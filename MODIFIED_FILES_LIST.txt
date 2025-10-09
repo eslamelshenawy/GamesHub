@@ -1,0 +1,66 @@
+========================================
+قائمة الملفات المُعدلة - يجب رفعها للسيرفر
+========================================
+
+ملفات API (المجلد: api/)
+---------------------------
+api/get_topup_requests.php
+api/approve_topup.php
+api/reject_topup.php
+api/get_reports.php
+api/admin_reports.php
+api/get_user_details.php
+
+ملفات JavaScript (المجلد: js/)
+---------------------------
+js/admin-dashboard.js
+
+========================================
+المسارات الكاملة على الجهاز المحلي:
+========================================
+
+C:\xampp\htdocs\api\api\get_topup_requests.php
+C:\xampp\htdocs\api\api\approve_topup.php
+C:\xampp\htdocs\api\api\reject_topup.php
+C:\xampp\htdocs\api\api\get_reports.php
+C:\xampp\htdocs\api\api\admin_reports.php
+C:\xampp\htdocs\api\api\get_user_details.php
+C:\xampp\htdocs\api\js\admin-dashboard.js
+
+========================================
+الملفات الاختيارية - لا تُرفع للسيرفر
+========================================
+(ملفات الاختبار فقط)
+
+api/create_test_topup.php
+api/create_test_withdraw.php
+api/create_test_report.php
+api/create_admin.php
+api/check_admin_user.php
+api/fix_admin_email.php
+
+========================================
+للرفع عبر FTP:
+========================================
+1. افتح برنامج FTP (FileZilla مثلاً)
+2. اتصل بالسيرفر
+3. انتقل للمجلد الرئيسي للموقع
+4. ارفع الملفات 7 في أماكنها:
+   - 6 ملفات في مجلد api/
+   - 1 ملف في مجلد js/
+
+========================================
+للرفع عبر Git:
+========================================
+git add api/get_topup_requests.php api/approve_topup.php api/reject_topup.php api/get_reports.php api/admin_reports.php api/get_user_details.php js/admin-dashboard.js
+git commit -m "Fix: Admin dashboard JSON API issues"
+git push origin main
+
+========================================
+التحقق بعد الرفع:
+========================================
+✓ إدارة الشحن والسحب - أزرار قبول/رفض
+✓ إدارة البلاغات - أزرار حل/رفض
+✓ إدارة المستخدمين - عرض التفاصيل
+
+========================================

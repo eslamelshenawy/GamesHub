@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>أضف اقتراحك — GamesHub</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        neonBlue: '#00f7ff',
+                        neonGreen: '#39ff14',
+                        neonPink: '#ff00ff'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+     <link rel="stylesheet" href="css/add-suggestion.css">
+
+    
+</head>
+<body>
+
+<div id="toast" class="toast">ميزة قريبا! ✨</div>
+
+<div id="overlay" class="fixed inset-0 bg-black bg-opacity-60 hidden z-40" onclick="closeSidebar()"></div>
+
+
+<div id="sidebar-container"></div>
+<!-- sidebar يتم تحميله ديناميكياً من js/sidebar.js -->
+
+<div class="min-h-screen md:mr-64 relative z-10">
+
+    <header class="p-4 flex items-center justify-between md:hidden">
+        <div class="flex items-center gap-3">
+            <button class="p-2 rounded-lg border border-white/6" onclick="openSidebar()"><i class="fa fa-bars text-xl"></i></button>
+            <a href="#" class="text-xl font-bold">GamesHub</a>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="#" class="px-3 py-2 rounded-lg border border-white/6" onclick="try{sessionStorage.setItem('post_auth_return', window.location.pathname+window.location.search+window.location.hash);}catch(e){} window.location.href='login.html'">تسجيل دخول</a>
+        </div>
+    </header>
+
+    <header class="hidden md:flex items-center justify-between px-8 py-6 border-b border-white/6">
+        <div class="flex items-center gap-6">
+ 
+        </div>
+        <div class="flex items-center gap-4">
+            <a href="add-account.html" class="px-4 py-2 rounded-lg neon-btn text-black font-semibold">أضف حسابك</a>
+            <a href="#" class="px-3 py-2 rounded-lg border border-white/6" onclick="try{sessionStorage.setItem('post_auth_return', window.location.pathname+window.location.search+window.location.hash);}catch(e){} window.location.href='login.html'">تسجيل دخول</a>
+        </div>
+    </header>
+
+    <div class="p-4 md:p-8 flex items-center justify-center min-h-[calc(100vh-160px)]">
+        <div class="max-w-2xl w-full text-center">
+            <div id="suggestion-form" class="suggestion-form card-bg p-8 rounded-xl shadow-lg">
+                <h1 class="text-2xl md:text-3xl font-bold mb-4">اقتراحك يهمنا!</h1>
+                <p class="muted text-sm mb-6">ساهم في تطوير منصة "GamesHub" واقتراح أفكار جديدة.</p>
+                <form id="suggestion-form-element" onsubmit="submitSuggestion(event)">
+                    <textarea 
+                        id="suggestion-textarea" 
+                        class="w-full h-40 p-4 rounded-xl bg-white/5 border border-white/10 outline-none focus:ring-2 focus:ring-[--neon-blue] transition placeholder:text-white/40" 
+                        placeholder="قولنا نفسك تلاقي إيه عندنا؟"
+                        required
+                    ></textarea>
+                    <button type="submit" class="w-full mt-4 neon-btn text-black font-semibold p-4 rounded-xl text-lg hover:opacity-80 transition">
+                        أرسل اقتراحك!
+                    </button>
+                </form>
+            </div>
+            
+            <div id="thank-you-message" class="thank-you-message card-bg p-8 rounded-xl shadow-lg text-center">
+                <i class="fa-solid fa-check-circle text-6xl mb-4" style="color:var(--neon-green)"></i>
+                <h2 class="text-3xl font-bold">شكراً يا صاحبي! 😉</h2>
+                <p class="muted text-lg mt-2">تم استلام اقتراحك بنجاح. نعمل على تحقيق أفكاركم.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="p-4 md:p-8 border-t border-white/6 mt-6">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row md:justify-between gap-4">
+            <div>
+                <h4 class="font-bold">GamesHub</h4>
+                <p class="muted text-sm">منصة وسيط لبيع وشراء حسابات الألعاب — آمنة وسهلة</p>
+            </div>
+            <div class="flex gap-3 items-center">
+                <a href="#" class="muted text-sm">سياسة الخصوصية</a>
+                <a href="#" class="muted text-sm">شروط الاستخدام</a>
+                <a href="#" class="muted text-sm">اتصل بنا</a>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+<script src="js/add-suggestion.js"></script>
+<script src="js/sidebar.js"></script>
+<script>
+// Close sidebar when a sidebar link is clicked to ensure mobile navigation works
+document.addEventListener('click', function(e){
+    try {
+        var a = e.target.closest && e.target.closest('aside#sidebar a');
+        if (a) {
+            // allow normal navigation but close UI first
+            closeSidebar();
+        }
+    } catch(err){}
+});
+</script>
+<script src="js/online-status.js"></script>
+</body>
+</html>

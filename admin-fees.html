@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>إحصائيات رسوم المنصة — GamesHub</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'neon-blue': '#00d4ff',
+                        'neon-purple': '#9b59ff', 
+                        'neon-green': '#32ff7e',
+                        'bg-dark': '#0b0f14'
+                    },
+                    fontFamily: {
+                        'tajawal': ['Tajawal', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+</head>
+<body class="font-tajawal bg-bg-dark text-white min-h-screen">
+
+<div class="container mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="text-center mb-8">
+        <h1 class="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-neon-purple to-neon-blue bg-clip-text text-transparent">
+            إحصائيات رسوم المنصة
+        </h1>
+        <p class="text-white/80 text-lg">تتبع إيرادات المنصة من رسوم البيع</p>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loading" class="text-center py-8">
+        <i class="fa fa-spinner fa-spin text-2xl text-neon-blue"></i>
+        <p class="mt-2 text-white/80">جاري تحميل البيانات...</p>
+    </div>
+
+    <!-- Error State -->
+    <div id="error" class="hidden text-center py-8">
+        <i class="fa fa-exclamation-triangle text-2xl text-red-500"></i>
+        <p class="mt-2 text-red-400">حدث خطأ في تحميل البيانات</p>
+        <button onclick="loadStats()" class="mt-4 px-6 py-2 bg-neon-blue text-black rounded-lg hover:bg-neon-blue/80 transition-colors">
+            إعادة المحاولة
+        </button>
+    </div>
+
+    <!-- Stats Content -->
+    <div id="stats-content" class="hidden">
+        <!-- Total Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-white/80 text-sm">إجمالي الصفقات</p>
+                        <p id="total-deals" class="text-2xl font-bold text-neon-blue">0</p>
+                    </div>
+                    <i class="fa fa-handshake text-3xl text-neon-blue/50"></i>
+                </div>
+            </div>
+
+            <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-white/80 text-sm">إجمالي الرسوم</p>
+                        <p id="total-fees" class="text-2xl font-bold text-neon-green">0 ج.م</p>
+                    </div>
+                    <i class="fa fa-coins text-3xl text-neon-green/50"></i>
+                </div>
+            </div>
+
+            <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-white/80 text-sm">متوسط الرسوم</p>
+                        <p id="avg-fee" class="text-2xl font-bold text-yellow-400">0 ج.م</p>
+                    </div>
+                    <i class="fa fa-chart-line text-3xl text-yellow-400/50"></i>
+                </div>
+            </div>
+
+            <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-white/80 text-sm">نسبة الرسوم</p>
+                        <p id="fee-percentage" class="text-2xl font-bold text-purple-400">10%</p>
+                    </div>
+                    <i class="fa fa-percentage text-3xl text-purple-400/50"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monthly Chart -->
+        <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 mb-8">
+            <h3 class="text-xl font-bold mb-4 text-neon-blue">الإحصائيات الشهرية</h3>
+            <div id="monthly-chart" class="h-64 flex items-end justify-between space-x-2">
+                <!-- Chart bars will be generated here -->
+            </div>
+        </div>
+
+        <!-- Recent Deals Table -->
+        <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+            <h3 class="text-xl font-bold mb-4 text-neon-blue">آخر الصفقات</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-white/20">
+                            <th class="text-right py-3 px-4">رقم الصفقة</th>
+                            <th class="text-right py-3 px-4">المشتري</th>
+                            <th class="text-right py-3 px-4">البائع</th>
+                            <th class="text-right py-3 px-4">المبلغ الإجمالي</th>
+                            <th class="text-right py-3 px-4">الرسوم</th>
+                            <th class="text-right py-3 px-4">مبلغ البائع</th>
+                            <th class="text-right py-3 px-4">التاريخ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="deals-table">
+                        <!-- Table rows will be generated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+async function loadStats() {
+    try {
+        document.getElementById('loading').classList.remove('hidden');
+        document.getElementById('error').classList.add('hidden');
+        document.getElementById('stats-content').classList.add('hidden');
+
+        const response = await fetch('api/platform_fees_stats.php', {
+            credentials: 'include'
+        });
+
+        if (!response.ok) {
+            throw new Error('فشل في تحميل البيانات');
+        }
+
+        const data = await response.json();
+
+        if (!data.success) {
+            throw new Error(data.error || 'خطأ غير معروف');
+        }
+
+        displayStats(data.data);
+        
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('stats-content').classList.remove('hidden');
+
+    } catch (error) {
+        console.error('Error loading stats:', error);
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('error').classList.remove('hidden');
+    }
+}
+
+function displayStats(data) {
+    // Display total stats
+    document.getElementById('total-deals').textContent = data.total_stats.total_deals || 0;
+    document.getElementById('total-fees').textContent = (data.total_stats.total_fees || 0).toFixed(2) + ' ج.م';
+    document.getElementById('avg-fee').textContent = (data.total_stats.avg_fee || 0).toFixed(2) + ' ج.م';
+    document.getElementById('fee-percentage').textContent = (data.total_stats.avg_fee_percentage || 10).toFixed(1) + '%';
+
+    // Display monthly chart
+    displayMonthlyChart(data.monthly_stats);
+
+    // Display recent deals
+    displayRecentDeals(data.recent_deals);
+}
+
+function displayMonthlyChart(monthlyData) {
+    const chartContainer = document.getElementById('monthly-chart');
+    chartContainer.innerHTML = '';
+
+    if (!monthlyData || monthlyData.length === 0) {
+        chartContainer.innerHTML = '<p class="text-white/60 text-center w-full">لا توجد بيانات شهرية</p>';
+        return;
+    }
+
+    const maxFees = Math.max(...monthlyData.map(m => parseFloat(m.monthly_fees) || 0));
+
+    monthlyData.forEach(month => {
+        const fees = parseFloat(month.monthly_fees) || 0;
+        const height = maxFees > 0 ? (fees / maxFees) * 200 : 0;
+        
+        const bar = document.createElement('div');
+        bar.className = 'flex flex-col items-center space-y-2';
+        bar.innerHTML = `
+            <div class="bg-gradient-to-t from-neon-blue to-neon-purple rounded-t-lg w-8 transition-all duration-300 hover:from-neon-purple hover:to-neon-blue" 
+                 style="height: ${height}px" 
+                 title="${month.month}: ${fees.toFixed(2)} ج.م">
+            </div>
+            <span class="text-xs text-white/60 transform -rotate-45 origin-left">${month.month}</span>
+        `;
+        chartContainer.appendChild(bar);
+    });
+}
+
+function displayRecentDeals(deals) {
+    const tableBody = document.getElementById('deals-table');
+    tableBody.innerHTML = '';
+
+    if (!deals || deals.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-white/60">لا توجد صفقات</td></tr>';
+        return;
+    }
+
+    deals.forEach(deal => {
+        const row = document.createElement('tr');
+        row.className = 'border-b border-white/10 hover:bg-white/5 transition-colors';
+        row.innerHTML = `
+            <td class="py-3 px-4 text-neon-blue font-mono">#${deal.id}</td>
+            <td class="py-3 px-4">${deal.buyer_name || 'غير محدد'}</td>
+            <td class="py-3 px-4">${deal.seller_name || 'غير محدد'}</td>
+            <td class="py-3 px-4 text-green-400 font-bold">${parseFloat(deal.escrow_amount).toFixed(2)} ج.م</td>
+            <td class="py-3 px-4 text-yellow-400 font-bold">${parseFloat(deal.platform_fee).toFixed(2)} ج.م</td>
+            <td class="py-3 px-4 text-neon-blue font-bold">${parseFloat(deal.seller_amount).toFixed(2)} ج.م</td>
+            <td class="py-3 px-4 text-white/60">${new Date(deal.created_at).toLocaleDateString('ar-EG')}</td>
+        `;
+        tableBody.appendChild(row);
+    });
+}
+
+// Load stats on page load
+document.addEventListener('DOMContentLoaded', loadStats);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GamesHub — سوق حسابات الألعاب</title>
+
+  <!-- خط عربي -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            'tajawal': ['Tajawal', 'sans-serif']
+          },
+          colors: {
+            'neon-blue': '#00d4ff',
+            'neon-purple': '#9b59ff',
+            'neon-green': '#32ff7e',
+            'bg-dark': '#0b0f14',
+            'card-dark': 'rgba(255,255,255,0.03)'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Override all transitions to be minimal */
+    * {
+      transition-duration: 150ms !important;
+    }
+
+    /* Disable transitions on mobile for better performance */
+    @media (max-width: 768px) {
+      * {
+        transition: none !important;
+      }
+    }
+  </style>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+
+  <link rel="stylesheet" href="css/index.css">
+
+  <style>
+    /* إخفاء أزرار تسجيل الدخول افتراضيًا لتجنب ال flicker */
+    #mobile-login-btn,
+    #desktop-login-btn,
+    #mobile-user-info,
+    #desktop-user-info {
+      display: none;
+    }
+  </style>
+</head>
+
+
+
+
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/68d5a7b20a2eb2192787879a/1j619e4f8';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->
+
+
+<body class="font-tajawal">
+
+  <!-- Toast message -->
+  <div id="toast" class="toast">ميزة قريبا! ✨</div>
+
+  <!-- Overlay (mobile) -->
+  <div id="overlay" class="fixed inset-0 bg-black bg-opacity-60 hidden z-40" onclick="closeSidebar()"></div>
+
+  <!-- Sidebar / Drawer -->
+  <div id="sidebar-container">
+    <!-- Sidebar content will be loaded here -->
+  </div>
+
+  <!-- Main wrapper with optimized spacing -->
+  <div class="min-h-screen md:mr-64 relative z-10">
+
+    <!-- Topbar (mobile) -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-bg-dark/80 border-b border-white/10 p-2 flex items-center justify-between md:hidden">
+      <div class="flex items-center gap-2">
+        <button class="p-2 rounded-lg border border-white/10 hover:border-neon-blue/50" onclick="openSidebar()">
+          <i class="fa fa-bars text-neon-blue"></i>
+        </button>
+        <a href="#" class="text-lg font-bold bg-gradient-to-r from-neon-purple to-neon-blue bg-clip-text text-transparent">
+          GamesHub
+        </a>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <!-- Login button (shown when not logged in) -->
+        <a href="login.html" id="mobile-login-btn" class="px-3 py-1.5 rounded-lg border border-white/10 hover:border-neon-blue/50 text-sm" onclick="try{sessionStorage.setItem('post_auth_return', window.location.pathname+window.location.search+window.location.hash);}catch(e){} window.location.href='login.html'">
+          تسجيل دخول
+        </a>
+
+        <!-- User info (shown when logged in) -->
+        <div id="mobile-user-info" class="flex items-center gap-2">
+          <span id="mobile-user-name" class="text-sm text-white/80"></span>
+          <button onclick="logout()" class="px-3 py-1.5 rounded-lg border border-red-500/50 hover:border-red-500 text-red-400 hover:text-red-300 text-sm transition-colors">
+            خروج
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Desktop header -->
+    <header class="hidden md:flex items-center justify-between px-6 py-3 sticky top-0 z-50 backdrop-blur-md bg-bg-dark/80 border-b border-white/10">
+      <div class="flex items-center gap-6">
+        <a href="#" class="text-2xl font-bold bg-gradient-to-r from-neon-purple to-neon-blue bg-clip-text text-transparent transition-colors duration-200">
+          GamesHub
+        </a>
+
+        <!-- Search elements removed as requested -->
+      </div>
+
+      <div class="flex items-center gap-3">
+        <nav class="flex items-center gap-6">
+          <!-- Navigation links removed as requested -->
+        </nav>
+        <a href="add-account.html" class="px-4 py-2 rounded-lg neon-btn text-black text-sm transition-colors duration-200" onclick="showPlaceholder()">
+          أضف حسابك
+        </a>
+
+        <!-- Login button (shown when not logged in) -->
+        <a href="login.html" id="desktop-login-btn" class="px-3 py-1.5 rounded-lg border border-white/10 hover:border-neon-blue/50 transition-colors duration-200 text-sm" onclick="try{sessionStorage.setItem('post_auth_return', window.location.pathname+window.location.search+window.location.hash);}catch(e){} window.location.href='login.html'">
+          تسجيل دخول
+        </a>
+
+        <!-- User info (shown when logged in) -->
+        <div id="desktop-user-info" class="flex items-center gap-3">
+          <span id="desktop-user-name" class="text-sm text-white/80"></span>
+          <button onclick="logout()" class="px-3 py-1.5 rounded-lg border border-red-500/50 hover:border-red-500 text-red-400 hover:text-red-300 text-sm transition-colors">
+            خروج
+          </button>
+        </div>
+      </div>
+    </header>
+
+      <!-- Hero Section -->
+    <section class="relative px-4 py-8 md:px-6 md:py-12 overflow-hidden">
+      <!-- Video Background -->
+      <video autoplay muted loop class="absolute inset-0 w-full h-full object-cover z-0" loading="lazy" preload="metadata">
+        <source src="uploads/A_seamless_loopable_202509052051_zfcyd.mp4" type="video/mp4">
+      </video>
+
+      <!-- Dark overlay for better text readability -->
+      <div class="absolute inset-0 bg-black/50 z-10"></div>
+
+      <!-- Background gradient overlay -->
+      <div class="absolute inset-0 bg-gradient-to-br from-neon-purple/20 via-transparent to-neon-blue/20 rounded-xl z-20"></div>
+
+      <div class="relative max-w-7xl mx-auto z-30">
+        <div class="text-center mb-8">
+          <h1 class="text-2xl md:text-4xl lg:text-5xl font-bold mb-4 leading-tight">
+            <span class="bg-gradient-to-r from-neon-purple via-neon-blue to-neon-green bg-clip-text text-transparent">
+              اشترِ وبيع حسابات الألعاب
+            </span>
+            <br>
+            <span class="text-white">بأمان تام</span>
+          </h1>
+          <p class="text-base md:text-lg text-white/80 mb-6 max-w-2xl mx-auto">
+            PUBG • Free Fire • COD • FIFA والمزيد — منصة وسيط آمنة ومضمونة للمستخدمين العرب
+          </p>
+
+          <div class="flex flex-col sm:flex-row gap-3 justify-center items-center mb-8">
+            <button class="px-6 py-2.5 rounded-lg neon-btn text-white text-sm" onclick="showPlaceholder()">
+              <i class="fa fa-play-circle ml-2"></i>
+              كيف تعمل المنصة؟
+            </button>
+            <button class="px-6 py-2.5 rounded-lg border border-neon-blue/50 text-neon-blue text-sm hover:bg-neon-blue/10">
+              <i class="fa fa-shield-alt ml-2"></i>
+              ضمان الأمان
+            </button>
+          </div>
+        </div>        <!-- Mobile search elements removed as requested -->
+      </div>
+    </section>
+
+    <!-- Featured Listings -->
+    <section class="relative px-4 py-8 md:px-8 md:py-12 bg-gradient-to-br from-bg-dark/80 via-bg-dark/90 to-bg-dark/95">
+      <!-- Background overlay for better visual depth -->
+      <div class="absolute inset-0 bg-gradient-to-br from-neon-purple/5 via-transparent to-neon-blue/5 rounded-2xl"></div>
+
+      <div class="relative max-w-7xl mx-auto">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-10 gap-6">
+          <div class="text-center sm:text-right">
+            <h2 class="text-3xl md:text-4xl font-bold mb-3">
+              <span class="bg-gradient-to-r from-neon-purple to-neon-blue bg-clip-text text-transparent">
+                عروض مميزة
+              </span>
+            </h2>
+            <p class="text-white/80 text-lg">اكتشف أفضل الحسابات المتاحة الآن</p>
+          </div>
+          <div class="flex items-center justify-center sm:justify-end gap-4">
+            <div class="text-sm text-white/70 bg-white/10 backdrop-blur-sm px-5 py-3 rounded-xl border border-white/20 shadow-lg">
+              عرض <span id="count" class="text-neon-blue font-bold text-base">6</span> نتيجة
+            </div>
+          </div>
+        </div>
+
+        <!-- Enhanced grid of cards with improved spacing and layout -->
+        <div id="cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 mb-10">
+          <!-- Cards will be dynamically inserted here -->
+        </div>
+
+        <!-- Enhanced Load more button -->
+        <div class="text-center mt-10">
+          <a href="all-offers.html" class="inline-flex items-center gap-3 px-8 py-3 rounded-xl border border-neon-blue/40 text-neon-blue text-base font-medium hover:bg-neon-blue/15 hover:border-neon-blue/60 hover:shadow-lg hover:shadow-neon-blue/20 transition-all duration-300 hover:scale-105">
+            <i class="fa fa-plus"></i>
+            <span>عرض المزيد</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Enhanced Premium Footer -->
+    <footer class="relative mt-20 overflow-hidden">
+      <!-- Animated background layers -->
+      <div class="absolute inset-0">
+        <div class="absolute inset-0 bg-gradient-to-t from-bg-dark via-bg-dark/95 to-transparent"></div>
+        <div class="absolute inset-0 bg-gradient-to-br from-neon-purple/5 via-transparent to-neon-blue/5"></div>
+        <div class="absolute top-0 left-1/4 w-96 h-96 bg-neon-blue/10 rounded-full blur-3xl animate-pulse"></div>
+        <div class="absolute bottom-0 right-1/4 w-80 h-80 bg-neon-purple/10 rounded-full blur-3xl animate-pulse" style="animation-delay: 2s;"></div>
+      </div>
+
+      <div class="relative border-t border-gradient-to-r from-transparent via-neon-blue/30 to-transparent px-4 py-16 md:px-8 md:py-20">
+        <div class="max-w-7xl mx-auto">
+          <!-- Main footer content -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-16">
+            <!-- Enhanced Brand section -->
+            <div class="lg:col-span-1">
+              <div class="mb-4">
+                <h4 class="text-2xl font-bold bg-gradient-to-r from-neon-purple via-neon-blue to-neon-green bg-clip-text text-transparent mb-2">
+                   GamesHub
+                 </h4>
+                <div class="w-16 h-0.5 bg-gradient-to-r from-neon-purple to-neon-blue rounded-full mb-4"></div>
+              </div>
+              <p class="text-white/80 text-sm leading-relaxed mb-6">
+                 منصة وسيط موثوقة لبيع وشراء حسابات الألعاب<br>
+                 آمنة وسهلة ومضمونة للمستخدمين العرب
+              </p>
+              <!-- Enhanced social links -->
+              <div class="flex gap-2">
+                <a href="#" class="group p-2 rounded-lg bg-gradient-to-br from-white/10 to-white/5 border border-white/20 hover:border-neon-blue/60 hover:bg-neon-blue/20 transition-all duration-300">
+                  <i class="fab fa-twitter text-sm text-neon-blue group-hover:text-white transition-colors duration-300"></i>
+                </a>
+                <a href="#" class="group p-2 rounded-lg bg-gradient-to-br from-white/10 to-white/5 border border-white/20 hover:border-neon-purple/60 hover:bg-neon-purple/20 transition-all duration-300">
+                  <i class="fab fa-discord text-sm text-neon-purple group-hover:text-white transition-colors duration-300"></i>
+                </a>
+                <a href="#" class="group p-2 rounded-lg bg-gradient-to-br from-white/10 to-white/5 border border-white/20 hover:border-neon-green/60 hover:bg-neon-green/20 transition-all duration-300">
+                  <i class="fab fa-telegram text-sm text-neon-green group-hover:text-white transition-colors duration-300"></i>
+                </a>
+              </div>
+            </div>
+
+            <!-- Quick links with enhanced styling -->
+            <div>
+              <h5 class="font-bold text-white text-lg mb-4 relative">
+                <span class="bg-gradient-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent">روابط سريعة</span>
+                <div class="absolute -bottom-1 left-0 w-8 h-0.5 bg-gradient-to-r from-neon-blue to-neon-purple rounded-full"></div>
+              </h5>
+              <div class="space-y-2">
+                <a href="#" class="group flex items-center gap-2 text-white/70 hover:text-neon-blue transition-all duration-300 text-sm">
+                  <i class="fa fa-chevron-left text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                  <span> كيف تعمل المنصة</span>
+                </a>
+                <a href="#" class="group flex items-center gap-2 text-white/70 hover:text-neon-blue transition-all duration-300 text-sm">
+                  <i class="fa fa-chevron-left text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                  <span> ضمان الأمان</span>
+                </a>
+                <a href="#" class="group flex items-center gap-2 text-white/70 hover:text-neon-blue transition-all duration-300 text-sm">
+                  <i class="fa fa-chevron-left text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                  <span> الأسئلة الشائعة</span>
+                </a>
+                <a href="#" class="group flex items-center gap-2 text-white/70 hover:text-neon-blue transition-all duration-300 text-sm">
+                  <i class="fa fa-chevron-left text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                  <span> دليل المستخدم</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Legal links with enhanced styling -->
+            <div>
+              <h5 class="font-bold text-white text-lg mb-4 relative">
+                <span class="bg-gradient-to-r from-neon-purple to-neon-green bg-clip-text text-transparent">قانوني ودعم</span>
+                <div class="absolute -bottom-1 left-0 w-8 h-0.5 bg-gradient-to-r from-neon-purple to-neon-green rounded-full"></div>
+              </h5>
+              <div class="space-y-2">
+                <a href="privacy.html" class="group flex items-center gap-2 text-white/70 hover:text-neon-purple transition-all duration-300 text-sm">
+                  <i class="fa fa-chevron-left text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                  <span> سياسة الخصوصية</span>
+                </a>
+                <a href="Terms-of-Use.html" class="group flex items-center gap-2 text-white/70 hover:text-neon-purple transition-all duration-300 text-sm">
+                  <i class="fa fa-chevron-left text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                  <span> شروط الاستخدام</span>
+                </a>
+                <a href="contact.html" class="group flex items-center gap-2 text-white/70 hover:text-neon-purple transition-all duration-300 text-sm">
+                  <i class="fa fa-chevron-left text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                  <span> الإبلاغ عن مشكلة</span>
+                </a>
+                <a href="contact.html" class="group flex items-center gap-2 text-white/70 hover:text-neon-purple transition-all duration-300 text-sm">
+                  <i class="fa fa-chevron-left text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                  <span> الدعم الفني</span>
+                </a>
+                <a href="#" class="group flex items-center gap-2 text-white/70 hover:text-neon-purple transition-all duration-300 text-sm">
+                  <i class="fa fa-chevron-left text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                  <span> مركز المساعدة</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Enhanced bottom footer -->
+          <div class="pt-4 border-t border-gradient-to-r from-transparent via-white/20 to-transparent">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+              <div class="flex flex-col md:flex-row md:items-center gap-2">
+                <p class="text-white/60 text-xs">
+                  © 2024 GamesHub. جميع الحقوق محفوظة.
+                </p>
+                <div class="flex items-center gap-1 text-xs text-white/50">
+                  <span>نسخة</span>
+                  <span class="px-1.5 py-0.5 bg-neon-blue/20 text-neon-blue rounded-full text-xs font-semibold">v2.0</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="flex items-center gap-1 text-xs text-white/60">
+                  <i class="fa fa-users text-neon-blue text-xs"></i>
+                  <span>+10K مستخدم</span>
+                </div>
+                <div class="w-px h-4 bg-white/20"></div>
+                <div class="flex items-center gap-1 text-xs text-white/60">
+                  <i class="fa fa-shield-alt text-neon-green text-xs"></i>
+                  <span>محمي وآمن</span>
+                </div>
+                <div class="w-px h-4 bg-white/20"></div>
+                <div class="flex items-center gap-1 text-xs text-white/60">
+                  <i class="fa fa-clock text-neon-purple text-xs"></i>
+                  <span>24/7 دعم</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- JS -->
+  <script src="js/hinex.js"></script>
+  <script src="js/sidebar.js"></script>
+  <script src="js/online-status.js"></script>
+  <script src="js/ban-check.js"></script>
+
+  <!-- Authentication state management -->
+  <script>
+    // Logout function
+    async function logout() {
+      try {
+        const response = await fetch('api/logout.php', {
+          method: 'POST',
+          credentials: 'include'
+        });
+
+        if (response.ok) {
+          sessionStorage.clear();
+          localStorage.clear();
+          window.location.reload();
+        }
+      } catch (error) {
+        console.error('[Header] خطأ في تسجيل الخروج:', error);
+        window.location.reload();
+      }
+    }
+
+    // Update header authentication state
+    function updateHeaderAuth(loggedIn, userName) {
+      console.log('[Header] 🔍 updateHeaderAuth called - loggedIn:', loggedIn, 'userName:', userName);
+
+      const mobileLoginBtn = document.getElementById('mobile-login-btn');
+      const desktopLoginBtn = document.getElementById('desktop-login-btn');
+      const mobileUserInfo = document.getElementById('mobile-user-info');
+      const desktopUserInfo = document.getElementById('desktop-user-info');
+      const mobileUserName = document.getElementById('mobile-user-name');
+      const desktopUserName = document.getElementById('desktop-user-name');
+
+      console.log('[Header] 📋 Elements found:', {
+        mobileLoginBtn: !!mobileLoginBtn,
+        desktopLoginBtn: !!desktopLoginBtn,
+        mobileUserInfo: !!mobileUserInfo,
+        desktopUserInfo: !!desktopUserInfo
+      });
+
+      if (loggedIn) {
+        // Hide login buttons
+        if (mobileLoginBtn) {
+          mobileLoginBtn.style.display = 'none';
+          console.log('[Header] ✅ Hidden mobile login button');
+        }
+        if (desktopLoginBtn) {
+          desktopLoginBtn.style.display = 'none';
+          console.log('[Header] ✅ Hidden desktop login button');
+        }
+
+        // Show user info
+        if (mobileUserInfo) {
+          mobileUserInfo.style.display = 'flex';
+          console.log('[Header] ✅ Showing mobile user info');
+        }
+        if (desktopUserInfo) {
+          desktopUserInfo.style.display = 'flex';
+          console.log('[Header] ✅ Showing desktop user info');
+        }
+
+        // Set user name
+        const name = userName || 'مستخدم';
+        if (mobileUserName) mobileUserName.textContent = name;
+        if (desktopUserName) desktopUserName.textContent = name;
+
+        console.log('[Header] ✓ مستخدم مسجل:', name);
+      } else {
+        // Show login buttons
+        if (mobileLoginBtn) {
+          mobileLoginBtn.style.display = 'inline-block';
+          console.log('[Header] ✅ Showing mobile login button');
+        }
+        if (desktopLoginBtn) {
+          desktopLoginBtn.style.display = 'inline-block';
+          console.log('[Header] ✅ Showing desktop login button');
+        }
+
+        // Hide user info
+        if (mobileUserInfo) {
+          mobileUserInfo.style.display = 'none';
+          console.log('[Header] ✅ Hidden mobile user info');
+        }
+        if (desktopUserInfo) {
+          desktopUserInfo.style.display = 'none';
+          console.log('[Header] ✅ Hidden desktop user info');
+        }
+
+        console.log('[Header] ✗ غير مسجل');
+      }
+
+      // Double check after 100ms
+      setTimeout(function() {
+        console.log('[Header] 🔄 After timeout check:');
+        if (desktopLoginBtn) {
+          console.log('[Header] desktop-login-btn display:', window.getComputedStyle(desktopLoginBtn).display);
+        }
+        if (desktopUserInfo) {
+          console.log('[Header] desktop-user-info display:', window.getComputedStyle(desktopUserInfo).display);
+        }
+      }, 100);
+    }
+
+    // Check login status when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('[Header] فحص حالة تسجيل الدخول...');
+
+      fetch('api/check_login.php', { credentials: 'include' })
+        .then(res => res.json())
+        .then(data => {
+          console.log('[Header] النتيجة:', data);
+          updateHeaderAuth(data.logged_in === true, data.name || data.username);
+        })
+        .catch(err => {
+          console.error('[Header] خطأ:', err);
+          updateHeaderAuth(false, null);
+        });
+    });
+  </script>
+
+  <script>
+    const PHP_BUYER_ID = "<?php echo isset($_SESSION['buyer_id']) ? $_SESSION['buyer_id'] : ''; ?>";
+  </script>
+</body>
+</html>

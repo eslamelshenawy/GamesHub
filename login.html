@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>تسجيل الدخول — GamesHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'neon-purple': '#9b59ff',
+                        'neon-blue': '#00d4ff',
+                        'neon-green': '#39ff14',
+                        'neon-pink': '#ff00ff',
+                        'dark-bg': '#0b0f14',
+                        'card-bg': '#1e293b',
+                        'input-bg': '#334155'
+                    },
+                    fontFamily: {
+                        'tajawal': ['Tajawal', 'sans-serif']
+                    },
+                    animation: {
+                        'move-bg': 'move-bg 15s linear infinite alternate',
+                        'glow': 'glow 2s ease-in-out infinite alternate'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @keyframes pulse-bg {
+            from { background-color: #0b0f14; }
+            to { background-color: #0d1218; }
+        }
+        @keyframes glow {
+            from { box-shadow: 0 0 20px rgba(155, 89, 255, 0.3); }
+            to { box-shadow: 0 0 30px rgba(0, 212, 255, 0.5); }
+        }
+        .neon-btn {
+            background: linear-gradient(90deg, #9b59ff, #00d4ff);
+            transition: all 0.3s ease;
+        }
+        .neon-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(155, 89, 255, 0.3);
+        }
+    </style>
+</head>
+<body class="font-tajawal bg-dark-bg text-white min-h-screen flex items-center justify-center p-4" style="background-color: #0b0f14; background-image: radial-gradient(circle, rgba(155, 89, 255, 0.1) 1px, transparent 1px), radial-gradient(circle, rgba(0, 212, 255, 0.1) 1px, transparent 1px); background-size: 50px 50px; background-position: 0 0, 25px 25px; animation: pulse-bg 10s infinite alternate;">
+
+    <div class="w-full max-w-sm p-8 space-y-6 bg-card-bg/80 backdrop-blur-lg rounded-2xl shadow-2xl border border-slate-700/50 lg:max-w-5xl lg:grid lg:grid-cols-2 lg:gap-12 lg:p-12">
+        <!-- Left Side - Branding (Desktop Only) -->
+        <div class="hidden lg:flex flex-col justify-center items-center text-center p-8 border-l border-slate-600/50">
+            <div class="mb-8">
+                <h2 class="text-5xl font-bold bg-gradient-to-r from-neon-purple to-neon-blue bg-clip-text text-transparent mb-4">GamesHub</h2>
+                <p class="text-lg text-slate-300 leading-relaxed">منصة آمنة وموثوقة لبيع وشراء حسابات الألعاب النادرة</p>
+            </div>
+            
+            <div class="space-y-4 w-full">
+                <div class="flex flex-wrap gap-3 justify-center">
+                    <span class="text-sm bg-slate-800/60 text-neon-blue px-4 py-2 rounded-full border border-neon-blue/30 hover:bg-neon-blue/10 transition-all">PUBG Mobile</span>
+                    <span class="text-sm bg-slate-800/60 text-neon-green px-4 py-2 rounded-full border border-neon-green/30 hover:bg-neon-green/10 transition-all">Free Fire</span>
+                    <span class="text-sm bg-slate-800/60 text-neon-pink px-4 py-2 rounded-full border border-neon-pink/30 hover:bg-neon-pink/10 transition-all">Call of Duty</span>
+                </div>
+                
+                <div class="mt-8 p-6 bg-slate-800/40 rounded-xl border border-slate-600/30">
+                    <h3 class="text-lg font-semibold text-neon-blue mb-2">✨ مميزات المنصة</h3>
+                    <ul class="text-sm text-slate-300 space-y-2 text-right">
+                        <li>🔒 حماية كاملة للمعاملات</li>
+                        <li>⚡ تحويل فوري وآمن</li>
+                        <li>🎮 أفضل الحسابات النادرة</li>
+                        <li>🏆 دعم فني متميز</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Login Form -->
+        <div class="flex flex-col justify-center space-y-8">
+            <div class="text-center lg:text-right">
+                <h1 class="text-4xl font-bold bg-gradient-to-r from-neon-purple to-neon-blue bg-clip-text text-transparent mb-3">تسجيل الدخول</h1>
+                <p class="text-slate-400 text-lg">مرحباً بك مرة أخرى في Wasata! 👋</p>
+            </div>
+            
+            <form id="loginForm" class="space-y-6" autocomplete="off">
+                <div class="space-y-4">
+                    <div class="relative">
+                        <input type="email" name="email" id="email" placeholder="البريد الإلكتروني" required 
+                               class="w-full p-4 pr-12 rounded-xl bg-input-bg/50 border border-slate-600/50 outline-none focus:ring-2 focus:ring-neon-blue focus:border-neon-blue transition-all duration-300 text-white placeholder-slate-400">
+                        <div class="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <div class="relative">
+                        <input type="password" name="password" id="password" placeholder="كلمة المرور" required 
+                               class="w-full p-4 pr-12 rounded-xl bg-input-bg/50 border border-slate-600/50 outline-none focus:ring-2 focus:ring-neon-blue focus:border-neon-blue transition-all duration-300 text-white placeholder-slate-400">
+                        <div class="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="w-full neon-btn text-black font-bold p-4 rounded-xl text-lg transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-lg">
+                    <span class="flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+                        </svg>
+                        تسجيل الدخول
+                    </span>
+                </button>
+            </form>
+            
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-4 pt-6 border-t border-slate-600/30">
+                <a href="/forget-password.html"  class="text-neon-blue hover:text-neon-purple transition-colors duration-300 text-sm font-medium hover:underline">
+                    🔑 هل نسيت كلمة المرور؟
+                </a>
+                <a href="#" onclick="window.location.href='signup.html'" class="text-neon-green hover:text-neon-blue transition-colors duration-300 text-sm font-medium hover:underline">
+                    ✨ إنشاء حساب جديد
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div id="toast" class="fixed bottom-4 left-1/2 transform -translate-x-1/2 p-3 rounded-lg text-white bg-slate-800 shadow-lg hidden"></div>
+
+    <script>
+        function showPlaceholder(event, msg) {
+            if(event) event.preventDefault();
+            const t = document.getElementById('toast');
+            t.textContent = msg || 'الميزة غير متاحة الآن.';
+            t.classList.remove('hidden');
+            setTimeout(() => {
+                t.classList.add('hidden');
+            }, 2500);
+        }
+        
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            // تحقق من صحة البيانات في الواجهة
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showPlaceholder(null, 'يرجى إدخال بريد إلكتروني صحيح');
+                return;
+            }
+            if (password.length < 6) {
+                showPlaceholder(null, 'كلمة المرور يجب أن تكون 6 أحرف أو أكثر');
+                return;
+            }
+            fetch('api/login.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password }),
+                credentials: 'include'
+            })
+            .then(async res => {
+                let data;
+                try { data = await res.json(); } catch { data = {}; }
+                if(res.ok && data.success){
+                    showPlaceholder(null, 'تم تسجيل الدخول بنجاح، سيتم تحويلك...');
+                    setTimeout(()=>{
+                        // التحقق من نوع المستخدم وإعادة التوجيه المناسب
+                        if (data.is_admin) {
+                            // إعادة توجيه الأدمن إلى لوحة التحكم
+                            window.location.href = 'admin-dashboard.html';
+                        } else {
+                            // تحقق من وجود باراميتر return في الرابط
+                            const params = new URLSearchParams(window.location.search);
+                            let ret = params.get('return');
+                            let isAddAccount = false;
+                            if(!ret) {
+                                // إذا لم يوجد باراميتر return، تحقق من sessionStorage/post_auth_return
+                                try {
+                                    ret = sessionStorage.getItem('post_auth_return');
+                                    if(ret) sessionStorage.removeItem('post_auth_return');
+                                } catch(e) { ret = null; }
+                            }
+                            if(ret && decodeURIComponent(ret).includes('add-account.html')) {
+                                try { sessionStorage.setItem('auto_publish_ad', '1'); } catch(e) {}
+                                isAddAccount = true;
+                            }
+                            if(ret){
+                                window.location.href = decodeURIComponent(ret);
+                            } else {
+                                window.location.href = 'index.html';
+                            }
+                        }
+                    }, 1200);
+                } else {
+                    // التحقق من حالة الحظر
+                    if (data.banned) {
+                        showBannedModal(data.message || 'تم حظر حسابك من قبل الإدارة');
+                    } else {
+                        showPlaceholder(null, data.error || 'فشل تسجيل الدخول');
+                    }
+                }
+            })
+            .catch(()=>showPlaceholder(null, 'خطأ في الاتصال بالخادم'));
+        });
+        
+        // دالة عرض نافذة الحظر
+        function showBannedModal(message) {
+            const modal = document.getElementById('bannedModal');
+            const messageElement = document.getElementById('bannedMessage');
+            messageElement.textContent = message;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+        
+        function closeBannedModal() {
+            const modal = document.getElementById('bannedModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+    </script>
+    
+    <!-- نافذة منبثقة للحظر -->
+    <div id="bannedModal" class="hidden fixed inset-0 bg-black bg-opacity-75 items-center justify-center z-50">
+        <div class="bg-card-bg rounded-lg p-8 max-w-md mx-4 border border-red-500 shadow-2xl">
+            <div class="text-center">
+                <div class="mb-4">
+                    <i class="fas fa-ban text-red-500 text-6xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-red-500 mb-4">تم حظر حسابك</h2>
+                <p id="bannedMessage" class="text-gray-300 mb-6 leading-relaxed"></p>
+                <button onclick="closeBannedModal()" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg transition-colors">
+                    موافق
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Font Awesome للأيقونات -->
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+</body>
+</html>

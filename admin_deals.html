@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة الصفقات - لوحة التحكم</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .sidebar {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        .sidebar.open {
+            transform: translateX(0);
+        }
+        .deal-card {
+            transition: all 0.3s ease;
+        }
+        .deal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .status-delivered {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        .status-completed {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        .status-cancelled {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar fixed inset-y-0 right-0 z-50 w-64 bg-white shadow-lg">
+        <!-- Sidebar content will be loaded here -->
+    </div>
+
+    <!-- Overlay -->
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
+
+    <!-- Main Content -->
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center py-4">
+                    <div class="flex items-center">
+                        <button id="sidebarToggle" class="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                        <h1 class="mr-4 text-2xl font-bold text-gray-900">
+                            <i class="fas fa-handshake text-blue-600 ml-2"></i>
+                            إدارة الصفقات
+                        </h1>
+                    </div>
+                    <div class="flex items-center space-x-4 space-x-reverse">
+                        <span class="text-sm text-gray-600">مرحباً، <span id="userName">الإدارة</span></span>
+                        <a href="login.html" class="text-blue-600 hover:text-blue-800">
+                            <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-clock text-2xl text-yellow-600"></i>
+                        </div>
+                        <div class="mr-4">
+                            <div class="text-sm font-medium text-gray-500">الصفقات المعلقة</div>
+                            <div class="text-2xl font-bold text-gray-900" id="pendingCount">0</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-check-circle text-2xl text-green-600"></i>
+                        </div>
+                        <div class="mr-4">
+                            <div class="text-sm font-medium text-gray-500">الصفقات المكتملة اليوم</div>
+                            <div class="text-2xl font-bold text-gray-900" id="completedToday">0</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-dollar-sign text-2xl text-blue-600"></i>
+                        </div>
+                        <div class="mr-4">
+                            <div class="text-sm font-medium text-gray-500">إجمالي المبالغ المعلقة</div>
+                            <div class="text-2xl font-bold text-gray-900" id="totalEscrow">0 ج.م</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-coins text-2xl text-green-600"></i>
+                        </div>
+                        <div class="mr-4">
+                            <div class="text-sm font-medium text-gray-500">إجمالي الربح المتوقع</div>
+                            <div class="text-2xl font-bold text-green-600" id="totalProfit">0 ج.م</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Deals Table -->
+            <div class="bg-white shadow rounded-lg">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-lg font-medium text-gray-900">
+                        <i class="fas fa-list-alt ml-2"></i>
+                        الصفقات المعلقة للمراجعة
+                    </h2>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">رقم الصفقة</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">المشتري</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">البائع</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الحساب</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">المبلغ الإجمالي</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-green-600 uppercase tracking-wider">
+                                    <i class="fas fa-coins ml-1"></i>مبلغ الربح
+                                </th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">التاريخ</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dealsTableBody" class="bg-white divide-y divide-gray-200">
+                            <!-- Deals will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div id="noDeals" class="hidden p-8 text-center">
+                    <i class="fas fa-inbox text-4xl text-gray-400 mb-4"></i>
+                    <p class="text-gray-500">لا توجد صفقات معلقة للمراجعة</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Deal Details Modal -->
+    <div id="dealModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+        <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-medium text-gray-900">تفاصيل الصفقة</h3>
+                    <button id="closeModal" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <div id="dealDetails" class="space-y-4">
+                    <!-- Deal details will be loaded here -->
+                </div>
+                
+                <div class="mt-6 flex justify-end space-x-3 space-x-reverse">
+                    <button id="approveDeal" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md">
+                        <i class="fas fa-check ml-1"></i> اعتماد الصفقة
+                    </button>
+                    <button id="rejectDeal" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md">
+                        <i class="fas fa-times ml-1"></i> رفض الصفقة
+                    </button>
+                    <button id="cancelModal" class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-md">
+                        إلغاء
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reject Reason Modal -->
+    <div id="rejectModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+        <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-1/2 shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">سبب رفض الصفقة</h3>
+                
+                <textarea id="rejectReason" class="w-full p-3 border border-gray-300 rounded-md" rows="4" placeholder="اكتب سبب رفض الصفقة..."></textarea>
+                
+                <div class="mt-4 flex justify-end space-x-3 space-x-reverse">
+                    <button id="confirmReject" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md">
+                        تأكيد الرفض
+                    </button>
+                    <button id="cancelReject" class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-md">
+                        إلغاء
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+            <div class="flex items-center">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 ml-3"></div>
+                <span class="text-gray-700">جاري التحميل...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/sidebar.js"></script>
+    <script src="js/admin_deals.js"></script>
+</body>
+</html>

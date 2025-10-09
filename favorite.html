@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>المفضلة — GamesHub</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'neon-blue': '#00d4ff',
+                        'neon-purple': '#8b5cf6',
+                        'neon-green': '#00ff88',
+                        'neon-pink': '#ff006e',
+                        'neon-yellow': '#ffff00',
+                        'neon-orange': '#ff8c00',
+                        'neon-cyan': '#00ffff',
+                        'neon-red': '#ff073a',
+                        'neon-teal': '#14b8a6',
+                        'neon-lime': '#84cc16',
+                        'neon-indigo': '#6366f1',
+                        'neon-rose': '#f43f5e'
+                    },
+                    fontFamily: {
+                        'tajawal': ['Tajawal', 'sans-serif']
+                    },
+                    animation: {
+                        'gradient': 'gradientShift 15s ease infinite',
+                        'float': 'float 3s ease-in-out infinite',
+                        'pulse-glow': 'pulseGlow 2s ease-in-out infinite'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/favorite.css">
+</head>
+<body class="font-tajawal bg-animated text-white min-h-screen">
+
+<div id="toast" class="toast">تمت إزالة الحساب من المفضلة.</div>
+
+<div id="overlay" class="fixed inset-0 bg-black bg-opacity-60 hidden z-40" onclick="closeSidebar()"></div>
+
+
+
+<div id="sidebar-container"></div>
+
+<div class="min-h-screen md:mr-64 relative z-10">
+
+    <header class="sticky top-0 z-30 p-4 flex items-center justify-between md:hidden backdrop-blur-xl bg-black/20 border-b border-white/10">
+        <div class="flex items-center gap-3">
+            <button class="p-3 rounded-xl bg-white/5 border border-neon-blue/20 hover:bg-white/10 hover:border-neon-blue/40 transition-all duration-300" onclick="openSidebar()">
+                <i class="fa fa-bars text-lg text-neon-blue"></i>
+            </button>
+            <a href="index.html" class="text-xl font-bold gradient-text">GamesHub</a>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="login.html" class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-neon-blue/30 transition-all duration-300 text-sm" onclick="try{sessionStorage.setItem('post_auth_return', window.location.pathname+window.location.search+window.location.hash);}catch(e){}">تسجيل دخول</a>
+        </div>
+    </header>
+
+    <header class="sticky top-0 z-30 hidden md:flex items-center justify-between px-8 py-6 backdrop-blur-xl bg-black/20 border-b border-white/10">
+        <div class="flex items-center gap-6">
+            <!-- Search elements removed as requested -->
+        </div>
+        <div class="flex items-center gap-4">
+            <a href="add-account.html" class="px-6 py-3 rounded-xl neon-btn text-black font-semibold hover:scale-105 transition-transform duration-200">أضف حسابك</a>
+            <a href="login.html" class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-neon-blue/30 transition-all duration-300" onclick="try{sessionStorage.setItem('post_auth_return', window.location.pathname+window.location.search+window.location.hash);}catch(e){}">تسجيل دخول</a>
+        </div>
+    </header>
+
+    <div class="p-6 md:p-8">
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+            <h1 class="text-3xl md:text-4xl font-bold gradient-text">المفضلة</h1>
+            <div class="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md">
+                <i class="fa-solid fa-heart text-neon-pink animate-pulse-glow"></i>
+                <p class="text-sm">يوجد <span id="favorite-count" class="font-bold text-neon-blue">4</span> حسابات في مفضلتك</p>
+            </div>
+        </div>
+
+        <div id="favorites-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        </div>
+        
+        <div id="no-favorites" class="text-center p-12 hidden">
+            <div class="max-w-md mx-auto">
+                <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-neon-pink/20 to-neon-purple/20 flex items-center justify-center backdrop-blur-md border border-white/10">
+                    <i class="fa-solid fa-heart-crack text-3xl text-neon-pink"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 gradient-text">لا يوجد حسابات في مفضلتك</h3>
+                <p class="text-white/70 text-lg leading-relaxed mb-6">عندما تجد حسابًا يعجبك، اضغط على زر القلب ليتم حفظه هنا.</p>
+                <a href="index.html" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl neon-btn text-black font-semibold hover:scale-105 transition-transform duration-200">
+                    تصفح الحسابات
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-gradient-to-r from-black/40 via-black/30 to-black/40 backdrop-blur-md border-t border-white/10 p-8 mt-12">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center">
+                <div class="mb-6">
+                    <h3 class="text-xl font-bold gradient-text mb-2">منصة التداول الآمن</h3>
+                    <p class="text-white/70 text-sm">© 2024 جميع الحقوق محفوظة.</p>
+                </div>
+                <div class="flex flex-wrap justify-center gap-8 text-sm">
+                    <a href="#" class="flex items-center gap-2 text-white/70 hover:text-neon-blue transition-all duration-300 hover:scale-105">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        سياسة الخصوصية
+                    </a>
+                    <a href="#" class="flex items-center gap-2 text-white/70 hover:text-neon-green transition-all duration-300 hover:scale-105">
+                        <i class="fa-solid fa-file-contract"></i>
+                        شروط الاستخدام
+                    </a>
+                    <a href="contact.html" class="flex items-center gap-2 text-white/70 hover:text-neon-purple transition-all duration-300 hover:scale-105">
+                        <i class="fa-solid fa-envelope"></i>
+                        اتصل بنا
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+<script src="js/hinex.js"></script>
+<script src="js/favorite.js"></script>
+<script src="js/sidebar.js"></script>
+<script>
+// جلب وعرض الحسابات المفضلة ديناميكياً
+
+function renderFavorites(accounts) {
+        const grid = document.getElementById('favorites-grid');
+        grid.innerHTML = '';
+        let count = 0;
+        accounts.forEach(acc => {
+                const img = acc.images && acc.images.length > 0 ? acc.images[0] : 'https://images.unsplash.com/photo-1605902711622-cfb43c44367e?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3';
+                const game = acc.game_name || '';
+                const price = acc.price || '';
+                const desc = acc.description || '';
+                const title = game || (desc.length > 40 ? desc.substring(0,40)+'...' : desc);
+                const id = acc.id;
+                grid.innerHTML += `
+                <article class="p-0 rounded-xl overflow-hidden card-bg">
+                    <div class="relative">
+                        <img src="${img}" alt="account" class="w-full h-44 object-cover" />
+                        <button class="absolute top-3 left-3 z-10 card-favorite-icon active-fav" title="إزالة من المفضلة" onclick="toggleFavoriteIndex(event, ${id}, this)">
+                            <i class="fas fa-heart text-2xl" style="color:#ff6b81;"></i>
+                        </button>
+                        <div class="absolute top-3 left-3 md:left-20 px-2 py-1 rounded-md text-xs font-semibold" style="background:rgba(0,0,0,0.5)">${game}</div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg">${title}</h3>
+                        <p class="mt-1 muted text-sm">${desc}</p>
+                        <div class="mt-3 flex items-center justify-between">
+                            <div>
+                                <div class="text-xl font-bold" style="color:var(--neon-blue)">$${price}</div>
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <a href="moredetails.html?id=${id}" class="px-3 py-2 rounded-lg border border-white/6 text-sm">تفاصيل</a>
+                                <button class="px-3 py-2 rounded-lg neon-btn text-black font-semibold" onclick="showPlaceholder('ميزة الشراء قريبًا')">اشتري الآن</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                `;
+                count++;
+        });
+        document.getElementById('favorite-count').textContent = count;
+        document.getElementById('no-favorites').classList.toggle('hidden', count > 0);
+}
+
+// جلب المفضلة عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', ()=>{
+        fetch('api/get_favorites.php')
+            .then(res => res.json())
+            .then(data => {
+                if(Array.isArray(data)) renderFavorites(data);
+                else document.getElementById('no-favorites').classList.remove('hidden');
+            });
+});
+</script>
+<script src="js/online-status.js"></script>
+</body>
+</html>

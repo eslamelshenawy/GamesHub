@@ -1,0 +1,42 @@
+
+        :root {
+            --neon-blue: #00d4ff;
+            --neon-purple: #9b59ff;
+            --neon-green: #32ff7e;
+            --bg-dark: #0b0f14;
+            --card-dark: rgba(255, 255, 255, 0.03);
+            --text-dark: #fff;
+            --muted-text: #cbd5e1;
+            --border-light: rgba(255, 255, 255, 0.06);
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .neon-btn {
+            background: linear-gradient(90deg, var(--neon-purple), var(--neon-blue));
+            box-shadow: 0 4px 18px rgba(59, 0, 120, 0.25), 0 0 8px rgba(0, 212, 255, 0.08);
+        }
+        .neon-outline {
+            border: 1px solid rgba(0, 212, 255, 0.12);
+        }
+        .sidebar-bg { background: linear-gradient(180deg, rgba(12, 14, 17, 0.98), rgba(8, 10, 12, 0.98)); border-left: 1px solid rgba(155, 89, 255, 0.06); }
+        .active-link { background: linear-gradient(90deg, rgba(0, 212, 255, 0.06), rgba(155, 89, 255, 0.04)); box-shadow: inset 4px 0 0 var(--neon-blue); }
+        .card-bg { background-color: var(--card-dark); border: 1px solid var(--border-light); }
+        .muted { color: var(--muted-text); }
+        .pill { background: rgba(255, 255, 255, 0.03); padding: 6px 10px; border-radius: 999px; font-size: 13px; }
+        .toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: 28px; z-index: 9999; padding: 12px 16px; border-radius: 10px; background: rgba(10, 12, 14, 0.9); box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6); color: #fff; display: none; }
+        .glow-hover:hover { box-shadow: 0 6px 24px rgba(0,212,255,0.12), 0 0 16px rgba(155,89,255,0.08); transform: translateY(-3px); }
+
+        /* Custom styling for image carousel */
+        .image-carousel img {
+            transition: transform 0.3s ease-in-out;
+            cursor: pointer;
+        }
+        .image-carousel img:hover {
+            transform: scale(1.05);
+        }

@@ -1,0 +1,1428 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم الإدارة - GamesHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'neon-purple': '#9b59ff',
+                        'neon-blue': '#00d4ff',
+                        'neon-green': '#39ff14',
+                        'neon-pink': '#ff00ff',
+                        'neon-yellow': '#ffff00',
+                        'neon-orange': '#ff8c00',
+                        'neon-cyan': '#00ffff',
+                        'neon-red': '#ff073a',
+                        'neon-teal': '#00ffa3',
+                        'neon-lime': '#ccff00',
+                        'neon-indigo': '#4b0082',
+                        'neon-rose': '#ff1493',
+                        'dark-bg': '#0b0f14',
+                        'dark-card': '#1a1f2e',
+                        'dark-hover': '#252b3b',
+                        'card-bg': '#1e293b',
+                        'input-bg': '#334155',
+                        'sidebar-bg': '#0f172a',
+                        'border-neon': '#374151',
+                        'text-muted': '#94a3b8'
+                    },
+                    fontFamily: {
+                        'tajawal': ['Tajawal', 'sans-serif']
+                    },
+                    animation: {
+                        'gradient-shift': 'gradientShift 8s ease-in-out infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-glow': 'pulseGlow 2s ease-in-out infinite alternate',
+                        'slide-in': 'slideIn 0.5s ease-out',
+                        'fade-in': 'fadeIn 0.3s ease-in'
+                    },
+                    backdropBlur: {
+                        'xs': '2px'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes pulseGlow {
+            from { box-shadow: 0 0 20px rgba(155, 89, 255, 0.3); }
+            to { box-shadow: 0 0 30px rgba(0, 212, 255, 0.5); }
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .gradient-bg {
+            background: linear-gradient(-45deg, #0b0f14, #1a1f2e, #1e293b, #0f172a);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+        .neon-glow {
+            box-shadow: 0 0 20px rgba(155, 89, 255, 0.3), 0 0 40px rgba(0, 212, 255, 0.2);
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(155, 89, 255, 0.2);
+        }
+        .sidebar-item:hover {
+            background: linear-gradient(90deg, rgba(155, 89, 255, 0.1), rgba(0, 212, 255, 0.1));
+            border-right: 3px solid #9b59ff;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, rgba(155, 89, 255, 0.1), rgba(0, 212, 255, 0.1));
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(155, 89, 255, 0.2);
+        }
+        .chart-container {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(55, 65, 81, 0.5);
+        }
+        .message-item {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+        }
+        #messagesContainer {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(155, 89, 255, 0.5) rgba(55, 65, 81, 0.3);
+        }
+        #messagesContainer::-webkit-scrollbar {
+            width: 6px;
+        }
+        #messagesContainer::-webkit-scrollbar-track {
+            background: rgba(55, 65, 81, 0.3);
+            border-radius: 3px;
+        }
+        #messagesContainer::-webkit-scrollbar-thumb {
+            background: rgba(155, 89, 255, 0.5);
+            border-radius: 3px;
+        }
+        #messagesContainer::-webkit-scrollbar-thumb:hover {
+            background: rgba(155, 89, 255, 0.7);
+        }
+        
+        /* Responsive button styles */
+        @media (max-width: 640px) {
+            .btn-responsive {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.875rem;
+            }
+        }
+        
+        /* Smooth transitions for all interactive elements */
+        .transition-smooth {
+            transition: all 0.3s ease;
+        }
+        
+        /* Enhanced responsive table system */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 0.75rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            margin-bottom: 1.5rem;
+        }
+        
+        .table-responsive::-webkit-scrollbar {
+            height: 8px;
+        }
+        
+        .table-responsive::-webkit-scrollbar-track {
+            background: rgba(55, 65, 81, 0.3);
+            border-radius: 4px;
+        }
+        
+        .table-responsive::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 4px;
+        }
+        
+        .table-responsive::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #059669, #047857);
+        }
+        
+        .table-responsive table {
+            min-width: 800px;
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(15px);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            border: 1px solid rgba(55, 65, 81, 0.3);
+        }
+        
+        .table-responsive th {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.8));
+            color: #10b981;
+            font-weight: 700;
+            text-align: center;
+            padding: 1.25rem 1rem;
+            border-bottom: 2px solid rgba(16, 185, 129, 0.3);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .table-responsive td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(55, 65, 81, 0.2);
+            text-align: center;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            vertical-align: middle;
+        }
+        
+        .table-responsive tr:hover {
+            background: rgba(55, 65, 81, 0.4);
+            transform: translateY(-1px);
+            transition: all 0.2s ease;
+        }
+        
+        .table-responsive tr:last-child td {
+            border-bottom: none;
+        }
+        
+        /* Tablet screens */
+        @media (max-width: 1024px) {
+            .table-responsive {
+                font-size: 0.85rem;
+            }
+            
+            .table-responsive th,
+            .table-responsive td {
+                padding: 0.5rem 0.75rem;
+            }
+        }
+        
+        /* Mobile screens */
+        @media (max-width: 768px) {
+            .table-responsive {
+                font-size: 0.8rem;
+                border-radius: 0.5rem;
+                overflow: hidden;
+            }
+            
+            .table-responsive th,
+            .table-responsive td {
+                padding: 0.6rem 0.5rem;
+                font-size: 0.75rem;
+            }
+            
+            .table-responsive th.mobile-essential,
+            .table-responsive td.mobile-essential {
+                display: table-cell !important;
+                font-weight: 600;
+            }
+        }
+        
+        /* Small mobile screens - Card layout */
+        @media (max-width: 640px) {
+            .overflow-x-auto {
+                overflow-x: visible;
+            }
+            
+            .mobile-stack-table {
+                display: block;
+                width: 100%;
+                border: none;
+                background: transparent;
+            }
+            
+            .mobile-stack-table thead {
+                display: none;
+            }
+            
+            .mobile-stack-table tbody {
+                display: flex !important;
+                flex-wrap: wrap;
+                gap: 0.75rem;
+                width: 100%;
+            }
+            
+            .mobile-stack-table tr {
+                display: block !important;
+                width: calc(50% - 0.375rem) !important;
+                margin-bottom: 0;
+                padding: 0.75rem;
+                border: 1px solid rgba(55, 65, 81, 0.3);
+                border-radius: 0.75rem;
+                background: linear-gradient(135deg, rgba(30, 41, 59, 0.4), rgba(15, 23, 42, 0.6));
+                backdrop-filter: blur(10px);
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                min-height: 200px;
+                flex: 0 0 calc(50% - 0.375rem);
+            }
+            
+            .mobile-stack-table td {
+                display: block;
+                width: 100%;
+                border: none;
+                padding: 0.3rem 0;
+                text-align: right;
+                position: relative;
+                min-height: 1.5rem;
+                font-size: 0.75rem;
+                line-height: 1.3;
+            }
+            
+            .mobile-stack-table td:before {
+                content: attr(data-label);
+                display: block;
+                width: 100%;
+                margin-bottom: 0.2rem;
+                font-weight: 700;
+                color: #10b981;
+                font-size: 0.7rem;
+                text-transform: uppercase;
+                letter-spacing: 0.025em;
+            }
+            
+            .mobile-stack-table td:empty {
+                display: none;
+            }
+            
+            /* Enhanced button styling for mobile */
+            .mobile-stack-table td button {
+                font-size: 0.65rem;
+                padding: 0.25rem 0.5rem;
+                margin: 0.1rem 0.05rem;
+                border-radius: 0.25rem;
+                font-weight: 600;
+                transition: all 0.2s ease;
+                min-width: auto;
+                width: 100%;
+                margin-bottom: 0.2rem;
+            }
+            
+            .mobile-stack-table td .flex {
+                flex-direction: column;
+                gap: 0.2rem;
+                align-items: stretch;
+            }
+            
+            /* Enhanced status badges */
+        .mobile-stack-table td span {
+            font-size: 0.65rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-weight: 600;
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+            margin-bottom: 0.2rem;
+        }
+        
+        /* Extra small screens - single column */
+        @media (max-width: 480px) {
+            .mobile-stack-table tr {
+                width: calc(50% - 0.375rem) !important;
+                flex: 0 0 calc(50% - 0.375rem) !important;
+            }
+        }
+        
+        /* Enhanced button and interactive elements styling */
+        .table-responsive button {
+            font-size: 0.8rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .table-responsive button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .table-responsive .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+        }
+        
+        .table-responsive .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+        
+        .table-responsive .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+        
+        .table-responsive .btn-warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+        
+        /* Status badges for all screens */
+        .table-responsive .status-badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .table-responsive .status-active {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+        
+        .table-responsive .status-pending {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+        
+        .table-responsive .status-inactive {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            color: white;
+        }
+            
+            /* Special styling for first and last cells */
+            .mobile-stack-table td:first-child {
+                border-top: 2px solid #10b981;
+                margin-top: 0.5rem;
+                font-weight: 700;
+                font-size: 0.9rem;
+            }
+            
+            .mobile-stack-table td:last-child {
+                border-bottom: 1px solid rgba(55, 65, 81, 0.2);
+                margin-bottom: 0.5rem;
+            }
+        }
+        
+        /* Enhanced mobile modal styles */
+        @media (max-width: 640px) {
+            .modal-mobile {
+                margin: 0.5rem;
+                max-height: 95vh;
+            }
+        }
+        
+        /* Sidebar States */
+        .sidebar-collapsed {
+            width: 70px !important;
+        }
+        
+        .sidebar-collapsed .sidebar-text {
+            opacity: 0;
+            visibility: hidden;
+            width: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-collapsed .sidebar-item {
+            justify-content: center;
+            padding: 10px;
+        }
+        
+        .sidebar-collapsed #sidebarToggle i {
+            transform: rotate(180deg);
+        }
+        
+        .main-content-expanded {
+            margin-right: 70px !important;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 1023px) {
+            #sidebar {
+                transform: translateX(100%);
+                width: 280px !important;
+                box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+                backdrop-filter: blur(20px);
+            }
+            
+            #sidebar.sidebar-open {
+                transform: translateX(0);
+            }
+            
+            #mainContent {
+                margin-right: 0 !important;
+            }
+            
+            #desktopSidebarToggle {
+                display: none !important;
+            }
+            
+            /* Mobile header adjustments */
+            #mobileMenuBtn {
+                top: 12px;
+                right: 12px;
+                backdrop-filter: blur(15px);
+            }
+            
+            /* Prevent horizontal scroll on mobile */
+            body.sidebar-open {
+                overflow-x: hidden;
+            }
+        }
+        
+        /* Extra small screens */
+        @media (max-width: 480px) {
+            #sidebar {
+                width: 100vw !important;
+                max-width: 320px;
+            }
+            
+            #mobileMenuBtn {
+                top: 8px;
+                right: 8px;
+                padding: 8px;
+            }
+            
+            /* Adjust header for very small screens */
+            header h1 {
+                font-size: 1rem !important;
+            }
+            
+            header p {
+                font-size: 0.7rem !important;
+            }
+        }
+        
+        /* Tablet adjustments */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            #sidebar {
+                width: 300px !important;
+            }
+        }
+        
+        /* Smooth transitions */
+        #sidebar, #mainContent, .sidebar-text, .sidebar-item {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Hover effects for collapsed sidebar */
+        @media (min-width: 1024px) {
+            .sidebar-collapsed:hover {
+                width: 280px !important;
+                z-index: 60;
+            }
+            
+            .sidebar-collapsed:hover .sidebar-text {
+                opacity: 1;
+                visibility: visible;
+                width: auto;
+            }
+            
+            .sidebar-collapsed:hover .sidebar-item {
+                justify-content: flex-start;
+                padding: 12px 16px;
+            }
+        }
+        
+        /* Sidebar overlay for mobile */
+        @media (max-width: 1023px) {
+            #sidebar::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.6);
+                z-index: -1;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                pointer-events: none;
+                backdrop-filter: blur(2px);
+            }
+            
+            #sidebar.sidebar-open::before {
+                opacity: 1;
+                pointer-events: auto;
+            }
+        }
+        
+        /* Smooth transitions for all interactive elements */
+        .sidebar-item, #mobileMenuBtn, #desktopSidebarToggle {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Enhanced mobile button styles */
+        @media (max-width: 1023px) {
+            #mobileMenuBtn:active {
+                transform: scale(0.95);
+                background: rgba(var(--card-bg), 0.95);
+            }
+        }
+        
+        /* Prevent text selection on interactive elements */
+        .sidebar-item, #mobileMenuBtn, #desktopSidebarToggle {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>
+</head>
+<body class="font-tajawal gradient-bg text-white min-h-screen">
+    <!-- Sidebar -->
+    <div id="sidebar" class="fixed right-0 top-0 h-full w-80 bg-sidebar-bg/95 backdrop-blur-lg border-l border-border-neon/30 transform translate-x-0 transition-all duration-300 z-50 overflow-y-auto lg:w-80 md:w-72 sm:w-80">
+        <div class="p-4 lg:p-6 border-b border-border-neon/30">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2 lg:gap-3 min-w-0">
+       
+                    <div class="sidebar-text min-w-0">
+                        <h2 class="text-lg lg:text-xl font-bold bg-gradient-to-r from-neon-purple to-neon-blue bg-clip-text text-transparent truncate">لوحة الإدارة</h2>
+                        <p class="text-text-muted text-xs lg:text-sm truncate">مرحباً بك أدمن</p>
+                    </div>
+                </div>
+                <!-- Close button for mobile -->
+                <button id="mobileSidebarClose" class="lg:hidden block p-2 rounded-lg hover:bg-gray-700/50 transition-colors flex-shrink-0">
+                    <i class="fas fa-times text-gray-400"></i>
+                </button>
+                <!-- Close button for desktop -->
+                <button id="sidebarToggle" class="lg:block hidden p-2 rounded-lg hover:bg-gray-700/50 transition-colors flex-shrink-0">
+                    <i class="fas fa-chevron-right text-gray-400"></i>
+                </button>
+            </div>
+        </div>
+        
+        <nav class="p-3 lg:p-4 space-y-1 lg:space-y-2">
+            <a href="#dashboard" class="sidebar-item flex items-center gap-2 lg:gap-3 p-2.5 lg:p-3 rounded-lg transition-all duration-300 text-white hover:text-neon-blue" onclick="showSection('dashboard')">
+                <i class="fas fa-tachometer-alt w-4 lg:w-5 flex-shrink-0 text-center"></i>
+                <span class="sidebar-text text-sm lg:text-base truncate">لوحة التحكم</span>
+            </a>
+            <a href="#users" class="sidebar-item flex items-center gap-2 lg:gap-3 p-2.5 lg:p-3 rounded-lg transition-all duration-300 text-white hover:text-neon-blue" onclick="showSection('users')">
+                <i class="fas fa-users w-4 lg:w-5 flex-shrink-0 text-center"></i>
+                <span class="sidebar-text text-sm lg:text-base truncate">إدارة المستخدمين</span>
+            </a>
+            <a href="#deals" class="sidebar-item flex items-center gap-2 lg:gap-3 p-2.5 lg:p-3 rounded-lg transition-all duration-300 text-white hover:text-neon-blue" onclick="showSection('deals')">
+                <i class="fas fa-handshake w-4 lg:w-5 flex-shrink-0 text-center"></i>
+                <span class="sidebar-text text-sm lg:text-base truncate">إدارة الصفقات</span>
+            </a>
+            <a href="#reports" class="sidebar-item flex items-center gap-2 lg:gap-3 p-2.5 lg:p-3 rounded-lg transition-all duration-300 text-white hover:text-neon-blue" onclick="showSection('reports')">
+                <i class="fas fa-flag w-4 lg:w-5 flex-shrink-0 text-center"></i>
+                <span class="sidebar-text text-sm lg:text-base truncate">إدارة البلاغات</span>
+            </a>
+            <a href="#topups" class="sidebar-item flex items-center gap-2 lg:gap-3 p-2.5 lg:p-3 rounded-lg transition-all duration-300 text-white hover:text-neon-blue" onclick="showSection('topups')">
+                <i class="fas fa-credit-card w-4 lg:w-5 flex-shrink-0 text-center"></i>
+                <span class="sidebar-text text-sm lg:text-base truncate">إدارة الشحن والسحب</span>
+            </a>
+            <div class="border-t border-border-neon/30 mt-3 lg:mt-4 pt-3 lg:pt-4">
+                <a href="index.html" class="sidebar-item flex items-center gap-2 lg:gap-3 p-2.5 lg:p-3 rounded-lg transition-all duration-300 text-neon-green hover:text-neon-blue">
+                    <i class="fas fa-home w-4 lg:w-5 flex-shrink-0 text-center"></i>
+                    <span class="sidebar-text text-sm lg:text-base truncate">العودة للموقع</span>
+                </a>
+                <a href="#" onclick="logout()" class="sidebar-item flex items-center gap-2 lg:gap-3 p-2.5 lg:p-3 rounded-lg transition-all duration-300 text-neon-red hover:text-red-400">
+                    <i class="fas fa-sign-out-alt w-4 lg:w-5 flex-shrink-0 text-center"></i>
+                    <span class="sidebar-text text-sm lg:text-base truncate">تسجيل الخروج</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Desktop Sidebar Toggle -->
+    <button id="desktopSidebarToggle" class="hidden lg:block fixed top-4 right-4 z-40 p-3 bg-sidebar-bg/90 backdrop-blur-lg rounded-lg border border-border-neon/30 transition-all duration-300 shadow-lg">
+        <i class="fas fa-chevron-right text-white"></i>
+    </button>
+
+    <!-- Main Content -->
+    <div id="mainContent" class="lg:mr-80 transition-all duration-300 min-h-screen">
+        <!-- Header -->
+        <header class="bg-card-bg/90 backdrop-blur-lg border-b border-border-neon/30 p-3 sm:p-4 lg:p-6 sticky top-0 z-30">
+            <div class="flex items-center justify-between gap-2 sm:gap-4">
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuBtn" class="lg:hidden bg-card-bg/90 backdrop-blur-lg p-2.5 rounded-lg border border-border-neon/30 text-white shadow-lg flex-shrink-0">
+                    <i class="fas fa-bars text-lg"></i>
+                </button>
+                
+                <div class="flex-1 min-w-0 pr-2 lg:pr-0">
+                    <h1 class="text-lg sm:text-xl lg:text-3xl font-bold bg-gradient-to-r from-neon-purple to-neon-blue bg-clip-text text-transparent truncate">لوحة تحكم الإدارة</h1>
+                    <p class="text-text-muted mt-0.5 lg:mt-1 text-xs sm:text-sm lg:text-base truncate">إدارة شاملة لمنصة GamesHub</p>
+                </div>
+                <div class="flex items-center gap-1 sm:gap-2 lg:gap-4 flex-shrink-0">
+                    <div class="bg-stat-card p-1.5 sm:p-2 lg:p-3 rounded-lg hidden sm:block">
+                        <div class="flex items-center gap-1 lg:gap-2">
+                            <i class="fas fa-clock text-neon-blue text-xs sm:text-sm lg:text-base"></i>
+                            <span id="currentTime" class="text-xs lg:text-sm whitespace-nowrap"></span>
+                        </div>
+                    </div>
+                    <div class="bg-stat-card p-1.5 sm:p-2 lg:p-3 rounded-lg">
+                        <div class="flex items-center gap-1 lg:gap-2">
+                            <i class="fas fa-user-shield text-neon-green text-xs sm:text-sm lg:text-base"></i>
+                            <span class="text-xs lg:text-sm whitespace-nowrap hidden sm:inline">مدير النظام</span>
+                            <span class="text-xs sm:hidden">أدمن</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Section -->
+        <section id="dashboardSection" class="p-6 space-y-6">
+            <!-- Main Stats Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+                <div class="stat-card p-4 lg:p-6 rounded-xl card-hover transition-all duration-300 hover:scale-105">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 min-w-0">
+                            <p class="text-text-muted text-xs lg:text-sm truncate">إجمالي المستخدمين</p>
+                            <p class="text-xl lg:text-2xl font-bold text-neon-blue" id="totalUsers">0</p>
+                            <p class="text-xs text-text-muted mt-1 truncate">متصل: <span id="onlineUsers">0</span></p>
+                        </div>
+                        <div class="w-10 h-10 lg:w-12 lg:h-12 bg-neon-blue/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-users text-neon-blue text-sm lg:text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card p-4 lg:p-6 rounded-xl card-hover transition-all duration-300 hover:scale-105">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 min-w-0">
+                            <p class="text-text-muted text-xs lg:text-sm truncate">إجمالي الصفقات</p>
+                            <p class="text-xl lg:text-2xl font-bold text-neon-green" id="totalDeals">0</p>
+                            <p class="text-xs text-text-muted mt-1 truncate">مكتملة: <span id="completedDeals">0</span></p>
+                        </div>
+                        <div class="w-10 h-10 lg:w-12 lg:h-12 bg-neon-green/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-handshake text-neon-green text-sm lg:text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card p-4 lg:p-6 rounded-xl card-hover transition-all duration-300 hover:scale-105">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 min-w-0">
+                            <p class="text-text-muted text-xs lg:text-sm truncate">إجمالي الحسابات</p>
+                            <p class="text-xl lg:text-2xl font-bold text-neon-purple" id="totalAccounts">0</p>
+                            <p class="text-xs text-text-muted mt-1 truncate">اليوم: <span id="accountsToday">0</span></p>
+                        </div>
+                        <div class="w-10 h-10 lg:w-12 lg:h-12 bg-neon-purple/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-gamepad text-neon-purple text-sm lg:text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card p-4 lg:p-6 rounded-xl card-hover transition-all duration-300 hover:scale-105">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 min-w-0">
+                            <p class="text-text-muted text-xs lg:text-sm truncate">إجمالي الرسائل</p>
+                            <p class="text-xl lg:text-2xl font-bold text-neon-pink" id="totalMessages">0</p>
+                            <p class="text-xs text-text-muted mt-1 truncate">اليوم: <span id="messagesToday">0</span></p>
+                        </div>
+                        <div class="w-10 h-10 lg:w-12 lg:h-12 bg-neon-pink/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-comments text-neon-pink text-sm lg:text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Financial Stats -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+                <div class="stat-card p-4 lg:p-6 rounded-xl card-hover transition-all duration-300 hover:scale-105">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 min-w-0">
+                            <p class="text-text-muted text-xs lg:text-sm truncate">إجمالي الأرصدة</p>
+                            <p class="text-xl lg:text-2xl font-bold text-neon-cyan" id="totalBalance">0</p>
+                            <p class="text-xs text-text-muted mt-1 truncate">معلق: <span id="pendingBalance">0</span> ج.م</p>
+                        </div>
+                        <div class="w-10 h-10 lg:w-12 lg:h-12 bg-neon-cyan/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-wallet text-neon-cyan text-sm lg:text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card p-4 lg:p-6 rounded-xl card-hover transition-all duration-300 hover:scale-105">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 min-w-0">
+                            <p class="text-text-muted text-xs lg:text-sm truncate">إجمالي المدفوعات</p>
+                            <p class="text-xl lg:text-2xl font-bold text-neon-orange" id="totalPayments">0</p>
+                            <p class="text-xs text-text-muted mt-1 truncate">المبلغ: <span id="totalPaymentAmount">0</span> ج.م</p>
+                        </div>
+                        <div class="w-10 h-10 lg:w-12 lg:h-12 bg-neon-orange/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-credit-card text-neon-orange text-sm lg:text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card p-4 lg:p-6 rounded-xl card-hover transition-all duration-300 hover:scale-105">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 min-w-0">
+                            <p class="text-text-muted text-xs lg:text-sm truncate">إجمالي الأرباح</p>
+                            <p class="text-xl lg:text-2xl font-bold text-neon-green" id="totalProfits">0</p>
+                            <p class="text-xs text-text-muted mt-1 truncate">اليوم: <span id="profitsToday">0</span> ج.م</p>
+                        </div>
+                        <div class="w-10 h-10 lg:w-12 lg:h-12 bg-neon-green/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-coins text-neon-green text-sm lg:text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card p-4 lg:p-6 rounded-xl card-hover transition-all duration-300 hover:scale-105">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 min-w-0">
+                            <p class="text-text-muted text-xs lg:text-sm truncate">معدل الإنجاز</p>
+                            <p class="text-xl lg:text-2xl font-bold text-neon-yellow" id="completionRate">0%</p>
+                            <p class="text-xs text-text-muted mt-1 truncate">متوسط الساعات: <span id="avgCompletionHours">0</span></p>
+                        </div>
+                        <div class="w-10 h-10 lg:w-12 lg:h-12 bg-neon-yellow/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-chart-line text-neon-yellow text-sm lg:text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Profits Statistics -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+                <div class="stat-card p-4 lg:p-6 rounded-xl card-hover transition-all duration-300 hover:scale-105">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 min-w-0">
+                            <p class="text-text-muted text-xs lg:text-sm truncate">إجمالي الأرباح (الصفقات المنجزة)</p>
+                            <p class="text-xl lg:text-2xl font-bold text-neon-green" id="totalValidProfits">0 ج.م</p>
+                            <p class="text-xs text-text-muted mt-1 truncate">استثناء الصفقات الفاشلة والسالبة</p>
+                        </div>
+                        <div class="w-10 h-10 lg:w-12 lg:h-12 bg-neon-green/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-chart-line text-neon-green text-sm lg:text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card p-4 lg:p-6 rounded-xl card-hover transition-all duration-300 hover:scale-105">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 min-w-0">
+                            <p class="text-text-muted text-xs lg:text-sm truncate">عدد الصفقات المنجزة</p>
+                            <p class="text-xl lg:text-2xl font-bold text-neon-cyan" id="completedValidDeals">0</p>
+                            <p class="text-xs text-text-muted mt-1 truncate">الصفقات الناجحة فقط</p>
+                        </div>
+                        <div class="w-10 h-10 lg:w-12 lg:h-12 bg-neon-cyan/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-handshake text-neon-cyan text-sm lg:text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card p-4 lg:p-6 rounded-xl card-hover transition-all duration-300 hover:scale-105">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 min-w-0">
+                            <p class="text-text-muted text-xs lg:text-sm truncate">متوسط الربح لكل صفقة</p>
+                            <p class="text-xl lg:text-2xl font-bold text-neon-orange" id="avgValidProfitPerDeal">0 ج.م</p>
+                            <p class="text-xs text-text-muted mt-1 truncate">للصفقات الناجحة فقط</p>
+                        </div>
+                        <div class="w-10 h-10 lg:w-12 lg:h-12 bg-neon-orange/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-calculator text-neon-orange text-sm lg:text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profits Analytics -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
+                <div class="chart-container p-4 lg:p-6 rounded-xl">
+                    <h3 class="text-lg font-semibold text-neon-green mb-4">
+                        <i class="fas fa-chart-pie ml-2"></i>تحليل الأرباح
+                    </h3>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div class="text-center p-3 bg-green-500/10 rounded-lg border border-green-500/20">
+                            <div class="text-sm text-green-400">إجمالي الأرباح</div>
+                            <div class="text-lg font-bold text-green-400" id="totalProfitsAmount">0 ج.م</div>
+                        </div>
+                        <div class="text-center p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
+                            <div class="text-sm text-blue-400">متوسط الربح/صفقة</div>
+                            <div class="text-lg font-bold text-blue-400" id="avgProfitPerDeal">0 ج.م</div>
+                        </div>
+                    </div>
+                    <div class="h-64">
+                        <canvas id="profitsChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-container p-4 lg:p-6 rounded-xl">
+                    <h3 class="text-lg font-semibold text-neon-purple mb-4">
+                        <i class="fas fa-chart-bar ml-2"></i>الأرباح الشهرية
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center p-3 bg-gray-700/50 rounded-lg">
+                            <span class="text-sm text-gray-300">هذا الشهر</span>
+                            <span class="font-bold text-neon-green" id="thisMonthProfit">0 ج.م</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-700/50 rounded-lg">
+                            <span class="text-sm text-gray-300">الشهر الماضي</span>
+                            <span class="font-bold text-gray-400" id="lastMonthProfit">0 ج.م</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-700/50 rounded-lg">
+                            <span class="text-sm text-gray-300">نمو الأرباح</span>
+                            <span class="font-bold text-neon-blue" id="profitGrowth">0%</span>
+                        </div>
+                    </div>
+                    <div class="h-48 mt-4">
+                        <canvas id="monthlyProfitsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Performers -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="chart-container p-6 rounded-xl">
+                    <h3 class="text-lg font-semibold text-neon-green mb-4">أفضل البائعين</h3>
+                    <div id="topSellers" class="space-y-3">
+                        <!-- Top sellers will be loaded here -->
+                    </div>
+                </div>
+
+                <div class="chart-container p-6 rounded-xl">
+                    <h3 class="text-lg font-semibold text-neon-blue mb-4">أفضل المشترين</h3>
+                    <div id="topBuyers" class="space-y-3">
+                        <!-- Top buyers will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Statistics -->
+            <div class="chart-container p-6 rounded-xl">
+                <h3 class="text-lg font-semibold text-neon-purple mb-4">إحصائيات الألعاب</h3>
+                <div id="gameStats" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Game statistics will be loaded here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Users Management Section -->
+        <section id="usersSection" class="p-4 lg:p-6 space-y-4 lg:space-y-6" style="display: none;">
+            <h2 class="text-xl lg:text-2xl font-bold text-neon-blue mb-4 lg:mb-6">إدارة المستخدمين</h2>
+            <div class="chart-container p-4 lg:p-6 rounded-xl">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-xs lg:text-sm text-right text-gray-300 table-responsive mobile-stack-table">
+                        <thead class="text-xs text-gray-400 uppercase bg-gray-700">
+                            <tr>
+                                <th class="px-3 lg:px-6 py-2 lg:py-3 mobile-essential">الاسم</th>
+                                <th class="px-3 lg:px-6 py-2 lg:py-3 hidden sm:table-cell">رقم الهاتف</th>
+                                <th class="px-3 lg:px-6 py-2 lg:py-3 hidden md:table-cell">تاريخ التسجيل</th>
+                                <th class="px-3 lg:px-6 py-2 lg:py-3 mobile-essential">الحالة</th>
+                                <th class="px-3 lg:px-6 py-2 lg:py-3 mobile-essential">الرصيد</th>
+                                <th class="px-3 lg:px-6 py-2 lg:py-3 mobile-essential">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <tr>
+                                <td colspan="5" class="px-3 lg:px-6 py-4 text-center">
+                                    <div class="py-6 lg:py-8">
+                                        <i class="fas fa-spinner fa-spin text-neon-blue text-xl lg:text-2xl mb-2"></i>
+                                        <p class="text-text-muted text-sm lg:text-base">جاري تحميل البيانات...</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Top-ups Management Section -->
+        <section id="topupsSection" class="p-4 lg:p-6 space-y-4 lg:space-y-6" style="display: none;">
+            <div class="chart-container p-4 lg:p-6 rounded-xl">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 lg:mb-6 gap-4">
+                    <h3 class="text-lg lg:text-xl font-semibold text-neon-blue">إدارة طلبات الشحن والسحب</h3>
+                    <div class="flex space-x-2 space-x-reverse w-full sm:w-auto">
+                        <button id="topupTab" class="flex-1 sm:flex-none px-3 lg:px-4 py-2 bg-neon-blue text-white rounded-lg transition-colors duration-200 text-sm lg:text-base">طلبات الشحن</button>
+                        <button id="withdrawTab" class="flex-1 sm:flex-none px-3 lg:px-4 py-2 bg-gray-600 text-gray-300 rounded-lg transition-colors duration-200 text-sm lg:text-base">طلبات السحب</button>
+                    </div>
+                </div>
+                
+                <!-- Top-up Requests Table -->
+                <div id="topupRequests" class="overflow-x-auto">
+                    <table class="w-full text-xs lg:text-sm text-right text-gray-300 table-responsive mobile-stack-table">
+                        <thead class="text-xs text-gray-400 uppercase bg-gray-700">
+                            <tr>
+                                <th class="px-3 lg:px-6 py-2 lg:py-3 mobile-essential">المستخدم</th>
+                                <th class="px-3 lg:px-6 py-2 lg:py-3 hidden sm:table-cell">رقم الهاتف</th>
+                                <th class="px-3 lg:px-6 py-2 lg:py-3 mobile-essential">المبلغ</th>
+                                <th class="px-3 lg:px-6 py-2 lg:py-3 hidden md:table-cell">طريقة الدفع</th>
+                                <th class="px-3 lg:px-6 py-2 lg:py-3 mobile-essential">الحالة</th>
+                                <th class="px-3 lg:px-6 py-2 lg:py-3 hidden lg:table-cell">التاريخ</th>
+                                <th class="px-3 lg:px-6 py-2 lg:py-3 mobile-essential">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="topupTableBody">
+                            <tr>
+                                <td colspan="7" class="px-3 lg:px-6 py-4 text-center">
+                                    <div class="py-6 lg:py-8">
+                                        <i class="fas fa-spinner fa-spin text-neon-blue text-xl lg:text-2xl mb-2"></i>
+                                        <p class="text-text-muted text-sm lg:text-base">جاري تحميل البيانات...</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Withdrawal Requests Table -->
+                <div id="withdrawRequests" class="overflow-x-auto" style="display: none;">
+                    <table class="w-full text-xs lg:text-sm text-right text-gray-300 table-responsive mobile-stack-table">
+                        <thead class="text-xs text-gray-400 uppercase bg-gray-700">
+                            <tr>
+                                <th class="px-3 lg:px-6 py-2 lg:py-3 mobile-essential">المستخدم</th>
+                                <th class="px-3 lg:px-6 py-2 lg:py-3 hidden sm:table-cell">رقم الهاتف</th>
+                                <th class="px-3 lg:px-6 py-2 lg:py-3 mobile-essential">المبلغ</th>
+                                <th class="px-3 lg:px-6 py-2 lg:py-3 hidden md:table-cell">طريقة السحب</th>
+                                <th class="px-3 lg:px-6 py-2 lg:py-3 mobile-essential">الحالة</th>
+                                <th class="px-3 lg:px-6 py-2 lg:py-3 hidden lg:table-cell">التاريخ</th>
+                                <th class="px-3 lg:px-6 py-2 lg:py-3 mobile-essential">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="withdrawTableBody">
+                            <tr>
+                                <td colspan="7" class="px-3 lg:px-6 py-4 text-center">
+                                    <div class="py-6 lg:py-8">
+                                        <i class="fas fa-spinner fa-spin text-neon-blue text-xl lg:text-2xl mb-2"></i>
+                                        <p class="text-text-muted text-sm lg:text-base">جاري تحميل البيانات...</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Deals Management Section -->
+        <section id="dealsSection" class="p-4 lg:p-6 space-y-4 lg:space-y-6" style="display: none;">
+            <div class="chart-container p-4 lg:p-6 rounded-xl">
+                <h3 class="text-lg lg:text-xl font-semibold text-neon-green mb-4 lg:mb-6">إدارة الصفقات المعلقة</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-xs lg:text-sm text-right text-gray-300 table-responsive mobile-stack-table">
+                        <thead class="text-xs text-gray-400 uppercase bg-gray-700">
+                            <tr>
+                                <th class="px-3 lg:px-6 py-2 lg:py-3 mobile-essential">رقم الصفقة</th>
+                                <th class="px-3 lg:px-6 py-2 lg:py-3 hidden sm:table-cell">المشتري</th>
+                                <th class="px-3 lg:px-6 py-2 lg:py-3 hidden sm:table-cell">البائع</th>
+                                <th class="px-3 lg:px-6 py-2 lg:py-3 hidden md:table-cell">الحساب</th>
+                                <th class="px-3 lg:px-6 py-2 lg:py-3 mobile-essential">المبلغ الإجمالي</th>
+                                <th class="px-3 lg:px-6 py-2 lg:py-3 hidden lg:table-cell text-green-400">مبلغ الربح</th>
+                                <th class="px-3 lg:px-6 py-2 lg:py-3 hidden lg:table-cell">التاريخ</th>
+                                <th class="px-3 lg:px-6 py-2 lg:py-3 mobile-essential">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dealsTableBody">
+                            <tr>
+                                <td colspan="7" class="px-3 lg:px-6 py-4 text-center">
+                                    <div class="py-6 lg:py-8">
+                                        <i class="fas fa-spinner fa-spin text-neon-green text-xl lg:text-2xl mb-2"></i>
+                                        <p class="text-text-muted text-sm lg:text-base">جاري تحميل البيانات...</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+     <!-- Receipt Modal -->
+    <div id="receiptModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-gray-800 rounded-lg p-4 lg:p-6 max-w-sm lg:max-w-md w-full mx-3 lg:mx-4 max-h-[90vh] overflow-y-auto modal-mobile">
+            <div class="flex justify-between items-center mb-3 lg:mb-4">
+                <h3 class="text-base lg:text-lg font-semibold text-white">إيصال الدفع</h3>
+                <button id="closeReceiptModal" class="text-gray-400 hover:text-white p-1">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
+            <div class="text-center">
+                <img id="receiptImage" src="" alt="Receipt" class="max-w-full h-auto rounded-lg">
+            </div>
+        </div>
+    </div>
+
+    <!-- Deal Details Modal -->
+    <div id="dealModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-gray-800 rounded-lg p-4 lg:p-6 max-w-sm sm:max-w-lg lg:max-w-2xl w-full mx-3 lg:mx-4 max-h-[90vh] overflow-y-auto modal-mobile">
+            <div class="flex justify-between items-center mb-3 lg:mb-4">
+                <h3 class="text-base lg:text-lg font-semibold text-white">تفاصيل الصفقة</h3>
+                <button id="closeDealModal" class="text-gray-400 hover:text-white p-1">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
+            <div id="dealDetails" class="text-gray-300 text-sm lg:text-base">
+                <!-- Deal details will be loaded here -->
+            </div>
+            <div class="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2 sm:space-x-reverse mt-4 lg:mt-6">
+                <button id="approveDeal" class="bg-neon-green text-white px-3 lg:px-4 py-2 rounded-lg hover:bg-green-600 text-sm lg:text-base">
+                    <i class="fas fa-check ml-1"></i>
+                    قبول
+                </button>
+                <button id="rejectDeal" class="bg-red-600 text-white px-3 lg:px-4 py-2 rounded-lg hover:bg-red-700 text-sm lg:text-base">
+                    <i class="fas fa-times ml-1"></i>
+                    رفض
+                </button>
+                <button id="viewConversation" class="bg-neon-blue text-white px-3 lg:px-4 py-2 rounded-lg hover:bg-neon-blue/80 text-sm lg:text-base">
+                    <i class="fas fa-comments ml-1"></i>
+                    عرض المحادثة
+                </button>
+                <button id="cancelDealModal" class="bg-gray-600 text-white px-3 lg:px-4 py-2 rounded-lg hover:bg-gray-700 text-sm lg:text-base">
+                    إلغاء
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reject Reason Modal -->
+    <div id="rejectModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-gray-800 rounded-lg p-4 lg:p-6 max-w-sm lg:max-w-md w-full mx-3 lg:mx-4 max-h-[90vh] overflow-y-auto modal-mobile">
+            <div class="flex justify-between items-center mb-3 lg:mb-4">
+                <h3 class="text-base lg:text-lg font-semibold text-white">سبب الرفض</h3>
+                <button id="closeRejectModal" class="text-gray-400 hover:text-white p-1">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
+            <textarea id="rejectReason" class="w-full p-2 lg:p-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-neon-blue text-sm lg:text-base" rows="4" placeholder="اكتب سبب الرفض..."></textarea>
+            <div class="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2 sm:space-x-reverse mt-3 lg:mt-4">
+                <button id="confirmReject" class="bg-red-600 text-white px-3 lg:px-4 py-2 rounded-lg hover:bg-red-700 text-sm lg:text-base">
+                    تأكيد الرفض
+                </button>
+                <button id="cancelReject" class="bg-gray-600 text-white px-3 lg:px-4 py-2 rounded-lg hover:bg-gray-700 text-sm lg:text-base">
+                    إلغاء
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Conversation Modal -->
+    <div id="conversationModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-2 lg:p-4">
+        <div class="bg-gray-800 rounded-lg max-w-xs sm:max-w-2xl lg:max-w-4xl w-full max-h-[95vh] lg:max-h-[90vh] flex flex-col overflow-hidden">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center p-3 lg:p-6 border-b border-gray-700">
+                <div class="flex items-center gap-2 lg:gap-4 min-w-0">
+                    <h3 class="text-base lg:text-xl font-semibold text-white truncate">محادثة الصفقة</h3>
+                    <div id="conversationDealInfo" class="text-xs lg:text-sm text-gray-400 hidden sm:block">
+                        <!-- Deal info will be loaded here -->
+                    </div>
+                </div>
+                <button id="closeConversationModal" class="text-gray-400 hover:text-white text-lg lg:text-xl p-1">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- Conversation Stats -->
+            <div id="conversationStats" class="p-2 lg:p-4 bg-gray-700/50 border-b border-gray-700">
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 lg:gap-4 text-center">
+                    <div class="bg-gray-800 rounded-lg p-2 lg:p-3">
+                        <div class="text-neon-blue text-sm lg:text-lg font-bold" id="totalMessages">0</div>
+                        <div class="text-xs text-gray-400">إجمالي الرسائل</div>
+                    </div>
+                    <div class="bg-gray-800 rounded-lg p-2 lg:p-3">
+                        <div class="text-neon-green text-sm lg:text-lg font-bold" id="buyerMessages">0</div>
+                        <div class="text-xs text-gray-400">رسائل المشتري</div>
+                    </div>
+                    <div class="bg-gray-800 rounded-lg p-2 lg:p-3">
+                        <div class="text-neon-purple text-sm lg:text-lg font-bold" id="sellerMessages">0</div>
+                        <div class="text-xs text-gray-400">رسائل البائع</div>
+                    </div>
+                    <div class="bg-gray-800 rounded-lg p-2 lg:p-3">
+                        <div class="text-neon-orange text-sm lg:text-lg font-bold" id="conversationDuration">-</div>
+                        <div class="text-xs text-gray-400">مدة المحادثة</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Search Bar -->
+            <div class="p-2 lg:p-4 border-b border-gray-700">
+                <div class="relative">
+                    <input type="text" id="messageSearch" placeholder="البحث في الرسائل..." 
+                           class="w-full bg-gray-700 text-white rounded-lg px-3 lg:px-4 py-2 pr-8 lg:pr-10 focus:outline-none focus:ring-2 focus:ring-neon-blue text-sm lg:text-base">
+                    <i class="fas fa-search absolute right-2 lg:right-3 top-2.5 lg:top-3 text-gray-400 text-sm lg:text-base"></i>
+                </div>
+            </div>
+            
+            <!-- Messages Container -->
+            <div id="messagesContainer" class="flex-1 overflow-y-auto p-2 lg:p-4 min-h-[300px] lg:min-h-[400px] max-h-[400px] lg:max-h-[500px] space-y-2 lg:space-y-3">
+                <div id="loadingMessages" class="text-center text-gray-400 py-6 lg:py-8">
+                    <i class="fas fa-spinner fa-spin text-lg lg:text-2xl mb-2"></i>
+                    <div class="text-sm lg:text-base">جاري تحميل المحادثة...</div>
+                </div>
+                <div id="noMessages" class="text-center text-gray-400 py-6 lg:py-8 hidden">
+                    <i class="fas fa-comments text-2xl lg:text-4xl mb-2 lg:mb-4 opacity-50"></i>
+                    <div class="text-sm lg:text-base">لا توجد رسائل في هذه المحادثة</div>
+                </div>
+            </div>
+            
+            <!-- Modal Footer -->
+            <div class="p-3 lg:p-6 border-t border-gray-700 bg-gray-800/50">
+                <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3">
+                    <div class="text-xs lg:text-sm text-gray-400">
+                        <span id="participantsInfo">المشاركون: </span>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-2 lg:gap-3 w-full lg:w-auto">
+                        <button id="approveFromConversation" class="bg-neon-green text-white px-3 lg:px-6 py-2 rounded-lg hover:bg-green-600 transition-all duration-200 text-sm lg:text-base">
+                            <i class="fas fa-check ml-2"></i>
+                            قبول الصفقة
+                        </button>
+                        <button id="rejectFromConversation" class="bg-red-600 text-white px-3 lg:px-6 py-2 rounded-lg hover:bg-red-700 transition-all duration-200 text-sm lg:text-base">
+                            <i class="fas fa-times ml-2"></i>
+                            رفض الصفقة
+                        </button>
+                        <button id="closeConversationModalBtn" class="bg-gray-600 text-white px-3 lg:px-6 py-2 rounded-lg hover:bg-gray-700 transition-all duration-200 text-sm lg:text-base">
+                            إغلاق
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reports Section -->
+        <section id="reportsSection" class="p-4 lg:p-6 space-y-4 lg:space-y-6" style="display: none;">
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-4 lg:mb-6">
+                <div>
+                    <h2 class="text-xl lg:text-2xl font-bold text-neon-blue mb-2 lg:mb-4">إدارة البلاغات</h2>
+                    <p class="text-text-muted mt-1 hidden lg:block">مراجعة وإدارة البلاغات المقدمة من المستخدمين</p>
+                </div>
+                <div class="flex flex-row gap-2 lg:gap-4 w-full sm:w-auto">
+                    <select id="reportStatusFilter" class="bg-card-bg border border-border-neon/30 rounded-lg px-3 py-2 text-white text-sm lg:text-base flex-1 sm:flex-none min-w-0">
+                        <option value="all">جميع البلاغات</option>
+                        <option value="pending">قيد المراجعة</option>
+                        <option value="resolved">تم الحل</option>
+                        <option value="dismissed">تم الرفض</option>
+                    </select>
+                    <button id="refreshReports" class="bg-neon-blue text-white px-3 lg:px-4 py-2 rounded-lg hover:bg-blue-600 transition-all duration-200 text-sm lg:text-base whitespace-nowrap">
+                        <i class="fas fa-sync-alt ml-1 lg:ml-2"></i>
+                        <span class="hidden sm:inline">تحديث</span>
+                        <span class="sm:hidden">تحديث</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Reports Stats -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-4 lg:mb-6">
+                <div class="stat-card p-4 lg:p-6 rounded-xl card-hover transition-all duration-300 hover:scale-105">
+                    <div class="flex items-center justify-between">
+                    <div class="flex-1 min-w-0">
+                        <p class="text-text-muted text-xs lg:text-sm truncate">إجمالي البلاغات</p>
+                        <p class="text-xl lg:text-2xl font-bold text-neon-red" id="totalReports">0</p>
+                        <p class="text-xs text-text-muted mt-1 truncate">اليوم: <span id="reportsToday">0</span></p>
+                    </div>
+                    <div class="w-10 h-10 lg:w-12 lg:h-12 bg-neon-red/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-flag text-neon-red text-sm lg:text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card p-4 lg:p-6 rounded-xl card-hover transition-all duration-300 hover:scale-105">
+                <div class="flex items-center justify-between">
+                    <div class="flex-1 min-w-0">
+                        <p class="text-text-muted text-xs lg:text-sm truncate">قيد المراجعة</p>
+                        <p class="text-xl lg:text-2xl font-bold text-neon-yellow" id="pendingReports">0</p>
+                        <p class="text-xs text-text-muted mt-1 truncate">يحتاج إجراء</p>
+                    </div>
+                    <div class="w-10 h-10 lg:w-12 lg:h-12 bg-neon-yellow/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-clock text-neon-yellow text-sm lg:text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card p-4 lg:p-6 rounded-xl card-hover transition-all duration-300 hover:scale-105">
+                <div class="flex items-center justify-between">
+                    <div class="flex-1 min-w-0">
+                        <p class="text-text-muted text-xs lg:text-sm truncate">تم الحل</p>
+                        <p class="text-xl lg:text-2xl font-bold text-neon-green" id="resolvedReports">0</p>
+                        <p class="text-xs text-text-muted mt-1 truncate">معدل الحل: <span id="resolutionRate">0%</span></p>
+                    </div>
+                    <div class="w-10 h-10 lg:w-12 lg:h-12 bg-neon-green/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-check-circle text-neon-green text-sm lg:text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card p-4 lg:p-6 rounded-xl card-hover transition-all duration-300 hover:scale-105">
+                <div class="flex items-center justify-between">
+                    <div class="flex-1 min-w-0">
+                        <p class="text-text-muted text-xs lg:text-sm truncate">متوسط وقت الحل</p>
+                        <p class="text-xl lg:text-2xl font-bold text-neon-cyan" id="avgResolutionTime">0</p>
+                        <p class="text-xs text-text-muted mt-1 truncate">ساعات</p>
+                    </div>
+                    <div class="w-10 h-10 lg:w-12 lg:h-12 bg-neon-cyan/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-stopwatch text-neon-cyan text-sm lg:text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+      <!-- Reports Table -->
+<div class="bg-card-bg rounded-xl border border-border-neon/30 overflow-hidden">
+    <div class="p-4 lg:p-6 border-b border-border-neon/30">
+        <h3 class="text-lg lg:text-xl font-semibold text-white">قائمة البلاغات</h3>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full table-responsive min-w-[800px]">
+            <thead class="bg-gray-800/50">
+                <tr>
+                    <th class="text-right p-3 lg:p-4 text-xs lg:text-sm font-medium text-text-muted uppercase tracking-wider w-20">رقم البلاغ</th>
+                    <th class="text-right p-3 lg:p-4 text-xs lg:text-sm font-medium text-text-muted uppercase tracking-wider w-24">المبلغ</th>
+                    <th class="text-right p-3 lg:p-4 text-xs lg:text-sm font-medium text-text-muted uppercase tracking-wider w-32">المحادثة</th>
+                    <th class="text-right p-3 lg:p-4 text-xs lg:text-sm font-medium text-text-muted uppercase tracking-wider w-48">السبب</th>
+                    
+                    <!-- هنا التعديل -->
+                    <th class="text-right p-3 lg:p-4 text-xs lg:text-sm font-medium text-text-muted uppercase tracking-wider w-40 min-w-[150px] whitespace-nowrap">
+                        الحالة
+                    </th>
+                    
+                    <th class="text-right p-3 lg:p-4 text-xs lg:text-sm font-medium text-text-muted uppercase tracking-wider w-28">التاريخ</th>
+                    <th class="text-right p-3 lg:p-4 text-xs lg:text-sm font-medium text-text-muted uppercase tracking-wider w-32">الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody id="reportsTableBody" class="divide-y divide-border-neon/20">
+                <tr>
+                    <td colspan="7" class="text-center p-6 lg:p-8 text-text-muted">
+                        <i class="fas fa-spinner fa-spin text-2xl lg:text-3xl mb-3 lg:mb-4"></i>
+                        <div class="text-sm lg:text-base">جاري تحميل البلاغات...</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+        <!-- Pagination -->
+        <div id="reportsPagination" class="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6">
+            <div class="text-sm text-text-muted">
+                عرض <span id="reportsStart">0</span> إلى <span id="reportsEnd">0</span> من <span id="reportsTotal">0</span> بلاغ
+            </div>
+            <div class="flex gap-2">
+                <button id="reportsPrevPage" class="px-3 py-2 bg-card-bg border border-border-neon/30 rounded-lg text-white hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm">
+                    السابق
+                </button>
+                <span id="reportsPageNumbers" class="flex gap-1">
+                    <!-- Page numbers will be inserted here -->
+                </span>
+                <button id="reportsNextPage" class="px-3 py-2 bg-card-bg border border-border-neon/30 rounded-lg text-white hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm">
+                    التالي
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Report Details Modal -->
+    <div id="reportDetailsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-card-bg rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-border-neon/30">
+            <div class="p-6 border-b border-border-neon/30">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-semibold text-white">تفاصيل البلاغ</h3>
+                    <button id="closeReportModal" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="p-6 space-y-6">
+                <div id="reportDetailsContent">
+                    <!-- Report details will be loaded here -->
+                </div>
+                <div class="border-t border-border-neon/30 pt-6">
+                    <h4 class="text-lg font-semibold text-white mb-4">إضافة ملاحظة إدارية</h4>
+                    <textarea id="adminNote" class="w-full p-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-neon-blue" rows="4" placeholder="اكتب ملاحظة إدارية..."></textarea>
+                    
+                    <!-- أزرار المحادثات -->
+                    <div class="bg-gray-800/50 border border-gray-600 rounded-lg p-4 mt-4">
+                        <h5 class="text-md font-semibold text-white mb-3 flex items-center">
+                            <i class="fas fa-comments ml-2 text-neon-blue"></i>
+                            إدارة المحادثات
+                        </h5>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <button id="viewReportedConversation" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-all duration-200 flex items-center justify-center">
+                                <i class="fas fa-eye ml-2"></i>
+                                عرض المحادثة المبلغ عنها
+                            </button>
+                            <button id="chatWithReporter" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-all duration-200 flex items-center justify-center">
+                                <i class="fas fa-user-tie ml-2"></i>
+                                محادثة المبلغ
+                            </button>
+                            <button id="chatWithReported" class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg transition-all duration-200 flex items-center justify-center">
+                                <i class="fas fa-user-shield ml-2"></i>
+                                محادثة المبلغ عنه
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- أزرار الحظر -->
+                    <div class="bg-red-900/20 border border-red-500/30 rounded-lg p-4 mt-4">
+                        <h5 class="text-md font-semibold text-white mb-3 flex items-center">
+                            <i class="fas fa-ban ml-2 text-red-400"></i>
+                            إدارة الحظر
+                        </h5>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <button id="banReporter" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-all duration-200 flex items-center justify-center">
+                                <i class="fas fa-user-slash ml-2"></i>
+                                حظر المبلغ
+                            </button>
+                            <button id="banReported" class="bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded-lg transition-all duration-200 flex items-center justify-center">
+                                <i class="fas fa-user-times ml-2"></i>
+                                حظر المبلغ عنه
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- أزرار الإجراءات -->
+                    <div class="flex flex-wrap justify-end gap-3 mt-6">
+                        <button id="releaseFundsFromReport" class="bg-yellow-500 text-white px-6 py-2 rounded-lg hover:bg-yellow-600 transition-all duration-200" title="تحرير الأموال للبائع بدون تأكيد المشتري">
+                            <i class="fas fa-money-bill-wave ml-2"></i>
+                            تحرير الأموال
+                        </button>
+                        <button id="resolveReport" class="bg-neon-green text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-all duration-200">
+                            <i class="fas fa-check ml-2"></i>
+                            حل البلاغ
+                        </button>
+                        <button id="dismissReport" class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-all duration-200">
+                            <i class="fas fa-times ml-2"></i>
+                            رفض البلاغ
+                        </button>
+                        <button id="saveNote" class="bg-neon-blue text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-all duration-200">
+                            <i class="fas fa-save ml-2"></i>
+                            حفظ الملاحظة
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report Conversation Modal -->
+    <div id="reportConversationModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+        <div id="reportConversationModalContent">
+            <!-- Report conversation content will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Admin Chat Modal -->
+    <div id="adminChatModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+        <div id="adminChatModalContent">
+            <!-- Admin chat content will be loaded here -->
+        </div>
+    </div>
+
+    <script src="js/admin-dashboard.js"></script>
+</body>
+</html>

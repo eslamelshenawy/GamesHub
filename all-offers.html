@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>جميع العروض - GamesHub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/index.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            'tajawal': ['Tajawal', 'sans-serif']
+          },
+          colors: {
+            'bg-dark': '#0a0a0a',
+            'neon-blue': '#00d4ff',
+            'neon-purple': '#8b5cf6',
+            'neon-green': '#00ff88'
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="font-tajawal bg-bg-dark text-white min-h-screen">
+  <!-- Toast Message -->
+  <div id="toast" class="fixed top-4 right-4 z-50 bg-neon-blue text-black px-6 py-3 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 font-semibold" style="display: none;"></div>
+
+  <!-- Overlay -->
+  <div id="overlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 opacity-0 pointer-events-none transition-opacity duration-300"></div>
+
+  <!-- Sidebar Container -->
+  <div id="sidebar-container" class="fixed inset-y-0 right-0 z-50 w-80 bg-gradient-to-b from-bg-dark via-bg-dark/95 to-bg-dark border-l border-white/10 backdrop-blur-xl transform translate-x-full transition-transform duration-300 ease-out">
+    <!-- Sidebar content will be loaded here -->
+  </div>
+
+  <!-- Main Wrapper -->
+  <div class="main-wrapper transition-transform duration-300 ease-out">
+    <!-- Mobile Topbar -->
+    <div class="md:hidden bg-bg-dark/90 backdrop-blur-xl border-b border-white/10 px-4 py-3 sticky top-0 z-30">
+      <div class="flex items-center justify-between">
+        <button id="mobile-menu-btn" class="p-2 rounded-lg hover:bg-white/10 transition-colors duration-200">
+          <i class="fa fa-bars text-xl"></i>
+        </button>
+        <h1 class="text-lg font-bold bg-gradient-to-r from-neon-purple to-neon-blue bg-clip-text text-transparent">
+          GamesHub
+        </h1>
+        <button class="mobile-search-btn p-2 rounded-lg transition-all duration-300">
+          <i class="fa fa-search text-xl"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Desktop Header -->
+    <header class="hidden md:flex items-center justify-between px-6 py-4 bg-bg-dark/90 backdrop-blur-xl border-b border-white/10 sticky top-0 z-30">
+      <div class="flex items-center gap-8">
+        <h1 class="text-2xl font-bold">
+          <span class="bg-gradient-to-r from-neon-purple to-neon-blue bg-clip-text text-transparent">GamesHub</span>
+        </h1>
+        <nav class="flex items-center gap-6">
+          <a href="index.html" class="text-white/70 hover:text-neon-blue transition-colors duration-200">الرئيسية</a>
+          <a href="all-offers.html" class="text-neon-blue font-semibold">جميع العروض</a>
+          <a href="#" class="text-white/70 hover:text-neon-blue transition-colors duration-200" onclick="showPlaceholder()">كيف تعمل</a>
+          <a href="contact.html" class="text-white/70 hover:text-neon-blue transition-colors duration-200">اتصل بنا</a>
+        </nav>
+      </div>
+
+      <!-- Search elements removed as requested -->
+
+      <div class="flex items-center gap-3">
+        <a href="add-account.html" class="px-4 py-2 rounded-lg neon-btn text-black text-sm transition-colors duration-200" onclick="showPlaceholder()">
+          أضف حسابك
+        </a>
+        <a href="login.html" class="px-3 py-1.5 rounded-lg border border-white/10 hover:border-neon-blue/50 transition-colors duration-200 text-sm" onclick="try{sessionStorage.setItem('post_auth_return', window.location.pathname+window.location.search+window.location.hash);}catch(e){} window.location.href='login.html'">
+          تسجيل دخول
+        </a>
+      </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="relative px-4 py-8 md:px-6 md:py-12">
+      <div class="absolute inset-0 bg-gradient-to-br from-neon-purple/10 via-transparent to-neon-blue/10 rounded-xl"></div>
+      
+      <div class="relative max-w-7xl mx-auto">
+        <div class="text-center mb-8">
+          <h1 class="text-2xl md:text-4xl font-bold mb-4 leading-tight">
+            <span class="bg-gradient-to-r from-neon-purple via-neon-blue to-neon-green bg-clip-text text-transparent">
+              جميع العروض المتاحة
+            </span>
+          </h1>
+          <p class="text-base md:text-lg text-white/80 mb-6 max-w-2xl mx-auto">
+            تصفح جميع حسابات الألعاب المتاحة للبيع والشراء
+          </p>
+        </div>
+
+        <!-- Mobile search elements removed as requested -->
+      </div>
+    </section>
+
+    <!-- All Listings -->
+    <section class="px-4 py-8 md:px-8 md:py-12">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
+          <div>
+            <h2 class="text-2xl md:text-3xl font-bold mb-2">
+              <span class="bg-gradient-to-r from-neon-purple to-neon-blue bg-clip-text text-transparent">
+                جميع العروض
+              </span>
+            </h2>
+            <p class="text-white/70">تصفح جميع الحسابات المتاحة</p>
+          </div>
+          <div class="flex items-center gap-4">
+            <div class="text-sm text-white/60 bg-white/5 px-4 py-2 rounded-xl border border-white/10">
+              عرض <span id="count" class="text-neon-blue font-semibold">0</span> نتيجة
+            </div>
+          </div>
+        </div>
+
+        <!-- Enhanced grid of cards -->
+        <div id="cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
+          <!-- Cards will be dynamically inserted here -->
+        </div>
+        
+        <!-- Load more button -->
+        <div id="load-more-container" class="text-center mt-8" style="display: none;">
+          <button id="load-more-btn" class="px-6 py-2.5 rounded-lg border border-neon-blue/30 text-neon-blue text-sm hover:bg-neon-blue/10 hover:border-neon-blue/50 transition-colors duration-200">
+            <i class="fa fa-plus ml-2"></i>
+            عرض المزيد
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Enhanced Footer -->
+    <footer class="relative mt-20">
+      <div class="absolute inset-0 bg-gradient-to-t from-bg-dark via-bg-dark/95 to-transparent"></div>
+      
+      <div class="relative border-t border-white/10 px-4 py-12 md:px-8 md:py-16">
+        <div class="max-w-7xl mx-auto">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+            <div class="lg:col-span-2">
+              <h4 class="text-2xl font-bold bg-gradient-to-r from-neon-purple to-neon-blue bg-clip-text text-transparent mb-4">
+                GamesHub
+              </h4>
+              <p class="text-white/70 text-lg leading-relaxed mb-6">
+                منصة وسيط موثوقة لبيع وشراء حسابات الألعاب — آمنة وسهلة ومضمونة للمستخدمين العرب
+              </p>
+            </div>
+            
+            <div>
+              <h5 class="font-bold text-white mb-4">روابط سريعة</h5>
+              <div class="space-y-3">
+                <a href="index.html" class="block text-white/70 hover:text-neon-blue transition-colors duration-300">الرئيسية</a>
+                <a href="all-offers.html" class="block text-neon-blue">جميع العروض</a>
+                <a href="#" class="block text-white/70 hover:text-neon-blue transition-colors duration-300">كيف تعمل المنصة</a>
+                <a href="contact.html" class="block text-white/70 hover:text-neon-blue transition-colors duration-300">اتصل بنا</a>
+              </div>
+            </div>
+            
+            <div>
+              <h5 class="font-bold text-white mb-4">قانوني</h5>
+              <div class="space-y-3">
+                <a href="privacy.html" class="block text-white/70 hover:text-neon-blue transition-colors duration-300">سياسة الخصوصية</a>
+                <a href="Terms-of-Use.html" class="block text-white/70 hover:text-neon-blue transition-colors duration-300">شروط الاستخدام</a>
+                <a href="contact.html" class="block text-white/70 hover:text-neon-blue transition-colors duration-300">اتصل بنا</a>
+              </div>
+            </div>
+          </div>
+          
+          <div class="pt-8 border-t border-white/10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <p class="text-white/60 text-sm">
+              © 2024 GamesHub. جميع الحقوق محفوظة.
+            </p>
+            <div class="flex items-center gap-4 text-sm text-white/60">
+              <span>صُنع بـ</span>
+              <i class="fa fa-heart text-red-500"></i>
+              <span>للمجتمع العربي</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- JS -->
+  <script src="js/hinex.js"></script>
+  <script src="js/sidebar.js"></script>
+  <script src="js/online-status.js"></script>
+  <script src="js/ban-check.js"></script>
+  <script>
+    // Override filter function for mobile filter
+    document.addEventListener('DOMContentLoaded', function(){
+      document.getElementById('filter-game-mobile')?.addEventListener('change', function(){
+        // Sync with desktop filter
+        var desktopFilter = document.getElementById('filter-game');
+        if (desktopFilter) {
+          desktopFilter.value = this.value;
+        }
+        filterCards();
+      });
+    });
+    
+    var PHP_BUYER_ID = "";
+  </script>
+</body>
+</html>

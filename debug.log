@@ -1,0 +1,834 @@
+{"payment_method":"istapay","amount":"350"}
+{"payment_method":"vodafone_cash","amount":"350"}
+{"payment_method":"istapay","amount":"350"}
+{"payment_method":"istapay","amount":"3500","to_id":37}
+[process_payment] PDOException: There is no active transaction
+{"payment_method":"istapay","amount":"850","to_id":37}
+[process_payment] PDOException: There is no active transaction
+{"payment_method":"vodafone_cash","amount":"850","to_id":37}
+[process_payment] PDOException: There is no active transaction
+{"payment_method":"istapay","amount":"600","to_id":36}
+[process_payment] PDOException: There is no active transaction
+{"payment_method":"istapay","amount":"6000","to_id":37}
+[process_payment] PDOException: There is no active transaction
+{"payment_method":"istapay","amount":"120000","to_id":36}
+{"payment_method":"istapay","amount":"11999","to_id":36}
+[process_payment] PDOException: There is no active transaction
+{"payment_method":"istapay","amount":"50","to_id":37}
+[process_payment] PDOException: There is no active transaction
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"50","to_id":36}
+[debug] payment_method=istapay, amount=50, from_id=37, to_id=36
+[debug] Before beginTransaction
+[debug] After beginTransaction
+[debug] from_wallet: {"balance":"51.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"39699.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] Exception caught: There is no active transaction
+[process_payment] PDOException: There is no active transaction
+[debug] Error response sent
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"50","to_id":37}
+[debug] payment_method=istapay, amount=50, from_id=36, to_id=37
+[debug] Before beginTransaction
+[debug] After beginTransaction
+[debug] from_wallet: {"balance":"39749.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"1.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] Exception caught: There is no active transaction
+[process_payment] PDOException: There is no active transaction
+[debug] Error response sent
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"50","to_id":37}
+[debug] payment_method=istapay, amount=50, from_id=36, to_id=37
+[debug] Before beginTransaction
+[debug] After beginTransaction
+[debug] from_wallet: {"balance":"39699.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"51.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] Exception caught: There is no active transaction
+[process_payment] PDOException: There is no active transaction
+[debug] Error response sent
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"50","to_id":36}
+[debug] payment_method=istapay, amount=50, from_id=37, to_id=36
+[debug] Before beginTransaction
+[debug] After beginTransaction
+[debug] from_wallet: {"balance":"101.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"39649.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] Exception caught: There is no active transaction
+[process_payment] PDOException: There is no active transaction
+[debug] Error response sent
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"300","to_id":37}
+[debug] payment_method=istapay, amount=300, from_id=36, to_id=37
+[debug] Before beginTransaction
+[debug] After beginTransaction
+[debug] from_wallet: {"balance":"39699.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"51.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] Exception caught: There is no active transaction
+[process_payment] PDOException: There is no active transaction
+[debug] Error response sent
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"300","to_id":36}
+[debug] payment_method=istapay, amount=300, from_id=37, to_id=36
+[debug] Before beginTransaction
+[debug] After beginTransaction
+[debug] from_wallet: {"balance":"351.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"39399.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] Exception caught: There is no active transaction
+[process_payment] PDOException: There is no active transaction
+[debug] Error response sent
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"300","to_id":37}
+[debug] payment_method=istapay, amount=300, from_id=36, to_id=37
+[debug] Before beginTransaction
+[debug] After beginTransaction
+[debug] from_wallet: {"balance":"39699.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"51.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] Exception caught: There is no active transaction
+[process_payment] PDOException: There is no active transaction
+[debug] Error response sent
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"30","to_id":36}
+[debug] payment_method=istapay, amount=30, from_id=37, to_id=36
+[debug] Before beginTransaction
+[debug] After beginTransaction
+[debug] from_wallet: {"balance":"351.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"39399.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] Exception caught: There is no active transaction
+[process_payment] PDOException: There is no active transaction
+[debug] Error response sent
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"10","to_id":36}
+[debug] payment_method=istapay, amount=10, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"321.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"39429.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] Exception caught: There is no active transaction
+[process_payment] PDOException: There is no active transaction
+[debug] Error response sent
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"20","to_id":36}
+[debug] payment_method=istapay, amount=20, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"311.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"39439.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] Exception caught: There is no active transaction
+[process_payment] PDOException: There is no active transaction
+[debug] Error response sent
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"30","to_id":36}
+[debug] payment_method=istapay, amount=30, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"291.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"39459.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"60","to_id":36}
+[debug] payment_method=istapay, amount=60, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"261.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"39489.00"}
+[debug] Added to receiver wallet
+[debug] Awaiting user confirmation
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"60","to_id":36}
+[debug] payment_method=istapay, amount=60, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"261.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"39489.00"}
+[debug] Added to receiver wallet
+[debug] Awaiting user confirmation
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"60","to_id":36}
+[debug] payment_method=istapay, amount=60, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"261.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"39489.00"}
+[debug] Added to receiver wallet
+[debug] Awaiting user confirmation
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"60","to_id":36}
+[debug] payment_method=istapay, amount=60, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"261.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"39489.00"}
+[debug] Added to receiver wallet
+[debug] Awaiting user confirmation
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"60","to_id":36}
+[debug] payment_method=istapay, amount=60, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"261.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"39489.00"}
+[debug] Added to receiver wallet
+[debug] Awaiting user confirmation
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"60","to_id":36}
+[debug] payment_method=istapay, amount=60, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"261.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"39489.00"}
+[debug] Added to receiver wallet
+[debug] Awaiting user confirmation
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"60","to_id":36}
+[debug] payment_method=istapay, amount=60, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"261.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"39489.00"}
+[debug] Added to receiver wallet
+[debug] Awaiting user confirmation
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"60","to_id":36}
+[debug] payment_method=istapay, amount=60, from_id=37, to_id=36
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"60","to_id":36}
+[debug] payment_method=istapay, amount=60, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"261.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"39489.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"39000","to_id":35}
+[debug] payment_method=istapay, amount=39000, from_id=36, to_id=35
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"39549.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"500.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"100","to_id":36}
+[debug] payment_method=istapay, amount=100, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"201.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"549.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"100","to_id":36}
+[debug] payment_method=istapay, amount=100, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"101.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"639.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"100","to_id":37}
+[debug] payment_method=istapay, amount=100, from_id=36, to_id=37
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"729.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"1.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"10","to_id":36}
+[debug] payment_method=istapay, amount=10, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"91.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"629.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"100","to_id":37}
+[debug] payment_method=istapay, amount=100, from_id=36, to_id=37
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"638.00"}
+[debug] Deducted from sender wallet (pending)
+[debug] payments table checked/created
+[debug] Exception caught: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'amount_after_fee' in 'field list'
+[debug] No active transaction to roll back
+[process_payment] PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'amount_after_fee' in 'field list'
+[debug] Error response sent
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"100","to_id":36}
+[debug] payment_method=istapay, amount=100, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"81.00"}
+[debug] Not enough balance or wallet not found
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"10","to_id":36}
+[debug] payment_method=istapay, amount=10, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"81.00"}
+[debug] Deducted from sender wallet (pending)
+[debug] payments table checked/created
+[debug] Exception caught: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'amount_after_fee' in 'field list'
+[debug] No active transaction to roll back
+[process_payment] PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'amount_after_fee' in 'field list'
+[debug] Error response sent
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"100","to_id":37}
+[debug] payment_method=istapay, amount=100, from_id=36, to_id=37
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"538.00"}
+[debug] Deducted from sender wallet (pending)
+[debug] payments table checked/created
+[debug] Exception caught: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'amount_after_fee' in 'field list'
+[debug] No active transaction to roll back
+[process_payment] PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'amount_after_fee' in 'field list'
+[debug] Error response sent
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"100","to_id":37}
+[debug] payment_method=istapay, amount=100, from_id=36, to_id=37
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"438.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"71.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"10","to_id":36}
+[debug] payment_method=istapay, amount=10, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"161.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"338.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"10","to_id":36}
+[debug] payment_method=istapay, amount=10, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"151.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"347.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"10","to_id":36}
+[debug] payment_method=istapay, amount=10, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"141.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"357.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"10","to_id":36}
+[debug] payment_method=istapay, amount=10, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"131.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"367.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"10","to_id":36}
+[debug] payment_method=istapay, amount=10, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"121.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"377.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"10","to_id":36}
+[debug] payment_method=istapay, amount=10, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"111.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"387.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"10","to_id":36}
+[debug] payment_method=istapay, amount=10, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"101.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"397.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"30","to_id":37}
+[debug] payment_method=istapay, amount=30, from_id=36, to_id=37
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"407.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"91.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"200","to_id":37}
+[debug] payment_method=istapay, amount=200, from_id=36, to_id=37
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"377.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"121.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"100","to_id":37}
+[debug] payment_method=istapay, amount=100, from_id=36, to_id=37
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"400.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"400.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"200","to_id":37}
+[debug] payment_method=istapay, amount=200, from_id=36, to_id=37
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"300.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"500.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"200","to_id":36}
+[debug] payment_method=istapay, amount=200, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"700.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"100.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"100","to_id":37}
+[debug] payment_method=istapay, amount=100, from_id=36, to_id=37
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"300.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"500.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"100","to_id":36}
+[debug] payment_method=istapay, amount=100, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"600.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"200.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"200","to_id":37}
+[debug] payment_method=istapay, amount=200, from_id=36, to_id=37
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"300.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"500.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"10","to_id":37}
+[debug] payment_method=istapay, amount=10, from_id=36, to_id=37
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"100.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"700.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"10","to_id":36}
+[debug] payment_method=istapay, amount=10, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"710.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"90.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"200","to_id":36}
+[debug] payment_method=istapay, amount=200, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"700.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"100.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"100","to_id":36}
+[debug] payment_method=istapay, amount=100, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"500.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"300.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"50","to_id":36}
+[debug] payment_method=istapay, amount=50, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"400.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"400.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"50","to_id":37}
+[debug] payment_method=istapay, amount=50, from_id=36, to_id=37
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"450.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"350.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"10","to_id":37}
+[debug] payment_method=istapay, amount=10, from_id=36, to_id=37
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"400.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"400.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"10","to_id":36}
+[debug] payment_method=istapay, amount=10, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"410.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"390.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"10","to_id":36}
+[debug] payment_method=istapay, amount=10, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"400.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"400.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"30","to_id":37}
+[debug] payment_method=istapay, amount=30, from_id=36, to_id=37
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"410.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"390.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"10","to_id":36}
+[debug] payment_method=istapay, amount=10, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"420.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"380.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"10","to_id":36}
+[debug] payment_method=istapay, amount=10, from_id=37, to_id=36
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"410.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"390.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"10","to_id":39}
+[debug] payment_method=istapay, amount=10, from_id=37, to_id=39
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"400.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: false
+[debug] Created new wallet for receiver
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"190","to_id":39}
+[debug] payment_method=istapay, amount=190, from_id=37, to_id=39
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"390.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"10.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"100","to_id":35}
+[debug] payment_method=istapay, amount=100, from_id=39, to_id=35
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"180.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"39500.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"30","to_id":37}
+[debug] payment_method=istapay, amount=30, from_id=40, to_id=37
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"500.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"220.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"vodafone_cash","amount":"200","to_id":41}
+[debug] payment_method=vodafone_cash, amount=200, from_id=41, to_id=41
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: false
+[debug] Not enough balance or wallet not found
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"vodafone_cash","amount":"200","to_id":41}
+[debug] payment_method=vodafone_cash, amount=200, from_id=41, to_id=41
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"10000.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"9800.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"vodafone_cash","amount":"1000","to_id":41}
+[debug] payment_method=vodafone_cash, amount=1000, from_id=44, to_id=41
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"10000.00"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"29900.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"20","to_id":44}
+[debug] payment_method=istapay, amount=20, from_id=46, to_id=44
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: false
+[debug] Not enough balance or wallet not found
+[debug] Start process_payment.php
+[debug] Decoded input: {"payment_method":"istapay","amount":"20","to_id":46}
+[debug] payment_method=istapay, amount=20, from_id=44, to_id=46
+[debug] Starting transaction
+[debug] Transaction started
+[debug] from_wallet: {"balance":"9999999999.99"}
+[debug] Deducted from sender wallet
+[debug] to_wallet: {"balance":"999980.00"}
+[debug] Added to receiver wallet
+[debug] payments table checked/created
+[debug] Payment record inserted
+[debug] No active transaction to commit
+[debug] Response sent successfully

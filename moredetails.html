@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>تفاصيل الحساب — GamesHub</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        neonBlue: '#00f7ff',
+                        neonGreen: '#39ff14',
+                        neonPink: '#ff00ff'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+
+ <link rel="stylesheet" href="css/moredetails.css">
+</head>
+<body>
+
+<div id="toast" class="toast">تم الإضافة إلى المفضلة بنجاح! ❤️</div>
+
+<div id="overlay" class="fixed inset-0 bg-black bg-opacity-60 hidden z-40" onclick="closeSidebar()"></div>
+
+
+
+<div id="sidebar-container"></div>
+<!-- تمت إزالة أي كود تحميل sidebar مكرر، الصفحة تعتمد الآن فقط على js/sidebar.js -->
+
+<div class="min-h-screen md:mr-64 relative z-10">
+
+    <header class="p-4 flex items-center justify-between md:hidden">
+        <div class="flex items-center gap-3">
+            <button class="p-2 rounded-lg border border-white/6" onclick="openSidebar()"><i class="fa fa-bars text-xl"></i></button>
+            <a href="#" class="text-xl font-bold">GamesHub</a>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="#" class="px-3 py-2 rounded-lg border border-white/6" onclick="try{sessionStorage.setItem('post_auth_return', window.location.pathname+window.location.search+window.location.hash);}catch(e){} window.location.href='login.html'">تسجيل دخول</a>
+        </div>
+    </header>
+
+    <header class="hidden md:flex items-center justify-between px-8 py-6 border-b border-white/6">
+        <div class="flex items-center gap-6">
+       
+        </div>
+            <div class="flex items-center gap-4">
+                <a href="add-account.html" class="px-4 py-2 rounded-lg neon-btn text-black font-semibold">أضف حسابك</a>
+                <a href="#" class="px-3 py-2 rounded-lg border border-white/6" onclick="try{sessionStorage.setItem('post_auth_return', window.location.pathname+window.location.search+window.location.hash);}catch(e){} window.location.href='login.html'">تسجيل دخول</a>
+            </div>
+    </header>
+
+    <div class="p-4 md:p-8 max-w-6xl mx-auto">
+        
+        <div class="card-bg rounded-xl p-4 md:p-8 shadow-lg">
+            <div class="grid md:grid-cols-2 gap-8">
+                
+                <div>
+                    <div class="w-full h-80 md:h-[400px] rounded-lg overflow-hidden mb-4">
+                        <img id="main-image" src="" alt="Main Account Image" class="w-full h-full object-cover transition-all duration-300">
+                    </div>
+                    <div id="image-carousel" class="flex gap-2 image-carousel overflow-x-auto pb-2"></div>
+                </div>
+
+                <div class="flex flex-col">
+                    <div class="flex items-center justify-between mb-2">
+                        <span id="game-name" class="text-xs font-semibold px-2 py-1 rounded-md" style="background-color:rgba(0,0,0,0.5)"></span>
+                        <button id="favorite-btn" class="text-2xl text-red-500 hover:text-red-700 transition"><i class="fa-regular fa-heart"></i></button>
+                    </div>
+                    <h1 id="account-title" class="text-3xl font-bold mb-2"></h1>
+                    <div class="flex items-center gap-2 mb-4" id="account-meta"></div>
+                    <p id="account-price" class="text-xl font-bold mb-4" style="color:var(--neon-blue)"></p>
+                    <div class="mb-6">
+                        <h2 class="font-bold text-lg mb-2">وصف الحساب</h2>
+                        <p id="account-desc" class="muted leading-relaxed"></p>
+                    </div>
+
+                    <div class="mt-auto flex flex-col sm:flex-row gap-4">
+                        <button class="w-full px-6 py-4 rounded-lg neon-btn text-black font-bold text-lg hover:opacity-80 transition" onclick="contactSeller()">
+                            <i class="fa fa-comments ml-2"></i> تواصل مع البائع
+                        </button>
+                 
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+        <!-- Chat modal -->
+        <div id="chat-modal" class="fixed inset-0 hidden items-center justify-center z-50 bg-black bg-opacity-60">
+            <div class="bg-[#0b0f14] w-full max-w-md mx-4 rounded-xl p-4 card-bg">
+                <div class="flex items-center justify-between mb-3">
+                    <h4 class="font-bold">محادثة مع البائع</h4>
+                    <button id="chat-modal-close" class="text-white/80"><i class="fa fa-times"></i></button>
+                </div>
+                <div id="chat-modal-messages" class="h-48 overflow-y-auto mb-3 p-2 border border-white/5 rounded-md"></div>
+                <form id="chat-modal-form" class="flex gap-2" onsubmit="sendToSeller(event)">
+                    <input type="hidden" id="chat-modal-seller-id" name="seller_id" value="">
+                    <input id="chat-modal-input" name="message" class="flex-1 p-2 rounded-lg bg-transparent border border-white/6" placeholder="اكتب رسالة...">
+                    <button type="submit" class="px-4 py-2 rounded-lg neon-btn text-black">إرسال</button>
+                </form>
+            </div>
+        </div>
+
+        <footer class="p-4 md:p-8 border-t border-white/6 mt-6">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row md:justify-between gap-4">
+            <div>
+                <h4 class="font-bold">GamesHub</h4>
+                <p class="muted text-sm">منصة وسيط لبيع وشراء حسابات الألعاب — آمنة وسهلة</p>
+            </div>
+            <div class="flex gap-3 items-center">
+                <a href="#" class="muted text-sm">سياسة الخصوصية</a>
+                <a href="#" class="muted text-sm">شروط الاستخدام</a>
+                <a href="#" class="muted text-sm">اتصل بنا</a>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+<script>
+// جلب بيانات الإعلان ديناميكيًا
+function getIdFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('id');
+}
+function renderAccountDetails(acc) {
+    // الصور
+    const mainImage = document.getElementById('main-image');
+    const carousel = document.getElementById('image-carousel');
+    if (acc.images && acc.images.length > 0) {
+        mainImage.src = acc.images[0];
+        mainImage.onerror = function(){ this.onerror=null; this.src='uploads/default-avatar.svg'; };
+        carousel.innerHTML = '';
+        acc.images.forEach((img, idx) => {
+            const imgEl = document.createElement('img');
+            imgEl.src = img;
+            imgEl.onerror = function(){ this.onerror=null; this.src='uploads/default-avatar.svg'; };
+            imgEl.className = 'w-24 h-24 rounded-lg object-cover border ' + (idx === 0 ? 'border-white/20 active-thumbnail' : 'border-transparent');
+            imgEl.onclick = function() {
+                mainImage.src = img;
+                document.querySelectorAll('#image-carousel img').forEach(e=>e.classList.remove('border-white/20','active-thumbnail'));
+                imgEl.classList.add('border-white/20','active-thumbnail');
+            };
+            carousel.appendChild(imgEl);
+        });
+    } else {
+        mainImage.src = 'uploads/default-avatar.svg';
+        carousel.innerHTML = '';
+    }
+    // ensure seller id is available for contact flow
+    try {
+        const hidden = document.getElementById('chat-modal-seller-id');
+        if (hidden) hidden.value = acc.user_id || acc.seller_id || acc.owner_id || '';
+    } catch(e){}
+    try {
+        window.CURRENT_SELLER_ID = acc.user_id || acc.seller_id || acc.owner_id || null;
+    } catch(e){}
+    // باقي التفاصيل
+    document.getElementById('game-name').textContent = acc.game_name || '';
+    document.getElementById('account-title').textContent = acc.game_name ? `حساب ${acc.game_name}` : '';
+    document.getElementById('account-meta').innerHTML = '';
+    document.getElementById('account-price').textContent = acc.price ? `$${acc.price}` : '';
+    document.getElementById('account-desc').textContent = acc.description || '';
+    // زر المفضلة
+    const favBtn = document.getElementById('favorite-btn');
+    const favIcon = favBtn.querySelector('i');
+    if(acc.is_favorite){
+        favIcon.className = 'fas fa-heart';
+    } else {
+        favIcon.className = 'fa-regular fa-heart';
+    }
+    favBtn.onclick = function(){
+        try {
+            const currentlyFav = favIcon.classList.contains('fas');
+            const setFavUI = (fav) => {
+                favIcon.className = fav ? 'fas fa-heart' : 'fa-regular fa-heart';
+            };
+            // optimistic UI
+            setFavUI(!currentlyFav);
+
+            // get CSRF then toggle
+            fetch('api/get_csrf.php', { credentials: 'include' })
+            .then(r => r.json())
+            .then(csrfData => {
+                const csrf = csrfData && csrfData.csrf_token ? csrfData.csrf_token : '';
+                return fetch('api/favorite.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ account_id: acc.id, csrf_token: csrf }),
+                    credentials: 'include'
+                });
+            })
+            .then(res => {
+                if (res.status === 401) {
+                    // not logged in -> revert and redirect
+                    setFavUI(currentlyFav);
+                    try { sessionStorage.setItem('post_auth_return', window.location.pathname + window.location.search + window.location.hash); } catch(e) {}
+                    window.location.href = 'login.html';
+                    throw new Error('unauthenticated');
+                }
+                return res.json();
+            })
+            .then(data => {
+                if (!data || !data.success) {
+                    setFavUI(currentlyFav);
+                    showPlaceholder(data && data.error ? data.error : (data && data.message ? data.message : 'فشل تحديث المفضلة'));
+                } else {
+                    if (typeof data.favorited !== 'undefined') setFavUI(!!data.favorited);
+                    showPlaceholder(data.message || (data.favorited ? 'تمت الإضافة إلى المفضلة!' : 'تمت الإزالة من المفضلة!'));
+                }
+            })
+            .catch(err => {
+                if (err && err.message === 'unauthenticated') return;
+                setFavUI(currentlyFav);
+                console.error('favorite toggle error', err);
+                showPlaceholder('خطأ في الاتصال بالخادم');
+            });
+        } catch(e) { console.error(e); }
+    };
+        // also set the contact button's data-seller attribute for direct usage
+        try {
+            const contactBtn = document.querySelector('button[onclick="contactSeller()"]');
+            if (contactBtn && acc.user_id) contactBtn.dataset.sellerId = acc.user_id;
+            // also set explicit click handler to pass seller id
+            if (contactBtn && acc.user_id) contactBtn.onclick = function(){ contactSeller(acc.user_id); };
+        } catch(e){}
+}
+window.addEventListener('DOMContentLoaded', function(){
+    const id = getIdFromUrl();
+    if(!id){
+        showPlaceholder('لا يوجد إعلان محدد');
+        return;
+    }
+    fetch('api/get_account.php?id='+id)
+        .then(res => res.json())
+        .then(acc => {
+            if(acc && !acc.error){
+                // store globally so contactSeller() can access the seller info
+                try {
+                    // normalize common owner field names to user_id for consistency
+                    if (!acc.user_id) {
+                        acc.user_id = acc.seller_id || acc.owner_id || acc.userId || acc.ownerId || acc.sellerId || acc.uid || null;
+                    }
+                    window.SELECTED_ACCOUNT = acc;
+                        // also set the contact button's data-seller attribute for direct usage
+                        try {
+                            const contactBtn = document.querySelector('button[onclick="contactSeller()"]');
+                            if (contactBtn && acc.user_id) contactBtn.dataset.sellerId = acc.user_id;
+                        } catch(e){}
+                } catch(e) { console.error('select account assign error', e); }
+                renderAccountDetails(acc);
+            } else {
+                showPlaceholder(acc.error || 'الإعلان غير موجود');
+            }
+        })
+        .catch(()=>showPlaceholder('خطأ في الاتصال بالخادم'));
+    // if we returned from login and requested to open chat, handle it
+    try {
+        const openChatRaw = sessionStorage.getItem('open_chat_after_login');
+        if (openChatRaw) {
+            try { sessionStorage.removeItem('open_chat_after_login'); } catch(e){}
+            const data = JSON.parse(openChatRaw);
+            // only auto-open if we're still on the same account page
+            if (data && data.seller_id) {
+                // ensure SELECTED_ACCOUNT is set (fetch may still be pending) - try immediate open or delay
+                const tryOpen = () => {
+                    const acc = window.SELECTED_ACCOUNT;
+                    if (acc && (acc.user_id == data.seller_id || acc.seller_id == data.seller_id)) {
+                        openChatModal(data.seller_id, data.displayName || acc.user_name || acc.username || 'البائع');
+                        return true;
+                    }
+                    return false;
+                };
+                if (!tryOpen()) {
+                    // retry a few times while account loads
+                    let attempts = 0;
+                    const iv = setInterval(() => {
+                        attempts++;
+                        if (tryOpen() || attempts > 10) clearInterval(iv);
+                    }, 300);
+                }
+            }
+        }
+    } catch(e){}
+});
+</script>
+<script src="js/moredetails.js"></script>
+<script src="js/sidebar.js"></script>
+<script src="js/online-status.js"></script>
+</body>
+</html>

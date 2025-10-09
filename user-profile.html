@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>صفحة المستخدم — GamesHub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'neon-blue': '#00d4ff',
+                        'neon-purple': '#9b59ff',
+                        'neon-green': '#32ff7e',
+                        'neon-pink': '#ff6b9d',
+                        'neon-yellow': '#ffd93d',
+                        'neon-orange': '#ff8c42',
+                        'neon-cyan': '#4ecdc4',
+                        'neon-red': '#ff5757',
+                        'neon-teal': '#26d0ce',
+                        'neon-lime': '#a8e6cf',
+                        'neon-indigo': '#667eea',
+                        'neon-rose': '#f093fb'
+                    },
+                    fontFamily: {
+                        'tajawal': ['Tajawal', 'sans-serif']
+                    },
+                    animation: {
+                        'gradientShift': 'gradientShift 3s ease infinite',
+                        'float': 'float 3s ease-in-out infinite',
+                        'pulse-glow': 'pulseGlow 2s ease-in-out infinite'
+                    },
+                    keyframes: {
+                        gradientShift: {
+                            '0%, 100%': { 'background-position': '0% 50%' },
+                            '50%': { 'background-position': '100% 50%' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { 'box-shadow': '0 0 5px rgba(0, 212, 255, 0.3)' },
+                            '50%': { 'box-shadow': '0 0 20px rgba(0, 212, 255, 0.6), 0 0 30px rgba(155, 89, 255, 0.4)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    <link rel="stylesheet" href="css/massages.css">
+</head>
+<body class="font-tajawal bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white min-h-screen">
+<div id="toast" class="toast">ميزة قريبا! ✨</div>
+<div id="overlay" class="fixed inset-0 bg-black bg-opacity-60 hidden z-40"></div>
+<div id="sidebar-container"></div>
+<div class="min-h-screen md:mr-64 relative z-10">
+    <header class="sticky top-0 z-30 p-4 flex items-center justify-between md:hidden backdrop-blur-md bg-black/20 border-b border-white/10">
+        <div class="flex items-center gap-3">
+            <button class="p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300" onclick="openSidebar()">
+                <i class="fa fa-bars text-xl"></i>
+            </button>
+            <a href="index.html" class="text-xl font-bold gradient-text">GamesHub</a>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="login.html" class="px-4 py-2 rounded-xl bg-gradient-to-r from-neon-purple/20 to-neon-blue/20 border border-white/10 hover:from-neon-purple/30 hover:to-neon-blue/30 transition-all duration-300 text-sm font-medium" onclick="try{sessionStorage.setItem('post_auth_return', window.location.pathname+window.location.search+window.location.hash);}catch(e){}">
+                <span class="gradient-text">تسجيل دخول</span>
+            </a>
+        </div>
+    </header>
+    <header class="hidden md:flex sticky top-0 z-30 p-4 items-center justify-between backdrop-blur-md bg-black/20 border-b border-white/10">
+        <div class="flex items-center gap-4">
+            <a href="index.html" class="text-2xl font-bold gradient-text">GamesHub</a>
+            <!-- Search elements removed as requested -->
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="add-account.html" class="px-6 py-3 rounded-xl bg-gradient-to-r from-neon-blue/20 to-neon-purple/20 border border-white/10 hover:from-neon-blue/30 hover:to-neon-purple/30 transition-all duration-300 font-medium">
+                <span class="gradient-text">إضافة حساب</span>
+            </a>
+            <a href="login.html" class="px-6 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300 font-medium" onclick="try{sessionStorage.setItem('post_auth_return', window.location.pathname+window.location.search+window.location.hash);}catch(e){}">
+                <span class="gradient-text">تسجيل دخول</span>
+            </a>
+        </div>
+    </header>
+    <div class="p-6 md:p-12">
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl p-8 mb-8 border border-white/10 shadow-2xl">
+                <div class="flex flex-col items-center mb-8">
+                    <div class="relative mb-6">
+                        <img id="user-profile-image" src="uploads/default-avatar.svg" class="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover border-4 border-neon-blue shadow-lg animate-pulse-glow">
+                        <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-gradient-to-r from-neon-green to-neon-blue rounded-full border-2 border-white flex items-center justify-center">
+                            <i class="fa fa-check text-white text-sm"></i>
+                        </div>
+                    </div>
+                    <h1 id="user-name" class="text-4xl font-bold mb-3 gradient-text">اسم المستخدم</h1>
+                    <p id="user-bio" class="text-gray-300 text-center max-w-2xl text-lg leading-relaxed">سيرة المستخدم ستظهر هنا. يمكن للمستخدم إضافة معلومات شخصية وتفاصيل حول اهتماماته في الألعاب.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-gradient-to-br from-neon-blue/20 to-neon-blue/10 backdrop-blur-sm rounded-xl p-6 border border-neon-blue/20 hover:from-neon-blue/30 hover:to-neon-blue/15 transition-all duration-300 group">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i class="fa fa-gamepad text-neon-blue text-2xl group-hover:animate-pulse"></i>
+                            <h3 class="text-lg font-semibold">الحسابات المضافة</h3>
+                        </div>
+                        <p class="text-3xl font-bold text-neon-blue" id="accounts-count">0</p>
+                        <p class="text-sm text-gray-400 mt-2">حساب نشط</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-neon-green/20 to-neon-green/10 backdrop-blur-sm rounded-xl p-6 border border-neon-green/20 hover:from-neon-green/30 hover:to-neon-green/15 transition-all duration-300 group">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i class="fa fa-heart text-neon-green text-2xl group-hover:animate-pulse"></i>
+                            <h3 class="text-lg font-semibold">المفضلة</h3>
+                        </div>
+                        <p class="text-3xl font-bold text-neon-green" id="favorites-count">0</p>
+                        <p class="text-sm text-gray-400 mt-2">حساب مفضل</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-neon-purple/20 to-neon-purple/10 backdrop-blur-sm rounded-xl p-6 border border-neon-purple/20 hover:from-neon-purple/30 hover:to-neon-purple/15 transition-all duration-300 group">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i class="fa fa-star text-neon-purple text-2xl group-hover:animate-pulse"></i>
+                            <h3 class="text-lg font-semibold">التقييم</h3>
+                        </div>
+                        <p class="text-3xl font-bold text-neon-purple" id="user-rating">5.0</p>
+                        <p class="text-sm text-gray-400 mt-2">من 5 نجوم</p>
+                    </div>
+                </div>
+                
+                <div class="max-w-xl mx-auto space-y-6">
+                    <div id="owner-buttons" class="flex flex-col sm:flex-row gap-4 hidden">
+                        <button class="px-6 py-3 rounded-xl bg-gradient-to-r from-neon-blue/20 to-neon-purple/20 border border-white/10 hover:from-neon-blue/30 hover:to-neon-purple/30 transition-all duration-300 font-medium">
+                            <span class="gradient-text">تعديل الملف الشخصي</span>
+                        </button>
+                        <button class="px-6 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300 font-medium">
+                            <span class="gradient-text">إعدادات الحساب</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="bg-gradient-to-r from-black/40 to-gray-900/40 backdrop-blur-md border-t border-white/10 mt-12 py-8">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row md:justify-between gap-6">
+                <div class="text-center md:text-right">
+                    <h4 class="text-xl font-bold gradient-text mb-2">GamesHub</h4>
+                    <p class="text-gray-300 text-sm leading-relaxed max-w-md">منصة وسيط لبيع وشراء حسابات الألعاب — آمنة وسهلة</p>
+                    <div class="flex justify-center md:justify-start gap-4 mt-4">
+                        <i class="fa fa-shield-alt text-neon-green text-lg"></i>
+                        <i class="fa fa-lock text-neon-blue text-lg"></i>
+                        <i class="fa fa-star text-neon-yellow text-lg"></i>
+                    </div>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4 items-center">
+                    <a href="privacy.html" class="text-gray-300 hover:text-neon-blue transition-colors duration-300 text-sm font-medium">
+                        <i class="fa fa-shield-alt ml-2"></i>سياسة الخصوصية
+                    </a>
+                    <a href="terms.html" class="text-gray-300 hover:text-neon-purple transition-colors duration-300 text-sm font-medium">
+                        <i class="fa fa-file-contract ml-2"></i>شروط الاستخدام
+                    </a>
+                    <a href="contact.html" class="text-gray-300 hover:text-neon-green transition-colors duration-300 text-sm font-medium">
+                        <i class="fa fa-envelope ml-2"></i>اتصل بنا
+                    </a>
+                </div>
+            </div>
+            <div class="border-t border-white/10 mt-6 pt-6 text-center">
+                <p class="text-gray-400 text-sm">
+                    © 2024 GamesHub. جميع الحقوق محفوظة.
+                   
+                </p>
+            </div>
+        </div>
+    </footer>
+</div>
+<script src="js/sidebar.js"></script>
+<script>
+// جلب بيانات المستخدم من API بناءً على معرف المستخدم في الرابط
+function getUserIdFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('id');
+}
+function fetchUserProfile(userId) {
+    if (!userId) return;
+    fetch('api/get_user.php?id=' + encodeURIComponent(userId), { credentials: 'include' })
+        .then(r => r.json())
+        .then(data => {
+            if (data && data.profile) {
+                document.getElementById('user-profile-image').src = data.profile.image || 'uploads/default-avatar.svg';
+                document.getElementById('user-name').textContent = data.profile.name || 'اسم المستخدم';
+                document.getElementById('user-bio').textContent = data.profile.bio || '';
+            }
+        });
+}
+document.addEventListener('DOMContentLoaded', function() {
+    const userId = getUserIdFromUrl();
+    fetchUserProfile(userId);
+});
+// دالة لتحويل المستخدم إلى صفحة الملف الشخصي مع تمرير id
+function goToUserProfile(userId) {
+    if (!userId) return;
+    window.location.href = "user-profile.html?id=" + encodeURIComponent(userId);
+}
+// يمكنك الآن استخدام goToUserProfile(userId) في أي زر أو عنصر:
+// <button onclick="goToUserProfile(5)">عرض الملف الشخصي</button>
+// أو في جافاسكريبت عند حدث معين:
+// goToUserProfile(selectedUserId);
+</script>
+</body>
+</html>

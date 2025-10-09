@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>إعلاناتي  — GamesHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+<div class="min-h-screen md:mr-64 relative z-10">
+    <!-- Toast message -->
+    <div id="toast" class="toast">ميزة قريبا! ✨</div>
+    <!-- Overlay (mobile) -->
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-60 hidden z-40" onclick="closeSidebar()"></div>
+    <div id="sidebar-container"></div>
+    <!-- keep only the search/header and the dynamic accounts list; remove static text -->
+    <header class="p-4 flex items-center justify-between md:hidden">
+        <div class="flex items-center gap-3">
+            <button class="p-2 rounded-lg border border-white/6" onclick="openSidebar()"><i class="fa fa-bars text-xl"></i></button>
+            <a href="#" class="text-xl font-bold">GamesHub</a>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="#" class="px-3 py-2 rounded-lg border border-white/6" onclick="try{sessionStorage.setItem('post_auth_return', window.location.pathname+window.location.search+window.location.hash);}catch(e){} window.location.href='login.html'">تسجيل دخول</a>
+        </div>
+    </header>
+
+    <header class="hidden md:flex items-center justify-between px-8 py-6 border-b border-white/6">
+        <div class="flex items-center gap-6">
+  
+        </div>
+        <div class="flex items-center gap-4">
+            <a href="add-account.html" class="px-4 py-2 rounded-lg neon-btn text-black font-semibold">أضف حسابك</a>
+        </div>
+    </header>
+
+    <div class="p-4 md:p-8 max-w-6xl mx-auto">
+        <div id="accounts-list" class="grid gap-6 md:grid-cols-2"></div>
+        <!-- سلايدر الصور -->
+        <div id="account-image-modal" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-50">
+            <button id="close-image-modal" class="absolute top-4 left-4 text-white text-2xl">&times;</button>
+            <button id="modal-prev-image" class="absolute right-8 top-1/2 -translate-y-1/2 bg-black/60 text-white rounded-full w-10 h-10 flex items-center justify-center z-10"><i class="fa fa-chevron-right"></i></button>
+            <img id="modal-slider-img" src="" class="max-h-[80vh] rounded border mx-auto" style="max-width:90vw">
+            <button id="modal-next-image" class="absolute left-8 top-1/2 -translate-y-1/2 bg-black/60 text-white rounded-full w-10 h-10 flex items-center justify-center z-10"><i class="fa fa-chevron-left"></i></button>
+        </div>
+        <div id="no-accounts" class="text-center text-gray-400 mt-8 hidden">لا يوجد حسابات مضافة بعد.</div>
+    </div>
+</div>
+<script src="js/sidebar.js"></script>
+<script>
+// سلايدر الصور في صفحة إعلاناتي
+const imageModal = document.getElementById('account-image-modal');
+const modalImg = document.getElementById('modal-slider-img');
+const modalPrev = document.getElementById('modal-prev-image');
+const modalNext = document.getElementById('modal-next-image');
+const closeModal = document.getElementById('close-image-modal');
+let modalImages = [];
+let modalIndex = 0;
+
+document.addEventListener('click', function(e){
+    // فتح السلايدر عند الضغط على صورة مصغرة
+    if(e.target.matches('#accounts-list img')){
+        const imgs = Array.from(e.target.closest('.flex').parentElement.querySelectorAll('img'));
+        modalImages = imgs.map(img=>img.src);
+        modalIndex = imgs.indexOf(e.target);
+        showModalImage();
+        imageModal.classList.remove('hidden');
+        imageModal.classList.add('flex');
+    }
+    // إغلاق السلايدر
+    if(e.target === imageModal || e.target === closeModal){
+        imageModal.classList.add('hidden');
+        imageModal.classList.remove('flex');
+    }
+});
+function showModalImage(){
+    if(modalImages.length === 0) return;
+    modalImg.src = modalImages[modalIndex];
+}
+modalPrev.onclick = function(e){ e.stopPropagation(); if(modalImages.length){ modalIndex = (modalIndex-1+modalImages.length)%modalImages.length; showModalImage(); } };
+modalNext.onclick = function(e){ e.stopPropagation(); if(modalImages.length){ modalIndex = (modalIndex+1)%modalImages.length; showModalImage(); } };
+// جلب الحسابات الخاصة بالمستخدم الحالي
+fetch('api/get_accounts.php', { credentials: 'include' })
+    .then(res => res.json())
+    .then(data => {
+        const list = document.getElementById('accounts-list');
+        const noAccounts = document.getElementById('no-accounts');
+        if(Array.isArray(data) && data.length > 0){
+            data.forEach(acc => {
+                const card = document.createElement('div');
+                card.className = 'bg-slate-900 rounded-xl p-4 shadow flex flex-col gap-3 cursor-pointer hover:shadow-lg transition';
+                card.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="w-16 h-16 rounded-lg overflow-hidden border border-[--border-light] bg-gray-800 flex items-center justify-center">
+                            ${acc.images && acc.images.length ? `<img src="${acc.images[0]}" class="w-full h-full object-cover">` : '<i class="fa fa-image text-3xl text-gray-500"></i>'}
+                        </div>
+                        <div>
+                            <div class="font-bold text-lg">${acc.game_name}</div>
+                            <div class="text-sm text-gray-400">${acc.price} $</div>
+                        </div>
+                    </div>
+                    <div class="text-sm text-gray-300">${acc.description}</div>
+                    <div class="flex gap-2 mt-2 flex-wrap">
+                        ${(acc.images||[]).slice(1,5).map(img=>`<img src="${img}" class="w-12 h-12 rounded object-cover border">`).join('')}
+                    </div>
+                    <div class="mt-3 flex gap-2">
+                        <button class="px-3 py-2 rounded-lg border border-white/6 text-sm edit-account-btn" data-id="${acc.id}">تعديل</button>
+                        <button class="px-3 py-2 rounded-lg border border-white/6 text-sm text-red-400 delete-account-btn" data-id="${acc.id}">حذف</button>
+                    </div>
+                `;
+                // navigate to details when clicking the card (except when clicking action buttons)
+                card.addEventListener('click', (e)=>{ if (!e.target.closest('.edit-account-btn') && !e.target.closest('.delete-account-btn')) window.location.href = `moredetails.html?id=${encodeURIComponent(acc.id)}`; });
+                list.appendChild(card);
+            });
+        } else {
+            noAccounts.classList.remove('hidden');
+        }
+    })
+    .catch(()=>{
+        document.getElementById('no-accounts').textContent = 'تعذر تحميل الحسابات.';
+        document.getElementById('no-accounts').classList.remove('hidden');
+    });
+
+// delegate delete/edit actions
+document.addEventListener('click', function(e){
+    const del = e.target.closest('.delete-account-btn');
+    if (del) {
+        const id = del.getAttribute('data-id');
+        if (!confirm('هل أنت متأكد أنك تريد حذف هذا الإعلان؟')) return;
+        fetch('api/get_csrf.php', { credentials: 'include' })
+        .then(r=>r.json())
+        .then(cs=>fetch('api/delete_account.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({ account_id: id, csrf_token: cs.csrf_token }),
+            credentials: 'include'
+        }))
+        .then(r=>r.json())
+        .then(data=>{
+            if (data && data.success) {
+                // remove card from DOM
+                const card = del.closest('#accounts-list > div');
+                if (card) card.remove();
+                showPlaceholder(data.message || 'تم الحذف');
+            } else {
+                showPlaceholder(data && data.error ? data.error : 'فشل الحذف');
+            }
+        })
+        .catch(()=>showPlaceholder('خطأ في الاتصال بالخادم'));
+    }
+
+    const edit = e.target.closest('.edit-account-btn');
+    if (edit) {
+        const id = edit.getAttribute('data-id');
+        const card = edit.closest('#accounts-list > div');
+        const currentTitle = card.querySelector('.font-bold')?.textContent || '';
+        const currentPrice = card.querySelector('.text-sm.text-gray-400')?.textContent?.replace('$','').trim() || '';
+        const currentDesc = card.querySelector('.text-sm.text-gray-300')?.textContent || '';
+        openEditModal({ id, card, title: currentTitle, price: currentPrice, description: currentDesc });
+    }
+});
+
+// filter accounts locally
+document.getElementById('accounts-search')?.addEventListener('input', function(){
+    const q = (this.value||'').toLowerCase().trim();
+    const cards = Array.from(document.querySelectorAll('#accounts-list > div'));
+    cards.forEach(card=>{
+        const text = (card.textContent||'').toLowerCase();
+        card.style.display = q && !text.includes(q) ? 'none' : '';
+    });
+});
+</script>
+<!-- Edit modal -->
+<div id="edit-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50">
+    <div class="bg-[#0b0f14] rounded-xl p-6 max-w-2xl w-full mx-4">
+        <h3 class="font-bold text-xl mb-4">تعديل الإعلان</h3>
+        <div class="space-y-3">
+            <label class="block">اسم اللعبة</label>
+            <input id="modal-game_name" class="w-full p-2 rounded bg-white/5" />
+            <label class="block">السعر</label>
+            <input id="modal-price" class="w-full p-2 rounded bg-white/5" />
+            <label class="block">الوصف</label>
+            <textarea id="modal-description" class="w-full p-2 rounded bg-white/5" rows="4"></textarea>
+            <label class="block mt-2">صور الإعلان</label>
+            <div id="modal-images-list" class="flex flex-wrap gap-2 mb-2"></div>
+            <input id="modal-add-images" type="file" accept="image/*" multiple class="block mt-2" />
+            <small class="text-gray-400">يمكنك حذف أو إضافة صور جديدة (الحد الأقصى 30 صورة).</small>
+        </div>
+        <div class="mt-4 flex gap-2 justify-end">
+            <button id="modal-cancel" class="px-4 py-2 rounded border">إلغاء</button>
+            <button id="modal-save" class="px-4 py-2 rounded neon-btn text-black">حفظ</button>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentEdit = null; // { id, card }
+// دعم تعديل الصور في نافذة التعديل (متغيرات خاصة بالنافذة فقط)
+let editModalImages = [];
+let editModalImagesToDelete = [];
+let editModalNewImages = [];
+function openEditModal({ id, card, title, price, description }){
+    currentEdit = { id, card };
+    document.getElementById('modal-game_name').value = title || '';
+    document.getElementById('modal-price').value = price || '';
+    document.getElementById('modal-description').value = description || '';
+    // جلب الصور من البطاقة (DOM)
+    editModalImages = [];
+    editModalImagesToDelete = [];
+    editModalNewImages = [];
+    const imgEls = card.querySelectorAll('img');
+    imgEls.forEach(img => {
+        if (img.src && !img.src.includes('data:')) {
+            editModalImages.push(img.src);
+        }
+    });
+    renderEditModalImages();
+    document.getElementById('modal-add-images').value = '';
+    const modal = document.getElementById('edit-modal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+function renderEditModalImages() {
+    const list = document.getElementById('modal-images-list');
+    list.innerHTML = '';
+    editModalImages.forEach((src, i) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'relative';
+        const img = document.createElement('img');
+        img.src = src;
+        img.className = 'w-16 h-16 object-cover rounded border';
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.title = 'حذف';
+        delBtn.className = 'absolute -top-2 -left-2 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs';
+        delBtn.innerHTML = '<i class="fa fa-times"></i>';
+        delBtn.onclick = function(e){
+            e.preventDefault();
+            editModalImagesToDelete.push(src);
+            editModalImages.splice(i,1);
+            renderEditModalImages();
+        };
+        wrapper.appendChild(img);
+        wrapper.appendChild(delBtn);
+        list.appendChild(wrapper);
+    });
+    // عرض الصور الجديدة (قبل الحفظ)
+    editModalNewImages.forEach((file, i) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'relative';
+        const img = document.createElement('img');
+        img.className = 'w-16 h-16 object-cover rounded border';
+        const reader = new FileReader();
+        reader.onload = function(e){ img.src = e.target.result; };
+        reader.readAsDataURL(file);
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.title = 'حذف';
+        delBtn.className = 'absolute -top-2 -left-2 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs';
+        delBtn.innerHTML = '<i class="fa fa-times"></i>';
+        delBtn.onclick = function(e){
+            e.preventDefault();
+            editModalNewImages.splice(i,1);
+            renderEditModalImages();
+        };
+        wrapper.appendChild(img);
+        wrapper.appendChild(delBtn);
+        list.appendChild(wrapper);
+    });
+}
+document.getElementById('modal-add-images').addEventListener('change', function(e){
+    const files = Array.from(e.target.files).filter(f=>f.type.startsWith('image/'));
+    // تحقق من الحد الأقصى
+    if (editModalImages.length + editModalNewImages.length + files.length > 30) {
+        showPlaceholder('الحد الأقصى للصور هو 30 صورة.');
+        return;
+    }
+    editModalNewImages = editModalNewImages.concat(files);
+    renderEditModalImages();
+});
+function closeEditModal(){
+    currentEdit = null;
+    const modal = document.getElementById('edit-modal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+document.getElementById('modal-cancel')?.addEventListener('click', closeEditModal);
+document.getElementById('modal-save')?.addEventListener('click', function(){
+    if (!currentEdit) return;
+    const id = currentEdit.id;
+    const card = currentEdit.card;
+    const newTitle = document.getElementById('modal-game_name').value.trim();
+    const newPrice = document.getElementById('modal-price').value.trim();
+    const newDesc = document.getElementById('modal-description').value.trim();
+    const saveBtn = document.getElementById('modal-save');
+    saveBtn.disabled = true;
+    fetch('api/get_csrf.php', { credentials: 'include' })
+    .then(r=>r.json())
+    .then(cs=>{
+        // 1. تحديث البيانات النصية
+        return fetch('api/update_account.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({ account_id: id, game_name: newTitle, price: newPrice, description: newDesc, csrf_token: cs.csrf_token }),
+            credentials: 'include'
+        }).then(r=>r.json()).then(data=>{
+            if (!(data && data.success)) throw new Error(data && data.error ? data.error : 'فشل التحديث');
+            // 2. تحديث الصور (حذف/إضافة)
+            const formData = new FormData();
+            formData.append('account_id', id);
+            formData.append('csrf_token', cs.csrf_token);
+            if (editModalImagesToDelete.length > 0) {
+                formData.append('delete_images', JSON.stringify(editModalImagesToDelete));
+            }
+            if (editModalNewImages.length > 0) {
+                for (let i=0; i<editModalNewImages.length; ++i) {
+                    formData.append('new_images[]', editModalNewImages[i]);
+                }
+            }
+            return fetch('api/update_account_images.php', {
+                method: 'POST',
+                body: formData,
+                credentials: 'include'
+            });
+        });
+    })
+    .then(r=>r.json())
+    .then(data=>{
+        saveBtn.disabled = false;
+        if (data && data.success) {
+            // تحديث نصوص البطاقة
+            if (card) {
+                card.querySelector('.font-bold').textContent = newTitle;
+                const priceEl = card.querySelector('.text-sm.text-gray-400');
+                if (priceEl) priceEl.textContent = newPrice + ' $';
+                const descEl = card.querySelector('.text-sm.text-gray-300');
+                if (descEl) descEl.textContent = newDesc;
+                // تحديث الصور في البطاقة
+                const mainImgDiv = card.querySelector('.flex.items-center.gap-3 > .w-16.h-16');
+                const thumbsDiv = card.querySelector('.flex.gap-2.mt-2');
+                // بناء مصفوفة الصور الجديدة
+                let allImgs = editModalImages.slice();
+                if (data.added && Array.isArray(data.added)) allImgs = allImgs.concat(data.added);
+                // الصورة الرئيسية
+                if (mainImgDiv) {
+                    mainImgDiv.innerHTML = allImgs[0] ? `<img src="${allImgs[0]}" class="w-full h-full object-cover">` : '<i class="fa fa-image text-3xl text-gray-500"></i>';
+                }
+                // الصور المصغرة
+                if (thumbsDiv) {
+                    thumbsDiv.innerHTML = (allImgs.slice(1,5).map(img=>`<img src="${img}" class="w-12 h-12 rounded object-cover border">`).join(''));
+                }
+            }
+            showPlaceholder('تم تحديث الإعلان والصور بنجاح');
+        } else {
+            showPlaceholder(data && data.error ? data.error : 'فشل تحديث الصور');
+        }
+        closeEditModal();
+    })
+    .catch(err=>{ saveBtn.disabled = false; showPlaceholder(err.message || 'خطأ في الاتصال بالخادم'); });
+});
+// close modal on clicking outside
+document.getElementById('edit-modal')?.addEventListener('click', function(e){ if (e.target === this) closeEditModal(); });
+</script>
+<script src="js/online-status.js"></script>
+</body>
+</html>

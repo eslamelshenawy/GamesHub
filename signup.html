@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>إنشاء حساب جديد — GamesHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #0b0f14;
+            color: #fff;
+            -webkit-font-smoothing: antialiased;
+            /* Background effect for gaming theme */
+            background-image: radial-gradient(circle, rgba(155, 89, 255, 0.1) 1px, transparent 1px), radial-gradient(circle, rgba(0, 212, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            background-position: 0 0, 25px 25px;
+            animation: pulse-bg 10s infinite alternate;
+        }
+        @keyframes pulse-bg {
+            from { background-color: #0b0f14; }
+            to { background-color: #0d1218; }
+        }
+        .neon-btn {
+            background: linear-gradient(90deg, #9b59ff, #00d4ff); 
+        } 
+        /* New CSS for desktop layout */
+        @media (min-width: 1024px) {
+            .container-desktop {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 2rem;
+                max-width: 1280px;
+                margin: auto;
+            }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div class="w-full max-w-sm p-8 space-y-6 bg-slate-900 rounded-xl shadow-lg lg:max-w-4xl lg:grid lg:grid-cols-2 lg:gap-8 lg:p-12">
+        <div class="hidden lg:flex flex-col justify-center items-center text-center p-8 border-l border-gray-700">
+            <h2 class="text-4xl font-bold bg-clip-text text-transparent" style="background-image: linear-gradient(90deg, #9b59ff, #00d4ff);">GamesHub</h2>
+            <p class="mt-4 text-gray-400">منصة آمنة وموثوقة لبيع وشراء حسابات الألعاب النادرة.</p>
+            <div class="mt-8 flex flex-wrap gap-2 justify-center">
+                <span class="text-xs bg-slate-800 text-[#00d4ff] px-3 py-1 rounded-full">PUBG</span>
+                <span class="text-xs bg-slate-800 text-[#39ff14] px-3 py-1 rounded-full">Free Fire</span>
+                <span class="text-xs bg-slate-800 text-[#ff00ff] px-3 py-1 rounded-full">COD</span>
+            </div>
+        </div>
+
+        <div class="flex flex-col justify-center">
+            <h1 class="text-3xl font-bold text-center lg:text-right">إنشاء حساب جديد</h1>
+            <p class="text-sm text-center text-gray-400 mt-2 lg:text-right">انضم إلينا الآن وشارك في عالم الألعاب!</p>
+            
+            <form onsubmit="registerUser(event)" class="space-y-4 mt-6">
+                <input type="text" placeholder="اسم المستخدم" name="username" required 
+                       class="w-full p-4 rounded-xl bg-gray-800 border border-gray-700 outline-none focus:ring-2 focus:ring-[#00d4ff] transition">
+                <input type="password" placeholder="كلمة المرور" name="password" required 
+                       class="w-full p-4 rounded-xl bg-gray-800 border border-gray-700 outline-none focus:ring-2 focus:ring-[#00d4ff] transition">
+                <input type="password" placeholder="تأكيد كلمة المرور" name="confirm_password" required 
+                       class="w-full p-4 rounded-xl bg-gray-800 border border-gray-700 outline-none focus:ring-2 focus:ring-[#00d4ff] transition">
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="number" placeholder="السن" name="age" required 
+                           class="w-full p-4 rounded-xl bg-gray-800 border border-gray-700 outline-none focus:ring-2 focus:ring-[#00d4ff] transition">
+                    <div class="relative">
+                        <select name="gender" required class="w-full p-4 rounded-xl bg-gray-800 border border-gray-700 outline-none focus:ring-2 focus:ring-[#00d4ff] transition text-gray-500 appearance-none pr-10">
+                            <option value="" disabled selected>الجنس</option>
+                            <option value="male">ذكر</option>
+                            <option value="female">أنثى</option>
+                        </select>
+                        <div class="absolute inset-y-0 left-0 flex items-center px-4 pointer-events-none text-gray-500">
+                            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" fill-rule="evenodd"></path></svg>
+                        </div>
+                    </div>
+                </div>
+                <input type="tel" placeholder="رقم الهاتف" name="phone" required 
+                       class="w-full p-4 rounded-xl bg-gray-800 border border-gray-700 outline-none focus:ring-2 focus:ring-[#00d4ff] transition">
+                <input type="email" placeholder="البريد الإلكتروني" name="email" required 
+                       class="w-full p-4 rounded-xl bg-gray-800 border border-gray-700 outline-none focus:ring-2 focus:ring-[#00d4ff] transition">
+                <button type="submit" class="w-full neon-btn text-black font-semibold p-4 rounded-xl text-lg hover:opacity-80 transition">
+                    إنشاء حساب
+                </button>
+            </form>
+            <p class="text-sm text-center text-gray-400 mt-6">
+                لديك حساب بالفعل؟ 
+                <a href="#" onclick="showLogin(event)" class="text-[#00d4ff] hover:underline">سجل الدخول</a>
+            </p>
+        </div>
+    </div>
+    
+    <div id="toast" class="fixed bottom-4 left-1/2 transform -translate-x-1/2 p-3 rounded-lg text-white bg-slate-800 shadow-lg hidden"></div>
+
+    <script src="js/sidebar.js"></script>
+    <script>
+        function registerUser(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            // forward any ?return= param to the server so it can validate and respond with redirect
+            var params = new URLSearchParams(window.location.search);
+            if (params.get('return')) {
+                // ensure return starts with a leading slash so server safe check accepts it
+                var r = params.get('return');
+                try { r = decodeURIComponent(r); } catch(e) {}
+                if (r && r.charAt(0) !== '/') r = '/' + r;
+                formData.append('return', encodeURIComponent(r));
+            }
+            // fetch CSRF token then submit the signup form
+            fetch('api/get_csrf.php', { credentials: 'include' })
+                .then(r => r.json())
+                .then(cs => {
+                    if (cs && cs.csrf_token) formData.append('csrf_token', cs.csrf_token);
+                    return fetch('api/signup.php', { method: 'POST', body: formData, credentials: 'include' });
+                })
+                .then(res => res.json())
+            .then(data => {
+                if(data.success){
+                    var final = null;
+                    try {
+                        var stored = sessionStorage.getItem('post_auth_return');
+                        if (stored) final = stored;
+                    } catch(e) { stored = null; }
+                    if (!final && data && data.redirect) final = data.redirect;
+                    final = final || 'index.html';
+                    try { sessionStorage.removeItem('post_auth_return'); } catch(e) {}
+                    window.location.href = final;
+                } else {
+                    showPlaceholder(data.error || 'فشل إنشاء الحساب');
+                }
+            })
+            .catch(()=>showPlaceholder('خطأ في الاتصال بالخادم'));
+        }
+        function showLogin(event) {
+            event.preventDefault();
+            try { sessionStorage.setItem('post_auth_return', window.location.pathname + window.location.search + window.location.hash); } catch(e) {}
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>محفظتك — GamesHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    <link rel="stylesheet" href="css/index.css">
+    <script src="js/online-status.js"></script>
+</head>
+<body>
+
+<div id="sidebar-container"></div>
+<div id="overlay" class="fixed inset-0 bg-black/60 z-40 hidden"></div>
+
+<!-- الهيدر للموبايل -->
+<header class="p-4 flex items-center justify-between md:hidden w-full">
+    <div class="flex items-center gap-3">
+        <button class="p-2 rounded-lg border border-white/10 hover:border-neon-blue/50" onclick="openSidebar()">
+            <i class="fa fa-bars text-neon-blue"></i>
+        </button>
+        <a href="#" class="text-lg font-bold bg-gradient-to-r from-neon-purple to-neon-blue bg-clip-text text-transparent">GamesHub</a>
+    </div>
+    <div class="flex items-center gap-3">
+        <a href="login.html" class="px-3 py-2 rounded-lg border border-white/6" onclick="try{sessionStorage.setItem('post_auth_return', window.location.pathname+window.location.search+window.location.hash);}catch(e){}">تسجيل دخول</a>
+    </div>
+</header>
+
+<div class="min-h-screen md:mr-64 relative z-10 flex flex-col items-center justify-center p-8">
+    <div class="bg-slate-900 rounded-xl shadow-lg p-8 max-w-md w-full text-center">
+        <div class="flex items-center justify-center gap-3 mb-6">
+            <i class="fa fa-wallet text-4xl" style="color:#00d4ff"></i>
+            <h1 class="text-3xl font-bold">فلوسك</h1>
+        </div>
+        <div class="mb-6">
+            <div class="mb-4">
+                <span class="text-2xl font-bold text-green-400">$<span id="wallet-balance">0.00</span></span>
+                <p class="muted mt-2">رصيدك الحالي في المحفظة</p>
+            </div>
+            <div class="bg-slate-800 rounded-lg p-4 border border-yellow-500/30">
+                <span class="text-xl font-bold text-yellow-400">$<span id="pending-balance">0.00</span></span>
+                <p class="text-yellow-300 text-sm mt-1">الرصيد المعلق (في الصفقات)</p>
+            </div>
+        </div>
+        <div class="flex flex-col gap-3">
+            <button id="charge-wallet-btn" class="w-full px-4 py-2 rounded-lg neon-btn text-black font-semibold text-lg hover:opacity-80 transition">شحن المحفظة</button>
+            <button id="withdraw-btn" class="w-full px-4 py-2 rounded-lg border border-white/6 text-lg hover:bg-white/10 transition">سحب الرصيد</button>
+            <!-- مودال سحب الرصيد -->
+            <div id="withdraw-modal" class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 hidden">
+                <form id="withdraw-form" class="bg-white rounded-xl p-8 max-w-xs w-full text-center shadow-lg">
+                    <h2 class="text-xl font-bold mb-4 text-black">سحب الرصيد</h2>
+                    <div class="mb-3">
+                        <label class="block mb-1 text-black font-semibold">المبلغ المطلوب</label>
+                        <input id="withdraw-amount" name="amount" type="number" min="1" step="0.01" placeholder="أدخل المبلغ" class="w-full p-2 rounded border border-gray-300 text-black" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="block mb-1 text-black font-semibold"> رقم فودافون كاش فقط </label>
+                        <input id="withdraw-phone" name="phone" type="text" placeholder="01xxxxxxxxx" class="w-full p-2 rounded border border-gray-300 text-black" required />
+                    </div>
+                    <div class="flex gap-2 justify-center mt-2">
+                        <button type="submit" class="px-4 py-2 rounded-lg neon-btn text-black font-semibold">إرسال الطلب</button>
+                        <button type="button" id="cancel-withdraw" class="px-4 py-2 rounded-lg bg-gray-200 text-gray-800 font-semibold">إلغاء</button>
+                    </div>
+                    <div id="withdraw-success" class="text-green-500 mt-4 hidden"></div>
+                </form>
+            </div>
+            <!-- نموذج شحن المحفظة مع فودافون كاش -->
+            <div id="charge-modal" class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 hidden">
+                <form id="topup-form" class="bg-white rounded-xl p-8 max-w-xs w-full text-center shadow-lg" enctype="multipart/form-data">
+                    <h2 class="text-xl font-bold mb-4 text-black">شحن المحفظة</h2>
+                    <div class="mb-3">
+                        <label class="block mb-1 text-black font-semibold">اختر طريقة الشحن</label>
+                        <select id="topup-method" name="method" class="w-full p-2 rounded border border-gray-300 text-black">
+                            <option value="vodafone_cash">فودافون كاش</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="block mb-1 text-black font-semibold"> رقم التلفون اللي حولت منوا</label>
+                        <input id="topup-phone" name="phone" type="text" placeholder="01xxxxxxxxx" class="w-full p-2 rounded border border-gray-300 text-black" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="block mb-1 text-black font-semibold">المبلغ</label>
+                        <input id="topup-amount" name="amount" type="number" min="1" step="0.01" placeholder="أدخل المبلغ" class="w-full p-2 rounded border border-gray-300 text-black" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="block mb-1 text-black font-semibold"> متنساش صوره التحويل  </label>
+                        <input id="topup-receipt" name="receipt" type="file" accept="image/*" class="w-full" />
+                    </div>
+                    <div class="mb-3 bg-gray-100 p-2 rounded text-black text-sm">
+                        <b>رقم فودافون كاش للشحن:</b> <span style="direction:ltr;display:inline-block">01098423818</span><br>
+                        بعد التحويل، أدخل رقمك وارفع صورة الإيصال ليتم مراجعة الطلب.
+                    </div>
+                    <div class="flex gap-2 justify-center mt-2">
+                        <button type="submit" class="px-4 py-2 rounded-lg neon-btn text-black font-semibold">إرسال الطلب</button>
+                        <button type="button" id="cancel-charge" class="px-4 py-2 rounded-lg bg-gray-200 text-gray-800 font-semibold">إلغاء</button>
+                    </div>
+                    <div id="charge-success" class="text-green-500 mt-4 hidden"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="js/sidebar.js"></script>
+<script>
+// جلب رصيد المحفظة من السيرفر وعرضه
+let walletBalance = 0.00;
+let pendingBalance = 0.00;
+function updateWalletBalance() {
+    fetch('api/get_wallet.php', { credentials: 'include' })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success && typeof data.balance !== 'undefined') {
+                walletBalance = parseFloat(data.balance);
+                document.getElementById('wallet-balance').textContent = walletBalance.toFixed(2);
+                
+                // عرض الرصيد المعلق
+                if (typeof data.pending_balance !== 'undefined') {
+                    pendingBalance = parseFloat(data.pending_balance);
+                    document.getElementById('pending-balance').textContent = pendingBalance.toFixed(2);
+                } else {
+                    pendingBalance = 0.00;
+                    document.getElementById('pending-balance').textContent = '0.00';
+                }
+            } else {
+                walletBalance = 0.00;
+                pendingBalance = 0.00;
+                document.getElementById('wallet-balance').textContent = '0.00';
+                document.getElementById('pending-balance').textContent = '0.00';
+            }
+        })
+        .catch(()=>{
+            walletBalance = 0.00;
+            pendingBalance = 0.00;
+            document.getElementById('wallet-balance').textContent = '0.00';
+            document.getElementById('pending-balance').textContent = '0.00';
+        });
+}
+
+updateWalletBalance();
+// تحديث الرصيد عند استعادة التركيز على الصفحة
+window.addEventListener('focus', updateWalletBalance);
+
+// استمع لتحديث الرصيد من صفحة الإدارة
+if (window.BroadcastChannel) {
+    try {
+        const bc = new BroadcastChannel('wallet_update');
+        bc.onmessage = function(ev) {
+            if (ev.data && ev.data.action === 'refresh_balance') {
+                updateWalletBalance();
+            }
+        };
+    } catch(e) {}
+}
+
+const chargeBtn = document.getElementById('charge-wallet-btn');
+const chargeModal = document.getElementById('charge-modal');
+const cancelCharge = document.getElementById('cancel-charge');
+const chargeSuccess = document.getElementById('charge-success');
+const topupForm = document.getElementById('topup-form');
+
+if (chargeBtn && chargeModal) {
+        chargeBtn.onclick = function() {
+                chargeModal.classList.remove('hidden');
+                chargeSuccess.classList.add('hidden');
+                if (topupForm) topupForm.reset();
+        };
+}
+if (cancelCharge && chargeModal) {
+        cancelCharge.onclick = function() {
+                chargeModal.classList.add('hidden');
+        };
+}
+if (topupForm && chargeSuccess) {
+        topupForm.onsubmit = function(e) {
+                e.preventDefault();
+                chargeSuccess.classList.add('hidden');
+                const formData = new FormData(topupForm);
+                fetch('api/request_topup.php', {
+                        method: 'POST',
+                        body: formData,
+                        credentials: 'include'
+                })
+                .then(res => res.json())
+                .then(data => {
+                        if (data.success) {
+                                chargeSuccess.textContent = data.message || 'تم إرسال طلب الشحن بنجاح!';
+                                chargeSuccess.classList.remove('hidden');
+                                setTimeout(()=>{ chargeModal.classList.add('hidden'); }, 1800);
+                        } else if (data.error === '401') {
+                // 401 redirect to login
+                window.location.href = 'login.html';
+            } else {
+                                chargeSuccess.textContent = data.error || 'حدث خطأ أثناء إرسال الطلب';
+                                    window.location.href = 'login.html';
+                                chargeSuccess.classList.remove('hidden');
+                        }
+                })
+                .catch(()=>{
+                        chargeSuccess.textContent = 'خطأ في الاتصال بالخادم';
+                        chargeSuccess.classList.remove('hidden');
+                });
+        };
+}
+</script>
+<script>
+// سحب الرصيد
+const withdrawBtn = document.getElementById('withdraw-btn');
+const withdrawModal = document.getElementById('withdraw-modal');
+const cancelWithdraw = document.getElementById('cancel-withdraw');
+const withdrawSuccess = document.getElementById('withdraw-success');
+const withdrawForm = document.getElementById('withdraw-form');
+
+if (withdrawBtn && withdrawModal) {
+    withdrawBtn.onclick = function() {
+        withdrawModal.classList.remove('hidden');
+        withdrawSuccess.classList.add('hidden');
+        if (withdrawForm) withdrawForm.reset();
+    };
+}
+if (cancelWithdraw && withdrawModal) {
+    cancelWithdraw.onclick = function() {
+        withdrawModal.classList.add('hidden');
+    };
+}
+if (withdrawForm && withdrawSuccess) {
+    withdrawForm.onsubmit = function(e) {
+        e.preventDefault();
+        withdrawSuccess.classList.add('hidden');
+        const formData = new FormData(withdrawForm);
+        fetch('api/request_withdraw.php', {
+            method: 'POST',
+            body: formData,
+            credentials: 'include'
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                withdrawSuccess.textContent = data.message || 'تم إرسال طلب السحب بنجاح!';
+                withdrawSuccess.classList.remove('hidden');
+                setTimeout(()=>{ withdrawModal.classList.add('hidden'); updateWalletBalance(); }, 1800);
+            } else if (data.error === '401') {
+                // 401 redirect to login
+                window.location.href = 'login.html';
+            }
+            else {
+                withdrawSuccess.textContent = data.error || 'حدث خطأ أثناء إرسال الطلب';
+                window.location.href = 'login.html';
+                withdrawSuccess.classList.remove('hidden');
+            }
+        })
+        .catch(()=>{
+            withdrawSuccess.textContent = 'خطأ في الاتصال بالخادم';
+            withdrawSuccess.classList.remove('hidden');
+        });
+    };
+} 
+</script>
+</body>
+</html>

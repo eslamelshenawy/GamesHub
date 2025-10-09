@@ -1,0 +1,250 @@
+/* Sidebar Styles */
+.sidebar {
+  @apply fixed top-0 right-0 h-full w-72 md:w-64 bg-gradient-to-b from-bg-dark/98 via-bg-dark/95 to-bg-dark/90 backdrop-blur-xl border-l border-gradient-to-b from-neon-purple/20 via-white/10 to-neon-blue/20 transform transition-all duration-300 ease-out z-50 shadow-2xl shadow-neon-purple/10;
+}
+
+.sidebar-header {
+  @apply sticky top-0 bg-gradient-to-r from-bg-dark/95 to-bg-dark/90 backdrop-blur-xl border-b border-gradient-to-r from-neon-purple/30 via-white/10 to-neon-blue/30 px-4 py-4 flex items-center justify-between shadow-lg shadow-black/20;
+}
+
+.sidebar-logo {
+  @apply text-xl font-bold bg-gradient-to-r from-neon-purple via-pink-400 to-neon-blue bg-clip-text text-transparent drop-shadow-lg animate-pulse;
+}
+
+.sidebar-close {
+  @apply p-2 rounded-lg hover:bg-white/5 text-white/60 hover:text-white md:hidden transition-all duration-200 ease-in-out hover:scale-110 hover:shadow-md;
+}
+
+.sidebar-content {
+  @apply h-[calc(100vh-60px)] overflow-y-auto relative;
+}
+
+.sidebar-content::before {
+  content: '';
+  @apply absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-neon-purple/50 to-transparent;
+}
+
+.sidebar-content::after {
+  content: '';
+  @apply absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-neon-blue/50 to-transparent;
+}
+
+.sidebar-section {
+  @apply px-4 py-2;
+}
+
+.sidebar-heading {
+  @apply text-xs uppercase text-white/40 font-medium mb-2;
+}
+
+.sidebar-link {
+  @apply flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-white/70 hover:text-white hover:bg-white/5 transition-all duration-300 ease-in-out relative overflow-hidden group;
+}
+
+.sidebar-link::before {
+  content: '';
+  @apply absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-neon-purple to-neon-blue transform scale-y-0 transition-transform duration-300 ease-out;
+}
+
+.sidebar-link:hover::before {
+  @apply scale-y-100;
+}
+
+.sidebar-link.active {
+  @apply bg-gradient-to-r from-neon-purple/25 via-purple-500/20 to-neon-blue/25 text-white border border-neon-purple/40 shadow-xl shadow-neon-purple/20 backdrop-blur-sm;
+}
+
+.sidebar-link.active::before {
+  @apply scale-y-100 shadow-lg shadow-neon-purple/30;
+}
+
+.sidebar-link.active-link {
+  @apply bg-gradient-to-r from-neon-purple/25 via-purple-500/20 to-neon-blue/25 text-white border border-neon-purple/40 shadow-xl shadow-neon-purple/20 backdrop-blur-sm;
+}
+
+.sidebar-link.active-link::before {
+  @apply scale-y-100 shadow-lg shadow-neon-purple/30;
+}
+
+.sidebar-link:hover {
+  @apply bg-gradient-to-r from-white/8 to-white/12 transform scale-[1.02] shadow-lg backdrop-blur-sm;
+}
+
+.sidebar-link:hover .sidebar-link-text {
+  @apply transform translate-x-1;
+}
+
+.sidebar-link.active:hover,
+.sidebar-link.active-link:hover {
+  @apply bg-gradient-to-r from-neon-purple/30 to-neon-blue/30 border-neon-purple/50 shadow-xl shadow-neon-purple/20;
+}
+
+.sidebar-divider {
+  @apply my-2 border-t border-white/10;
+}
+
+.sidebar-footer {
+  @apply sticky bottom-0 bg-gradient-to-t from-bg-dark/95 to-bg-dark/90 backdrop-blur-xl border-t border-gradient-to-r from-neon-purple/30 via-white/10 to-neon-blue/30 p-4 shadow-lg shadow-black/20;
+}
+
+/* Custom Scrollbar for Sidebar */
+.sidebar-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-content::-webkit-scrollbar-track {
+  @apply bg-gradient-to-b from-transparent via-white/5 to-transparent;
+}
+
+.sidebar-content::-webkit-scrollbar-thumb {
+  @apply bg-gradient-to-b from-neon-purple/40 to-neon-blue/40 rounded-full hover:from-neon-purple/60 hover:to-neon-blue/60 shadow-sm;
+}
+
+.sidebar-content::-webkit-scrollbar-thumb:hover {
+  @apply shadow-lg shadow-neon-purple/20;
+}
+
+/* Responsive Adjustments */
+@media (min-width: 768px) {
+  .sidebar {
+    @apply translate-x-0;
+  }
+  
+  .main-content {
+    @apply mr-64;
+  }
+}
+
+/* Mobile Overlay */
+.sidebar-overlay {
+  @apply fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity duration-200;
+}
+
+/* Animation Classes */
+.sidebar-enter {
+  @apply translate-x-full opacity-0;
+}
+
+.sidebar-enter-active {
+  @apply translate-x-0 opacity-100;
+}
+
+.sidebar-exit {
+  @apply translate-x-0 opacity-100;
+}
+
+.sidebar-exit-active {
+  @apply translate-x-full opacity-0;
+}
+
+/* Professional Enhancements */
+.sidebar-link {
+  position: relative;
+}
+
+.sidebar-link::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  width: 4px;
+  height: 4px;
+  background: linear-gradient(45deg, var(--neon-purple), var(--neon-blue));
+  border-radius: 50%;
+  transform: translateY(-50%) scale(0);
+  transition: transform 0.3s ease;
+  opacity: 0;
+}
+
+.sidebar-link.active::after,
+.sidebar-link.active-link::after {
+  transform: translateY(-50%) scale(1);
+  opacity: 1;
+  box-shadow: 0 0 8px var(--neon-purple);
+}
+
+/* Hover Glow Effect */
+.sidebar-link:hover {
+  box-shadow: inset 0 0 20px rgba(139, 92, 246, 0.1), 0 0 20px rgba(139, 92, 246, 0.05);
+}
+
+.sidebar-link.active:hover,
+.sidebar-link.active-link:hover {
+  box-shadow: inset 0 0 30px rgba(139, 92, 246, 0.2), 0 0 30px rgba(139, 92, 246, 0.1);
+}
+
+/* User Profile Section */
+.user-profile {
+  @apply flex items-center gap-4 p-4 rounded-xl bg-gradient-to-r from-white/8 via-neon-purple/5 to-white/8 mb-4 border border-gradient-to-r from-neon-purple/20 via-white/10 to-neon-blue/20 hover:border-neon-purple/40 transition-all duration-300 ease-in-out hover:shadow-xl hover:shadow-neon-purple/15 backdrop-blur-sm;
+}
+
+.user-avatar {
+  @apply w-10 h-10 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-neon-purple/20 hover:shadow-xl hover:shadow-neon-purple/30 transition-all duration-200 ease-in-out hover:scale-105;
+}
+
+.user-info {
+  @apply flex-1;
+}
+
+.user-name {
+  @apply text-sm font-medium text-white;
+}
+
+.user-status {
+  @apply text-xs text-white/60;
+}
+
+/* Enhanced Icon Styles */
+.sidebar-link i {
+  @apply transition-all duration-300 ease-in-out relative z-10;
+}
+
+.sidebar-link.active i,
+.sidebar-link.active-link i {
+  @apply text-neon-purple drop-shadow-lg filter brightness-125;
+}
+
+.sidebar-link:hover i {
+  @apply transform scale-110 rotate-3 text-neon-blue drop-shadow-md;
+}
+
+.sidebar-link i::before {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-r from-neon-purple/20 to-neon-blue/20 rounded-full scale-0 transition-transform duration-300 ease-out -z-10;
+}
+
+.sidebar-link:hover i::before {
+  @apply scale-150;
+}
+
+/* Enhanced Section Styles */
+.sidebar-section {
+  @apply px-4 py-3 transition-all duration-300 ease-in-out relative;
+}
+
+.sidebar-section:not(:last-child)::after {
+  content: '';
+  @apply absolute bottom-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/5 to-transparent;
+}
+
+.sidebar-heading {
+  @apply text-xs uppercase text-white/50 font-semibold mb-3 tracking-widest relative pl-3;
+}
+
+.sidebar-heading::before {
+  content: '';
+  @apply absolute left-0 top-1/2 -translate-y-1/2 w-2 h-2 bg-gradient-to-r from-neon-purple to-neon-blue rounded-full shadow-sm shadow-neon-purple/50;
+}
+
+/* Logout Button Enhancement */
+.sidebar-link[data-action="logout"] {
+  @apply hover:bg-gradient-to-r hover:from-red-500/15 hover:to-red-600/10 hover:text-red-400 hover:border-red-500/40 hover:shadow-lg hover:shadow-red-500/20;
+}
+
+.sidebar-link[data-action="logout"]:hover i {
+  @apply text-red-400 drop-shadow-lg transform rotate-12;
+}
+
+.sidebar-link[data-action="logout"]:hover::before {
+  @apply bg-gradient-to-b from-red-500 to-red-600;
+}

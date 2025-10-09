@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>استعادة كلمة المرور — GamesHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+   <link rel="stylesheet" href="css/forget-pass.css">
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+<div id="sidebar-container"></div>
+    <div class="w-full max-w-sm p-8 space-y-6 bg-slate-900 rounded-xl shadow-lg lg:max-w-4xl lg:grid lg:grid-cols-2 lg:gap-8 lg:p-12">
+        <div class="hidden lg:flex flex-col justify-center items-center text-center p-8 border-l border-gray-700">
+            <h2 class="text-4xl font-bold text-transparent bg-clip-text" style="background-image: linear-gradient(90deg, #9b59ff, #00d4ff);">
+                الحماية أولاً
+            </h2>
+            <p class="mt-4 text-gray-400">نظامنا يحافظ على أمان حسابك.</p>
+            <div class="mt-8 flex flex-wrap gap-2 justify-center">
+                <span class="text-xs bg-slate-800 text-[#00d4ff] px-3 py-1 rounded-full">أمان</span>
+                <span class="text-xs bg-slate-800 text-[#39ff14] px-3 py-1 rounded-full">ثقة</span>
+                <span class="text-xs bg-slate-800 text-[#ff00ff] px-3 py-1 rounded-full">سرعة</span>
+            </div>
+        </div>
+        
+        <div class="flex flex-col justify-center">
+            <h1 class="text-3xl font-bold text-center lg:text-right mb-2">استعادة كلمة المرور</h1>
+            <p class="text-sm text-center lg:text-right text-gray-400 mb-6">أدخل رقم هاتفك المسجل لإرسال كود التحقق.</p>
+            
+            <form onsubmit="sendCode(event)" id="phoneForm" class="space-y-4">
+                <input type="tel" id="phoneNumber" placeholder="أدخل رقم الهاتف" required 
+                       class="w-full p-4 rounded-xl bg-gray-800 border border-gray-700 outline-none focus:ring-2 focus:ring-[#00d4ff] transition">
+                
+                <button type="submit" class="w-full neon-btn text-black font-semibold p-4 rounded-xl text-lg hover:opacity-80 transition">
+                    إرسال كود التحقق
+                </button>
+            </form>
+    
+            <p class="text-sm text-center lg:text-right text-gray-400 mt-6">
+                تذكرت كلمة السر؟ 
+                <a href="#" onclick="try{sessionStorage.setItem('post_auth_return', window.location.pathname+window.location.search+window.location.hash);}catch(e){} window.location.href='login.html'" class="text-[#00d4ff] hover:underline">سجل الدخول</a>
+            </p>
+        </div>
+    </div>
+
+    <div id="codeModal" class="modal">
+        <div class="modal-content text-center">
+            <h2 class="text-2xl font-bold mb-4">أدخل كود التحقق</h2>
+            <p class="text-sm text-gray-400 mb-6">لقد أرسلنا كود التحقق إلى رقمك. يرجى إدخاله هنا.</p>
+            
+            <form onsubmit="verifyCode(event)" class="space-y-4">
+                <input type="number" id="verificationCode" placeholder="كود التحقق (6 أرقام)" required 
+                       class="w-full p-4 rounded-xl bg-gray-800 border border-gray-700 text-center text-lg outline-none focus:ring-2 focus:ring-[#00d4ff] transition">
+                
+                <button type="submit" class="w-full neon-btn text-black font-semibold p-4 rounded-xl text-lg hover:opacity-80 transition">
+                    تأكيد
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="resetModal" class="modal">
+        <div class="modal-content text-center">
+            <h2 class="text-2xl font-bold mb-4">إعادة تعيين كلمة السر</h2>
+            <p class="text-sm text-gray-400 mb-6">أدخل كلمة سر جديدة وقوية.</p>
+            
+            <form onsubmit="resetPassword(event)" class="space-y-4">
+                <input type="password" id="newPassword" placeholder="كلمة المرور الجديدة" required 
+                       class="w-full p-4 rounded-xl bg-gray-800 border border-gray-700 outline-none focus:ring-2 focus:ring-[#00d4ff] transition">
+                <input type="password" id="confirmNewPassword" placeholder="تأكيد كلمة المرور الجديدة" required 
+                       class="w-full p-4 rounded-xl bg-gray-800 border border-gray-700 outline-none focus:ring-2 focus:ring-[#00d4ff] transition">
+                
+                <button type="submit" class="w-full neon-btn text-black font-semibold p-4 rounded-xl text-lg hover:opacity-80 transition">
+                    تأكيد
+                </button>
+            </form>
+        </div>
+    </div>
+    
+   <script src="js/forget-pass.js"></script>
+   <script src="js/sidebar.js"></script>
+   <script>
+function sendCode(event) {
+    event.preventDefault();
+    const phoneNumber = document.getElementById('phoneNumber').value;
+    fetch('api/send_code.php', {
+        method: 'POST',
+        body: new URLSearchParams({ phone: phoneNumber }),
+        credentials: 'include'
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.success){
+            document.getElementById('codeModal').style.display = 'flex';
+        } else {
+            alert(data.error || 'فشل إرسال الكود');
+        }
+    })
+    .catch(()=>alert('خطأ في الاتصال بالخادم'));
+}
+
+function verifyCode(event) {
+    event.preventDefault();
+    const verificationCode = document.getElementById('verificationCode').value;
+    fetch('api/verify_code.php', {
+        method: 'POST',
+        body: new URLSearchParams({ code: verificationCode }),
+        credentials: 'include'
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.success){
+            document.getElementById('codeModal').style.display = 'none';
+            document.getElementById('resetModal').style.display = 'flex';
+        } else {
+            alert(data.error || 'كود غير صحيح');
+        }
+    })
+    .catch(()=>alert('خطأ في الاتصال بالخادم'));
+}
+
+function resetPassword(event) {
+    event.preventDefault();
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+    if (newPassword !== confirmNewPassword) {
+        alert('كلمتا المرور غير متطابقتين');
+        return;
+    }
+    fetch('api/reset_password.php', {
+        method: 'POST',
+        body: new URLSearchParams({ password: newPassword }),
+        credentials: 'include'
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.success){
+            alert('تم إعادة تعيين كلمة السر بنجاح. سيتم نقلك لصفحة تسجيل الدخول.');
+            window.location.href = 'login.html';
+        } else {
+            alert(data.error || 'فشل إعادة التعيين');
+        }
+    })
+    .catch(()=>alert('خطأ في الاتصال بالخادم'));
+}
+</script>
+<script src="js/online-status.js"></script>
+</body>
+</html>

@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>صفحة المستخدم — GamesHub</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        neonBlue: '#00f7ff',
+                        neonGreen: '#39ff14',
+                        neonPink: '#ff00ff'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    <style>
+        :root {
+            --neon-blue: #00d4ff;
+            --neon-purple: #9b59ff;
+            --neon-green: #32ff7e;
+            --bg-dark: #0b0f14;
+            --card-dark: rgba(255, 255, 255, 0.03);
+            --text-dark: #fff;
+            --muted-text: #cbd5e1;
+            --border-light: rgba(255, 255, 255, 0.06);
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+            -webkit-font-smoothing: antialiased;
+            /* Background effect for gaming theme */
+            background-image: radial-gradient(circle, rgba(155, 89, 255, 0.1) 1px, transparent 1px), radial-gradient(circle, rgba(0, 212, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            background-position: 0 0, 25px 25px;
+            animation: pulse-bg 10s infinite alternate;
+        }
+
+        @keyframes pulse-bg {
+            from { background-color: var(--bg-dark); }
+            to { background-color: #0d1218; }
+        }
+
+        .neon-btn {
+            background: linear-gradient(90deg, var(--neon-purple), var(--neon-blue));
+            box-shadow: 0 4px 18px rgba(59, 0, 120, 0.25), 0 0 8px rgba(0, 212, 255, 0.08);
+        }
+        .card-bg { background-color: var(--card-dark); border: 1px solid var(--border-light); }
+        .muted { color: var(--muted-text); }
+        .pill { background: rgba(255, 255, 255, 0.03); padding: 6px 10px; border-radius: 999px; font-size: 13px; }
+        .toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: 28px; z-index: 9999; padding: 12px 16px; border-radius: 10px; background: rgba(10, 12, 14, 0.9); box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6); color: #fff; display: none; }
+        .glow-hover:hover { box-shadow: 0 6px 24px rgba(0,212,255,0.12), 0 0 16px rgba(155,89,255,0.08); transform: translateY(-3px); }
+    /* modal styles */
+    .modal-overlay { transition: opacity 220ms ease, visibility 220ms ease; }
+    .modal-overlay.hidden { opacity: 0; visibility: hidden; }
+    .modal-overlay.flex { opacity: 1; visibility: visible; }
+    .modal-panel { background: linear-gradient(180deg,#07080a 0%, #0b0f14 100%); border-radius: 12px; box-shadow: 0 12px 40px rgba(3,6,12,0.6); border: 1px solid rgba(255,255,255,0.04); transform-origin: center; }
+    @keyframes modal-enter { from { opacity: 0; transform: translateY(-8px) scale(0.98);} to { opacity:1; transform: translateY(0) scale(1);} }
+    @keyframes modal-leave { from { opacity: 1; transform: translateY(0) scale(1);} to { opacity:0; transform: translateY(-8px) scale(0.98);} }
+    .modal-panel.show { animation: modal-enter 220ms ease forwards; }
+    .modal-panel.hide { animation: modal-leave 180ms ease forwards; }
+    .input-with-icon { position: relative; }
+    .input-with-icon .fa { position: absolute; top: 50%; transform: translateY(-50%); right: 12px; color: rgba(255,255,255,0.6); }
+    .input-with-icon input, .input-with-icon textarea, .input-with-icon select { padding-right: 40px; }
+    .modal-close-btn { position: absolute; top: 8px; left: 8px; color: rgba(255,255,255,0.6); }
+    .btn-neon-primary { background: linear-gradient(90deg, var(--neon-blue), #5ad8ff); }
+    .btn-neon-primary:hover { filter: brightness(1.05); transform: translateY(-2px); }
+    </style>
+</head>
+    <body>
+
+
+<div id="toast" class="toast">ميزة قريبا! ✨</div>
+<div id="overlay" class="fixed inset-0 bg-black bg-opacity-60 hidden z-40"></div>
+
+  <div id="sidebar-container"></div>
+
+<div class="min-h-screen md:mr-64 relative z-10">
+
+    <header class="p-4 flex items-center justify-between md:hidden">
+        <div class="flex items-center gap-3">
+            <button class="p-2 rounded-lg border border-white/6 open-sidebar-btn"><i class="fa fa-bars text-xl"></i></button>
+            <a href="#" class="text-xl font-bold">GamesHub</a>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="#" class="px-3 py-2 rounded-lg border border-white/6" onclick="try{sessionStorage.setItem('post_auth_return', window.location.pathname+window.location.search+window.location.hash);}catch(e){} window.location.href='login.html'">تسجيل دخول</a>
+        </div>
+    </header>
+
+    <header class="hidden md:flex items-center justify-between px-8 py-6 border-b border-white/6">
+        <div class="flex items-center gap-6">
+            <!-- Search elements removed as requested -->
+        </div>
+        <div class="flex items-center gap-4">
+            <a href="add-account.html" class="px-4 py-2 rounded-lg neon-btn text-black font-semibold">أضف حسابك</a>
+            <a href="#" class="px-3 py-2 rounded-lg border border-white/6" onclick="try{sessionStorage.setItem('post_auth_return', window.location.pathname+window.location.search+window.location.hash);}catch(e){} window.location.href='login.html'">تسجيل دخول</a>
+        </div>
+    </header>
+
+    <div class="p-4 md:p-8">
+        <div class="flex flex-col items-center mb-8">
+            <img id="user-profile-image" 
+             class="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover mb-4 border-4 border-[--neon-blue]">
+            <h1 id="user-name" class="text-3xl font-bold mb-2"> الوصف</h1>
+            <p id="user-bio" class="muted text-center max-w-lg">  كلمنا عن نفسك شويه</p>
+        </div>
+
+        <div class="max-w-xl mx-auto space-y-6">
+            <div id="owner-buttons" class="flex flex-col sm:flex-row gap-4 hidden">
+                <button id="edit-profile-btn" class="neon-btn text-black font-semibold p-4 rounded-xl flex-1">
+                    <i class="fa fa-edit ml-2"></i> تعديل بياناتي
+                </button>
+                <button id="owner-ads-button" class="card-bg p-4 rounded-xl flex-1 border border-white/10 text-right">
+                    <div class="font-bold text-lg">إعلاناتي</div>
+                    <div class="muted text-sm mt-1"><span id="my-accounts-count">0</span> حسابات معروضة</div>
+                </button>
+            </div>
+            
+            <div id="visitor-buttons" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <button id="visitor-ads-button" class="card-bg p-4 rounded-xl border border-white/10 text-right">
+                    <div class="font-bold text-lg">إعلاناته</div>
+                    <div class="muted text-sm mt-1"><span id="their-accounts-count">0</span> حسابات معروضة</div>
+                </button>
+                <button onclick="showPlaceholder('سيتم إظهار محادثاتك مع هذا المستخدم')" class="card-bg p-4 rounded-xl border border-white/10 text-right">
+                    <div class="font-bold text-lg">الرسائل</div>
+                    <div class="muted text-sm mt-1">محادثة جارية</div>
+                </button>
+            </div>
+
+            <div class="card-bg p-6 rounded-xl space-y-4">
+                <div class="flex items-center gap-4">
+                    <div class="bg-white/5 p-3 rounded-full text-xl" style="color:var(--neon-green)">
+                        <i class="fa fa-phone"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold">رقم الهاتف</h4>
+                        <p id="user-phone" class="muted">.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="bg-white/5 p-3 rounded-full text-xl" style="color:var(--neon-purple)">
+                        <i class="fa fa-calendar-alt"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold">السن</h4>
+                        <p id="user-age" class="muted"> .</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="bg-white/5 p-3 rounded-full text-xl" style="color:var(--neon-blue)">
+                        <i class="fa fa-venus-mars"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold">الجنس</h4>
+                        <p id="user-gender" class="muted">ذكر</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="p-4 md:p-8 border-t border-white/6 mt-6">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row md:justify-between gap-4">
+            <div>
+                <h4 class="font-bold">GamesHub</h4>
+                <p class="muted text-sm">منصة وسيط لبيع وشراء حسابات الألعاب — آمنة وسهلة</p>
+            </div>
+            <div class="flex gap-3 items-center">
+                <a href="#" class="muted text-sm">سياسة الخصوصية</a>
+                <a href="#" class="muted text-sm">شروط الاستخدام</a>
+                <a href="#" class="muted text-sm">اتصل بنا</a>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+<script>
+// باقي أكواد الجافاسكريبت
+
+
+function isProfileOwner(profileId) {
+    const currentUserId = '123';
+    const pageProfileId = '123'; 
+    return currentUserId === pageProfileId;
+}
+
+function loadUserProfile(profileData) {
+    const userProfileImage = document.getElementById('user-profile-image');
+    const userName = document.getElementById('user-name');
+    const userBio = document.getElementById('user-bio');
+    const userPhone = document.getElementById('user-phone');
+    const userAge = document.getElementById('user-age');
+    const userGender = document.getElementById('user-gender');
+    
+    if (userProfileImage) {
+        if (profileData.image) {
+            userProfileImage.src = profileData.image;
+        } else {
+            // use the default avatar shipped with the project
+            userProfileImage.src = 'uploads/default-avatar.svg';
+        }
+    }
+    if (userName) userName.textContent = profileData.name;
+    if (userBio) userBio.textContent = profileData.bio;
+    if (userPhone) userPhone.textContent = profileData.phone;
+    if (userAge) userAge.textContent = profileData.age;
+    if (userGender) userGender.textContent = profileData.gender;
+
+    const userAvatarSidebar = document.getElementById('user-avatar-sidebar');
+    const usernameSidebar = document.getElementById('username-sidebar');
+    if (userAvatarSidebar) {
+    userAvatarSidebar.src = profileData.image ? profileData.image : 'uploads/default-avatar.svg';
+    }
+    if (usernameSidebar) usernameSidebar.textContent = profileData.name;
+
+    const ownerButtons = document.getElementById('owner-buttons');
+    const visitorButtons = document.getElementById('visitor-buttons');
+
+    if (ownerButtons && visitorButtons) {
+        if (isProfileOwner(profileData.id)) {
+            ownerButtons.classList.remove('hidden');
+            visitorButtons.classList.add('hidden');
+        } else {
+            ownerButtons.classList.add('hidden');
+            visitorButtons.classList.remove('hidden');
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Determine profile id from query string (e.g., profile.html?id=123). If missing, API will return current session user.
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    const url = id ? `api/get_user.php?id=${encodeURIComponent(id)}` : 'api/get_user.php';
+    fetch(url, { credentials: 'include' })
+        .then(res => res.json())
+        .then(data => {
+            if (data && data.profile) {
+                loadUserProfile(data.profile);
+                // Show owner controls if viewer is owner
+                if (data.is_owner) {
+                    const ownerButtons = document.getElementById('owner-buttons');
+                    const visitorButtons = document.getElementById('visitor-buttons');
+                    if (ownerButtons && visitorButtons) {
+                        ownerButtons.classList.remove('hidden');
+                        visitorButtons.classList.add('hidden');
+                    }
+                }
+                // fetch accounts count for this profile
+                const profileId = data.profile.id;
+                fetch(`api/get_accounts_count.php?user_id=${encodeURIComponent(profileId)}`, { credentials: 'include' })
+                    .then(r => r.json())
+                    .then(c => {
+                        const myCountEl = document.getElementById('my-accounts-count');
+                        const theirCountEl = document.getElementById('their-accounts-count');
+                        if (myCountEl && data.is_owner) myCountEl.textContent = c.count || 0;
+                        if (theirCountEl && !data.is_owner) theirCountEl.textContent = c.count || 0;
+                    })
+                    .catch(()=>{/* ignore */});
+                // make the entire ads box clickable
+                const ownerAdsBtn = document.getElementById('owner-ads-button');
+                const visitorAdsBtn = document.getElementById('visitor-ads-button');
+                if (ownerAdsBtn) {
+                    ownerAdsBtn.addEventListener('click', () => {
+                        // navigate to user's own ads management/listing
+                        window.location.href = 'myaccount.html';
+                    });
+                }
+                if (visitorAdsBtn) {
+                    visitorAdsBtn.addEventListener('click', () => {
+                        // navigate to public listing filtered by this user
+                        window.location.href = `index.html?user=${encodeURIComponent(profileId)}`;
+                    });
+                }
+            } else {
+                showPlaceholder('تعذر تحميل بيانات المستخدم');
+            }
+        })
+        .catch(() => showPlaceholder('خطأ في الاتصال بالخادم'));
+});
+</script>
+<!-- Edit profile modal -->
+<div id="edit-profile-modal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50" role="dialog" aria-modal="true" aria-labelledby="edit-profile-title">
+    <div class="relative w-full max-w-xl mx-4">
+      <button aria-label="إغلاق" class="modal-close-btn" id="edit-close-btn"><i class="fa fa-times"></i></button>
+      <div class="modal-panel p-6 card-bg">
+        <h3 id="edit-profile-title" class="text-xl font-bold mb-4">تعديل بياناتي</h3>
+        <form id="edit-profile-form" class="space-y-3">
+            <div class="input-with-icon">
+                <label class="block text-sm mb-1">الاسم</label>
+                <input id="edit-name" name="name" class="w-full p-2 rounded-lg bg-transparent border border-white/6" />
+                <i class="fa fa-user"></i>
+            </div>
+                        <div class="input-with-icon">
+                            <label class="block text-sm mb-1">صورة البروفايل</label>
+                            <input id="edit-profile-image" name="profile_image" type="file" accept="image/*" class="w-full p-2 rounded-lg bg-transparent border border-white/6" />
+                            <i class="fa fa-image"></i>
+                        </div>
+            <div class="input-with-icon">
+                <label class="block text-sm mb-1">السيرة</label>
+                <textarea id="edit-bio" name="bio" rows="4" class="w-full p-2 rounded-lg bg-transparent border border-white/6"></textarea>
+                <i class="fa fa-pencil-alt"></i>
+            </div>
+            <div class="input-with-icon">
+                <label class="block text-sm mb-1">الهاتف</label>
+                <input id="edit-phone" name="phone" type="tel" class="w-full p-2 rounded-lg bg-transparent border border-white/6" disabled />
+                <i class="fa fa-phone"></i>
+            </div>
+            <div class="input-with-icon">
+                <label class="block text-sm mb-1">الجنس</label>
+                <select id="edit-gender" name="gender" class="w-full p-2 rounded-lg bg-transparent border border-white/6" disabled>
+                    <option value="ذكر">ذكر</option>
+                    <option value="أنثى">أنثى</option>
+                </select>
+                <i class="fa fa-venus-mars"></i>
+            </div>
+            <div class="flex gap-3 justify-end">
+                <button type="button" id="edit-cancel" class="px-4 py-2 rounded-lg border border-white/6">إلغاء</button>
+                <button type="submit" class="px-4 py-2 rounded-lg btn-neon-primary text-black">حفظ</button>
+            </div>
+        </form>
+      </div>
+    </div>
+</div>
+
+<script>
+// Edit profile modal logic
+document.addEventListener('DOMContentLoaded', function(){
+    const editBtn = document.getElementById('edit-profile-btn');
+    const modal = document.getElementById('edit-profile-modal');
+    const cancel = document.getElementById('edit-cancel');
+    const form = document.getElementById('edit-profile-form');
+
+    function openModal(){
+        // populate fields from current DOM
+        document.getElementById('edit-name').value = document.getElementById('user-name').textContent || '';
+        document.getElementById('edit-bio').value = document.getElementById('user-bio').textContent || '';
+    document.getElementById('edit-phone').value = document.getElementById('user-phone').textContent || '';
+    document.getElementById('edit-gender').value = document.getElementById('user-gender').textContent || 'ذكر';
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    const panel = modal.querySelector('.modal-panel');
+    if (panel) { panel.classList.remove('hide'); panel.classList.add('show'); }
+    // move focus to first input
+    setTimeout(()=>{ const first = document.getElementById('edit-name'); if (first) first.focus(); }, 60);
+    }
+
+    function closeModal(){
+    const panel = modal.querySelector('.modal-panel');
+    if (panel) { panel.classList.remove('show'); panel.classList.add('hide'); }
+    // wait animation then hide
+    setTimeout(()=>{ modal.classList.remove('flex'); modal.classList.add('hidden'); }, 180);
+    }
+
+    if (editBtn) editBtn.addEventListener('click', openModal);
+    if (cancel) cancel.addEventListener('click', closeModal);
+    const closeBtn = document.getElementById('edit-close-btn');
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    // close on backdrop click
+    modal.addEventListener('click', function(e){ if (e.target === modal) closeModal(); });
+    // close on ESC
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal(); });
+
+    form.addEventListener('submit', function(e){
+        e.preventDefault();
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn.disabled) return; // already submitting
+        submitBtn.disabled = true;
+        // get CSRF
+        fetch('api/get_csrf.php', { credentials: 'include' })
+            .then(r=>r.json())
+            .then(cs=>{
+                const formData = new FormData();
+                formData.append('csrf_token', cs.csrf_token || '');
+                formData.append('name', document.getElementById('edit-name').value.trim());
+                formData.append('bio', document.getElementById('edit-bio').value.trim());
+                formData.append('phone', document.getElementById('edit-phone').value.trim());
+                formData.append('gender', document.getElementById('edit-gender').value);
+                // صورة البروفايل
+                const imageInput = document.getElementById('edit-profile-image');
+                if (imageInput && imageInput.files && imageInput.files[0]) {
+                    formData.append('profile_image', imageInput.files[0]);
+                }
+                return fetch('api/update_user_image.php', {
+                    method: 'POST',
+                    credentials: 'include',
+                    body: formData
+                });
+            })
+            .then(r=>r.json())
+            .then(j=>{
+                if (j && j.success) {
+                    document.getElementById('user-name').textContent = document.getElementById('edit-name').value.trim();
+                    document.getElementById('user-bio').textContent = document.getElementById('edit-bio').value.trim();
+                    document.getElementById('user-phone').textContent = document.getElementById('edit-phone').value.trim();
+                    document.getElementById('user-gender').textContent = document.getElementById('edit-gender').value;
+                    if (j.image) {
+                        document.getElementById('user-profile-image').src = j.image;
+                    }
+                    const usernameSidebar = document.getElementById('username-sidebar');
+                    if (usernameSidebar) usernameSidebar.textContent = document.getElementById('edit-name').value.trim();
+                    closeModal();
+                    showPlaceholder('تم حفظ التغييرات');
+                } else {
+                    showPlaceholder((j && j.error) ? j.error : 'حدث خطأ');
+                }
+                if (submitBtn) submitBtn.disabled = false;
+            })
+            .catch(()=> showPlaceholder('خطأ في الاتصال'));
+    // ensure button re-enabled if fetch chain fails before final then
+    setTimeout(()=>{ const submitBtn2 = form.querySelector('button[type="submit"]'); if (submitBtn2) submitBtn2.disabled = false; }, 5000);
+}) }) ;
+</script>
+<script src="js/sidebar.js"></script>
+<script src="js/online-status.js"></script>
+<script src="js/ban-check.js"></script>
+</body>
+</html>
