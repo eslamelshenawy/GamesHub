@@ -14,6 +14,11 @@ api/get_user_details.php
 ملفات JavaScript (المجلد: js/)
 ---------------------------
 js/admin-dashboard.js
+js/massage.js
+
+ملفات PHP الأخرى (المجلد الرئيسي)
+---------------------------
+messages.php
 
 ========================================
 المسارات الكاملة على الجهاز المحلي:
@@ -26,6 +31,8 @@ C:\xampp\htdocs\api\api\get_reports.php
 C:\xampp\htdocs\api\api\admin_reports.php
 C:\xampp\htdocs\api\api\get_user_details.php
 C:\xampp\htdocs\api\js\admin-dashboard.js
+C:\xampp\htdocs\api\js\massage.js
+C:\xampp\htdocs\api\messages.php
 
 ========================================
 الملفات الاختيارية - لا تُرفع للسيرفر
@@ -45,15 +52,16 @@ api/fix_admin_email.php
 1. افتح برنامج FTP (FileZilla مثلاً)
 2. اتصل بالسيرفر
 3. انتقل للمجلد الرئيسي للموقع
-4. ارفع الملفات 7 في أماكنها:
+4. ارفع الملفات 9 في أماكنها:
    - 6 ملفات في مجلد api/
-   - 1 ملف في مجلد js/
+   - 2 ملف في مجلد js/
+   - 1 ملف في المجلد الرئيسي
 
 ========================================
 للرفع عبر Git:
 ========================================
-git add api/get_topup_requests.php api/approve_topup.php api/reject_topup.php api/get_reports.php api/admin_reports.php api/get_user_details.php js/admin-dashboard.js
-git commit -m "Fix: Admin dashboard JSON API issues"
+git add api/get_topup_requests.php api/approve_topup.php api/reject_topup.php api/get_reports.php api/admin_reports.php api/get_user_details.php js/admin-dashboard.js js/massage.js messages.php
+git commit -m "Fix: Admin dashboard JSON API issues & file preview UI"
 git push origin main
 
 ========================================

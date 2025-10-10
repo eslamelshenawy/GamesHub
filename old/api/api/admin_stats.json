@@ -1,0 +1,61 @@
+{
+  "success": true,
+  "users": {
+    "total_users": 1250,
+    "online_users": 45,
+    "new_users_today": 12,
+    "active_users_week": 320
+  },
+  "accounts": {
+    "total_accounts": 2840,
+    "accounts_today": 28,
+    "accounts_by_game": [
+      {"game_name": "PUBG Mobile", "count": 850},
+      {"game_name": "Free Fire", "count": 620},
+      {"game_name": "Call of Duty", "count": 480},
+      {"game_name": "Fortnite", "count": 390},
+      {"game_name": "Clash of Clans", "count": 280},
+      {"game_name": "Minecraft", "count": 220}
+    ]
+  },
+  "deals": {
+    "total_deals": 3420,
+    "completed_deals": 2890,
+    "pending_deals": 180,
+    "cancelled_deals": 350,
+    "total_deal_amount": 485000
+  },
+  "wallets": {
+    "balance_totals": {
+      "total_balance": 125000,
+      "total_pending": 8500
+    },
+    "payment_totals": {
+      "total_payments": 2340,
+      "total_payment_amount": 340000
+    }
+  },
+  "messages": {
+    "total_messages": 15680,
+    "messages_today": 245
+  },
+  "performance": {
+    "completion_rate": 84.5,
+    "avg_completion_hours": 2.3
+  },
+  "top_sellers": [
+    {"name": "أحمد محمد", "phone": "01234567890", "deal_count": 45, "total_sales": 25000},
+    {"name": "سارة أحمد", "phone": "01234567891", "deal_count": 38, "total_sales": 22000},
+    {"name": "محمد علي", "phone": "01234567892", "deal_count": 42, "total_sales": 20500},
+    {"name": "فاطمة حسن", "phone": "01234567893", "deal_count": 35, "total_sales": 18000},
+    {"name": "عمر خالد", "phone": "01234567894", "deal_count": 30, "total_sales": 15500}
+  ],
+  "top_buyers": [
+    {"name": "ليلى محمود", "phone": "01234567895", "deal_count": 28, "total_purchases": 18500},
+    {"name": "كريم أحمد", "phone": "01234567896", "deal_count": 25, "total_purchases": 16000},
+    {"name": "نور الدين", "phone": "01234567897", "deal_count": 22, "total_purchases": 14500},
+    {"name": "هدى سالم", "phone": "01234567898", "deal_count": 20, "total_purchases": 13000},
+    {"name": "يوسف عبدالله", "phone": "01234567899", "deal_count": 18, "total_purchases": 11500}
+  ],
+  "generated_at": "2024-12-24 15:30:00"
+}

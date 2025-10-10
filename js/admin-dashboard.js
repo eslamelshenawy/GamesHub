@@ -1020,7 +1020,7 @@ class AdminDashboard {
                 this.loadTopups();
                 this.loadDashboardData();
             } else {
-                this.showNotification('فشل في قبول طلب الشحن: ' + data.message, 'error');
+                this.showNotification('فشل في قبول طلب الشحن: ' + (data.error || data.message), 'error');
             }
         } catch (error) {
             console.error('Error approving topup:', error);
@@ -1042,7 +1042,7 @@ class AdminDashboard {
                 this.loadTopups();
                 this.loadDashboardData();
             } else {
-                this.showNotification('فشل في رفض طلب الشحن: ' + data.message, 'error');
+                this.showNotification('فشل في رفض طلب الشحن: ' + (data.error || data.message), 'error');
             }
         } catch (error) {
             console.error('Error rejecting topup:', error);
@@ -1061,10 +1061,10 @@ class AdminDashboard {
             const data = await response.json();
             if (data.success) {
                 this.showNotification('تم قبول طلب السحب بنجاح', 'success');
-                this.loadTopups();
+                this.loadWithdrawals();
                 this.loadDashboardData();
             } else {
-                this.showNotification('فشل في قبول طلب السحب: ' + data.message, 'error');
+                this.showNotification('فشل في قبول طلب السحب: ' + (data.error || data.message), 'error');
             }
         } catch (error) {
             console.error('Error approving withdrawal:', error);
@@ -1083,10 +1083,10 @@ class AdminDashboard {
             const data = await response.json();
             if (data.success) {
                 this.showNotification('تم رفض طلب السحب', 'success');
-                this.loadTopups();
+                this.loadWithdrawals();
                 this.loadDashboardData();
             } else {
-                this.showNotification('فشل في رفض طلب السحب: ' + data.message, 'error');
+                this.showNotification('فشل في رفض طلب السحب: ' + (data.error || data.message), 'error');
             }
         } catch (error) {
             console.error('Error rejecting withdrawal:', error);

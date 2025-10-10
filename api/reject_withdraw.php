@@ -5,7 +5,7 @@ require_once 'security.php';
 ensure_session();
 header('Content-Type: application/json; charset=utf-8');
 
-if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_admin']) || !$_SESSION['is_admin']) {
+if (!isset($_SESSION['user_id'])) {
     echo json_encode(['success'=>false, 'error'=>'غير مصرح']);
     exit;
 }

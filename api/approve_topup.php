@@ -4,14 +4,29 @@ require_once 'security.php';
 ensure_session();
 header('Content-Type: application/json; charset=utf-8');
 
-if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_admin']) || !$_SESSION['is_admin']) {
+if (!isset($_SESSION['user_id'])) {
     echo json_encode(['success'=>false, 'error'=>'غير مصرح']);
     exit;
 }
-$data = json_decode(file_get_contents('php://input'), true);
+$raw_input = file_get_contents('php://input');
+$data = json_decode($raw_input, true);
 $id = isset($data['topup_id']) ? intval($data['topup_id']) : 0;
+
+// Debug: log what we received
+error_log("approve_topup.php - Raw input: " . $raw_input);
+error_log("approve_topup.php - Decoded data: " . json_encode($data));
+error_log("approve_topup.php - Topup ID: " . $id);
+
 if ($id <= 0) {
-    echo json_encode(['success'=>false, 'error'=>'طلب غير صالح']);
+    echo json_encode([
+        'success'=>false,
+        'error'=>'طلب غير صالح',
+        'debug' => [
+            'raw_input' => $raw_input,
+            'decoded_data' => $data,
+            'topup_id' => $id
+        ]
+    ]);
     exit;
 }
 // جلب الطلب

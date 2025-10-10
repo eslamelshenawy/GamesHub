@@ -1,0 +1,44 @@
+قائمة الملفات المُعدلة - ارفعها للسيرفر
+==========================================
+
+api/get_topup_requests.php
+api/approve_topup.php
+api/reject_topup.php
+api/approve_withdraw.php
+api/reject_withdraw.php
+api/get_reports.php
+api/admin_reports.php
+api/get_user_details.php
+api/get_active_deal.php
+api/get_conversation_by_users.php
+js/admin-dashboard.js
+js/massage.js
+messages.php
+
+==========================================
+المسارات الكاملة:
+==========================================
+
+C:\xampp\htdocs\api\api\get_topup_requests.php
+C:\xampp\htdocs\api\api\approve_topup.php
+C:\xampp\htdocs\api\api\reject_topup.php
+C:\xampp\htdocs\api\api\approve_withdraw.php
+C:\xampp\htdocs\api\api\reject_withdraw.php
+C:\xampp\htdocs\api\api\get_reports.php
+C:\xampp\htdocs\api\api\admin_reports.php
+C:\xampp\htdocs\api\api\get_user_details.php
+C:\xampp\htdocs\api\api\get_active_deal.php
+C:\xampp\htdocs\api\api\get_conversation_by_users.php
+C:\xampp\htdocs\api\js\admin-dashboard.js
+C:\xampp\htdocs\api\js\massage.js
+C:\xampp\htdocs\api\messages.php
+
+==========================================
+المجموع: 13 ملف
+==========================================
+
+==========================================
+ملفات اختيارية (للاختبار فقط):
+==========================================
+api/create_test_requests.php (لإنشاء طلبات تجريبية)
+==========================================

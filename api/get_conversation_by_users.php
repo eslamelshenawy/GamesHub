@@ -1,8 +1,8 @@
 <?php
-// Session is now managed in db.php
+require_once 'db.php';
 require_once 'security.php';
 ensure_session();
-require_once 'db.php';
+header('Content-Type: application/json; charset=utf-8');
 
 // التحقق من تسجيل الدخول
 if (!isset($_SESSION['user_id'])) {
