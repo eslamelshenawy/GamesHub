@@ -14,15 +14,25 @@ header('Content-Type: application/json; charset=utf-8');
 // }
 
 $name = isset($_POST['name']) ? trim($_POST['name']) : '';
-// تم حذف متغير البريد الإلكتروني
+$email = isset($_POST['email']) ? trim($_POST['email']) : '';
 $password = isset($_POST['password']) ? $_POST['password'] : '';
-if (empty($name) || strlen($password) < 6) {
+
+// Validate input
+if (empty($name) || empty($email) || strlen($password) < 6) {
 	http_response_code(400);
 	echo json_encode(['error' => 'بيانات غير صحيحة']);
 	exit;
 }
 
+// Validate email format
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+	http_response_code(400);
+	echo json_encode(['error' => 'البريد الإلكتروني غير صالح']);
+	exit;
+}
+
 try {
+	// Check if email already exists
 	$stmt = $pdo->prepare('SELECT id FROM users WHERE email = ? LIMIT 1');
 	$stmt->execute([$email]);
 	if ($stmt->fetch()) {
@@ -30,10 +40,19 @@ try {
 		echo json_encode(['error' => 'البريد الإلكتروني مستخدم بالفعل']);
 		exit;
 	}
+
+	// Create new user
 	$hashed = password_hash($password, PASSWORD_DEFAULT);
 	$stmt = $pdo->prepare('INSERT INTO users (name, email, password) VALUES (?, ?, ?)');
 	$stmt->execute([$name, $email, $hashed]);
-	echo json_encode(['success' => true]);
+	$user_id = $pdo->lastInsertId();
+
+	// Automatically log in the user after registration
+	$_SESSION['user_id'] = $user_id;
+	$_SESSION['user_name'] = $name;
+	$_SESSION['user_email'] = $email;
+
+	echo json_encode(['success' => true, 'user_id' => $user_id]);
 } catch (Exception $e) {
 	http_response_code(500);
 	echo json_encode(['error' => 'خطأ في الخادم']);

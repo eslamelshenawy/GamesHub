@@ -14,8 +14,8 @@ $production_config = [
     'session' => [
         'cookie_secure' => true,     // HTTPS only
         'cookie_httponly' => true,   // Prevent XSS
-        'cookie_samesite' => 'None', // Required for cross-origin requests
-        'cookie_domain' => 'bvize.com', // Exact domain match (no dot prefix)
+        'cookie_samesite' => 'Lax',  // Changed from None to Lax (same-site cookies)
+        'cookie_domain' => '.bvize.com', // Added dot prefix for subdomain support
         'cookie_path' => '/',        // Site-wide cookies
         'cookie_lifetime' => 86400   // 24 hours
     ],
