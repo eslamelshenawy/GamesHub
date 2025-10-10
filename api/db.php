@@ -88,12 +88,13 @@ if ($isProduction) {
         ini_set('session.cookie_path', $sessionConfig['cookie_path']);
         ini_set('session.cookie_lifetime', $sessionConfig['cookie_lifetime']);
     } else {
-        // Fallback production settings
+        // Fallback production settings (should match production_config.php)
         ini_set('session.cookie_secure', '1');
         ini_set('session.cookie_httponly', '1');
-        ini_set('session.cookie_samesite', 'None');
-        ini_set('session.cookie_domain', 'bvize.com');
+        ini_set('session.cookie_samesite', 'Lax'); // Changed from None to Lax
+        ini_set('session.cookie_domain', '.bvize.com'); // Added dot prefix
         ini_set('session.cookie_path', '/');
+        ini_set('session.cookie_lifetime', '86400'); // 24 hours
     }
     
     // Additional production session security

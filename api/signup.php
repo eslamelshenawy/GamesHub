@@ -1,11 +1,10 @@
 <?php
-
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: *");
-
+// Start session first before any headers
 require_once 'db.php';
 require_once 'security.php';
 ensure_session();
+// CORS headers are set in db.php for production
+
 header('Content-Type: application/json; charset=utf-8');
 
 $username = isset($_POST['username']) ? trim($_POST['username']) : '';
@@ -63,6 +62,7 @@ try {
     $stmt = $pdo->prepare('INSERT INTO users (name, password, age, gender, phone, email) VALUES (?, ?, ?, ?, ?, ?)');
     $stmt->execute([$username, $hashed, $age, $gender, $phone, $email]);
     $user_id = $pdo->lastInsertId();
+
     // تسجيل دخول المستخدم تلقائياً
     $_SESSION['user_id'] = $user_id;
     $_SESSION['user_name'] = $username;
@@ -70,6 +70,10 @@ try {
     $_SESSION['user_gender'] = $gender;
     $_SESSION['user_phone'] = $phone;
     $_SESSION['user_email'] = $email;
+
+    // Force PHP to write session data immediately
+    session_write_close();
+
     $target = safe_return_target_signup($raw_return) ?: 'myaccount.html';
     echo json_encode(['success' => true, 'redirect' => $target]);
 } catch (Exception $e) {

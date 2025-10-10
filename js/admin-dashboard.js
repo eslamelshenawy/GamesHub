@@ -65,16 +65,23 @@ class AdminDashboard {
             item.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                
+
+                const onclickAttr = item.getAttribute('onclick');
+
+                // Skip if onclick doesn't contain showSection (e.g., logout button)
+                if (!onclickAttr || !onclickAttr.includes('showSection')) {
+                    return;
+                }
+
                 // Remove active class from all items
                 document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('bg-neon-blue/20'));
-                
+
                 // Add active class to clicked item
                 item.classList.add('bg-neon-blue/20');
-                
-                const section = item.getAttribute('onclick').match(/showSection\('(.+)'\)/)[1];
+
+                const section = onclickAttr.match(/showSection\('(.+)'\)/)[1];
                 this.showSection(section);
-                
+
                 // Close mobile sidebar after navigation
                 if (window.innerWidth < 1024) {
                     const sidebar = document.getElementById('sidebar');
@@ -2619,6 +2626,29 @@ function adjustTableResponsiveness() {
 function closeReportModal() {
     if (window.adminDashboard) {
         window.adminDashboard.closeReportModal();
+    }
+}
+
+// Global logout function
+function logout() {
+    if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
+        fetch('api/logout.php', {
+            method: 'POST',
+            credentials: 'include'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = 'login.html';
+            } else {
+                alert('حدث خطأ أثناء تسجيل الخروج');
+            }
+        })
+        .catch(error => {
+            console.error('Logout error:', error);
+            // Redirect anyway since session might be cleared
+            window.location.href = 'login.html';
+        });
     }
 }
 

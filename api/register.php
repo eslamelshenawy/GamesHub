@@ -52,6 +52,9 @@ try {
 	$_SESSION['user_name'] = $name;
 	$_SESSION['user_email'] = $email;
 
+	// Force PHP to write session data immediately
+	session_write_close();
+
 	echo json_encode(['success' => true, 'user_id' => $user_id]);
 } catch (Exception $e) {
 	http_response_code(500);

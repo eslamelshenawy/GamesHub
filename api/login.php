@@ -1,16 +1,17 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
+// Start session first before any headers
+require_once 'db.php';
+// Session already started in db.php
+// CORS headers are set in db.php for production
 
 // Handle preflight OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+    header("Access-Control-Allow-Headers: Content-Type, Authorization");
     http_response_code(200);
     exit;
 }
-
-require_once 'db.php';
-// Session already started in db.php
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -68,13 +69,22 @@ try {
 		$_SESSION['user_name'] = $user['name'];
 		$_SESSION['user_email'] = $email;
 		$_SESSION['is_admin'] = ($user['role'] === 'admin') ? 1 : 0;
-		
+
+		// Debug: Log session data
+		error_log("Login successful - Session ID: " . session_id() . ", User ID: " . $user['id']);
+		error_log("Session save path: " . session_save_path());
+		error_log("Session cookie params: " . json_encode(session_get_cookie_params()));
+
+		// Force PHP to write session data immediately
+		session_write_close();
+
 		echo json_encode([
 			'success' => true,
 			'message' => 'تم تسجيل الدخول بنجاح',
 			'user_id' => $user['id'],
 			'user_name' => $user['name'],
-			'is_admin' => ($user['role'] === 'admin')
+			'is_admin' => ($user['role'] === 'admin'),
+			'debug_session_id' => session_id() // Debug info
 		]);
 	} else {
 		http_response_code(401);
