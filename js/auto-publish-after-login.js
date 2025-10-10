@@ -1,12 +1,18 @@
 // نشر الحساب تلقائياً بعد تسجيل الدخول إذا وجدت بيانات نشر معلقة
 // يعتمد على image-idb.js
 (async function(){
-    // انتظر حتى يتم تسجيل الدخول فعلياً (مثلاً: تحقق من وجود PHPSESSID أو أي مؤشر آخر)
-    function isLoggedIn() {
-        return document.cookie.includes('PHPSESSID');
+    // التحقق من تسجيل الدخول باستخدام API بدلاً من فحص الكوكي
+    let loginData;
+    try {
+        const res = await fetch('api/check_login.php', { credentials: 'include' });
+        loginData = await res.json();
+    } catch(e) {
+        console.error('خطأ في التحقق من تسجيل الدخول:', e);
+        return;
     }
+
     // انتظر حتى يتم تسجيل الدخول (في حال تم التوجيه بعد تسجيل الدخول)
-    if (!isLoggedIn()) return;
+    if (!loginData || !loginData.logged_in) return;
     // تحقق من وجود بيانات نشر معلقة
     if (!sessionStorage.getItem('pending_ad')) return;
     // تحميل مكتبة image-idb.js إذا لم تكن محملة

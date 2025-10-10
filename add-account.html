@@ -615,50 +615,10 @@ modalImg.addEventListener('touchend', function(e){
     else if (dx < -60) { modalNext.click(); }
 });
 
-// --- سيناريو جديد: نشر الحساب بعد تسجيل الدخول تلقائياً ---
-function isLoggedIn() {
-    return document.cookie.includes('PHPSESSID');
-}
-const addAccountForm = document.getElementById('add-account-form');
-addAccountForm.addEventListener('submit', function(e) {
-    if (!isLoggedIn()) {
-        // اجمع بيانات النموذج (بدون صور)
-        const formData = {
-            game_name: document.getElementById('game-name').value,
-            description: document.getElementById('description').value,
-            price: document.getElementById('price').value
-        };
-        // الصور: سنحفظها مؤقتاً في IndexedDB (دعم صور كثيرة/كبيرة)
-        const files = document.getElementById('image-upload').files;
-        const images = [];
-        const maxImages = Math.min(files.length, 30); // دعم حتى 30 صورة
-        let loaded = 0;
-        if (files.length > 0) {
-            for (let i = 0; i < maxImages; i++) {
-                const reader = new FileReader();
-                reader.onload = function(ev) {
-                    // بدلاً من base64، نخزن Blob مباشرة في IndexedDB
-                    saveImageToIDB('pendingAddAccount_img_' + i, files[i]).then(() => {
-                        loaded++;
-                        if (loaded === maxImages) {
-                            localStorage.setItem('pendingAddAccount', JSON.stringify({ ...formData, imagesCount: maxImages }));
-                            redirectToLogin();
-                        }
-                    });
-                };
-                reader.readAsArrayBuffer(files[i]); // نقرأ فقط للتأكد من صحة الملف
-            }
-            e.preventDefault();
-            return false;
-        } else {
-            localStorage.setItem('pendingAddAccount', JSON.stringify({ ...formData, imagesCount: 0 }));
-            redirectToLogin();
-            e.preventDefault();
-            return false;
-        }
-    }
-    // إذا كان مسجلاً الدخول، أكمل الإرسال عادي
-});
+// --- ملاحظة: تم إزالة فحص isLoggedIn() المحلي ---
+// الآن نعتمد على السيرفر للتحقق من تسجيل الدخول
+// إذا لم يكن المستخدم مسجل دخول، سيرد السيرفر بـ 401
+// والكود في add-account.js سيتعامل مع ذلك
 
 function redirectToLogin() {
     // store return path
@@ -666,10 +626,13 @@ function redirectToLogin() {
     window.location.href = 'login.html?return=%2Fadd-account.html';
 }
 
-// عند تحميل الصفحة: إذا كان هناك بيانات نشر معلقة وتم تسجيل الدخول، انشر تلقائياً
+// عند تحميل الصفحة: إذا كان هناك بيانات نشر معلقة، تحقق من تسجيل الدخول واعرضها
 window.addEventListener('DOMContentLoaded', function(){
-    if (isLoggedIn()) {
-        if (localStorage.getItem('pendingAddAccount')) {
+    // التحقق من تسجيل الدخول باستخدام API
+    fetch('api/check_login.php', { credentials: 'include' })
+        .then(res => res.json())
+        .then(loginData => {
+            if (loginData.logged_in && localStorage.getItem('pendingAddAccount')) {
             console.log('[DEBUG] وجد بيانات نشر معلقة في localStorage');
             const data = JSON.parse(localStorage.getItem('pendingAddAccount'));
             const form = document.getElementById('add-account-form');
@@ -715,7 +678,11 @@ window.addEventListener('DOMContentLoaded', function(){
                 showPlaceholder('لم يتم العثور على بيانات نشر معلقة. إذا كنت قد ملأت النموذج قبل تسجيل الدخول، يرجى إعادة المحاولة.');
             }
         }
-    }
+            }
+        })
+        .catch(err => {
+            console.error('[DEBUG] خطأ في التحقق من تسجيل الدخول:', err);
+        });
 });
 
 // إرسال النموذج المسترجع برمجياً مع حذف البيانات المؤقتة فقط بعد نجاح الإرسال

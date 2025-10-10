@@ -68,95 +68,46 @@
 
     // عند تحميل الصفحة: إذا كان المستخدم مسجلاً الدخول ويوجد إعلان معلق في sessionStorage، استرجعه تلقائياً
     document.addEventListener('DOMContentLoaded', function() {
-        function isLoggedIn() {
-            return document.cookie.includes('PHPSESSID');
-        }
-        if (isLoggedIn()) {
-            try {
-                var draft = sessionStorage.getItem('addAccountDraft');
-                if (draft) {
-                    var data = JSON.parse(draft);
-                    if (data) {
-                        if (document.getElementById('game-name') && data.game_name) document.getElementById('game-name').value = data.game_name;
-                        if (document.getElementById('description') && data.description) document.getElementById('description').value = data.description;
-                        if (document.getElementById('price') && data.price) document.getElementById('price').value = data.price;
-                        // إذا كان auto_publish_ad=1 في sessionStorage، نفذ الإرسال التلقائي
-                        var autoPublish = false;
-                        try {
-                            autoPublish = sessionStorage.getItem('auto_publish_ad') === '1';
-                            if(autoPublish) sessionStorage.removeItem('auto_publish_ad');
-                        } catch(e) {}
-                        if(autoPublish) {
-                            setTimeout(function(){
-                                var form = document.querySelector('form');
-                                if(form) form.dispatchEvent(new Event('submit'));
-                            }, 500);
+        // التحقق من تسجيل الدخول باستخدام API بدلاً من فحص الكوكي
+        fetch('api/check_login.php', { credentials: 'include' })
+            .then(res => res.json())
+            .then(loginData => {
+                if (loginData.logged_in) {
+                    try {
+                        var draft = sessionStorage.getItem('addAccountDraft');
+                        if (draft) {
+                            var data = JSON.parse(draft);
+                            if (data) {
+                                if (document.getElementById('game-name') && data.game_name) document.getElementById('game-name').value = data.game_name;
+                                if (document.getElementById('description') && data.description) document.getElementById('description').value = data.description;
+                                if (document.getElementById('price') && data.price) document.getElementById('price').value = data.price;
+                                // إذا كان auto_publish_ad=1 في sessionStorage، نفذ الإرسال التلقائي
+                                var autoPublish = false;
+                                try {
+                                    autoPublish = sessionStorage.getItem('auto_publish_ad') === '1';
+                                    if(autoPublish) sessionStorage.removeItem('auto_publish_ad');
+                                } catch(e) {}
+                                if(autoPublish) {
+                                    setTimeout(function(){
+                                        var form = document.querySelector('form');
+                                        if(form) form.dispatchEvent(new Event('submit'));
+                                    }, 500);
+                                }
+                            }
                         }
-                    }
+                    } catch(e) {}
                 }
-            } catch(e) {}
-        }
+            })
+            .catch(err => {
+                console.error('خطأ في التحقق من تسجيل الدخول:', err);
+            });
     });
 
     const theForm = document.querySelector('form');
     if (theForm) {
         theForm.addEventListener('submit', function(event) {
-            function isLoggedIn() {
-                return document.cookie.includes('PHPSESSID');
-            }
-        if (!isLoggedIn()) {
-                // حفظ بيانات النموذج والصور في sessionStorage و IndexedDB
-                try {
-                    var images = [];
-                    var imageInput = document.getElementById('image-upload');
-                    if (imageInput && imageInput.files && imageInput.files.length > 0) {
-                        for (var i = 0; i < imageInput.files.length && i < 30; i++) {
-                            var file = imageInput.files[i];
-                            var key = 'addAccountImage_' + i;
-                            images.push(key);
-                            // حفظ الصورة في IndexedDB
-                            if (typeof saveImageToIDB === 'function') {
-                                saveImageToIDB(key, file);
-                            }
-                        }
-                    }
-                    sessionStorage.setItem('addAccountDraft', JSON.stringify({
-                        game_name: document.getElementById('game-name').value,
-                        description: document.getElementById('description').value,
-                        price: document.getElementById('price').value,
-                        images: images
-                    }));
-                } catch(e) {
-                    // fallback: حفظ فقط النصوص إذا فشل حفظ الصور
-                    try {
-                        sessionStorage.setItem('addAccountDraft', JSON.stringify({
-                            game_name: document.getElementById('game-name').value,
-                            description: document.getElementById('description').value,
-                            price: document.getElementById('price').value
-                        }));
-                    } catch(e) {}
-                }
-                event.preventDefault();
-                showPlaceholder('يجـب تسجيل الدخول أولا لإنشاء إعلان. سيتم تحويلك لصفحة التسجيل.');
-                setTimeout(function(){
-            // redirect to login (not signup) so the user can authenticate
-            // include the full current path (and query/hash) encoded as `return` so
-            // the login page can redirect back safely after successful auth
-            try {
-                var currentPath = window.location.pathname + window.location.search + window.location.hash;
-                // store the intended return target in sessionStorage so login/signup can restore it
-                try { sessionStorage.setItem('post_auth_return', currentPath); } catch(e) { /* ignore */ }
-                var returnParam = encodeURIComponent(currentPath);
-                window.location.href = 'login.html?return=' + returnParam;
-            } catch (e) {
-                // fallback to a simple redirect if something goes wrong
-                try { sessionStorage.setItem('post_auth_return', '/add-account.html'); } catch(e) {}
-                window.location.href = 'login.html?return=%2Fadd-account.html';
-            }
-                }, 1200);
-                return false;
-            }
-            // إذا كان مسجلاً الدخول، أكمل الإرسال
+            // أزل الفحص المحلي للكوكي - دع السيرفر يتحقق من تسجيل الدخول
+            // إذا لم يكن مسجل دخول، سيرد السيرفر بـ 401 وسنتعامل معه
             event.preventDefault();
             const form = event.target;
             fetch('api/get_csrf.php', {credentials: 'include'})

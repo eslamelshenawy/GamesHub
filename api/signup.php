@@ -60,22 +60,43 @@ try {
     
     $hashed = password_hash($password, PASSWORD_DEFAULT);
     $stmt = $pdo->prepare('INSERT INTO users (name, password, age, gender, phone, email) VALUES (?, ?, ?, ?, ?, ?)');
-    $stmt->execute([$username, $hashed, $age, $gender, $phone, $email]);
+    $result = $stmt->execute([$username, $hashed, $age, $gender, $phone, $email]);
+
+    if (!$result) {
+        error_log("Signup failed: INSERT failed");
+        http_response_code(500);
+        echo json_encode(['error' => 'فشل إنشاء الحساب']);
+        exit;
+    }
+
     $user_id = $pdo->lastInsertId();
 
+    // Debug: Log the insert result
+    error_log("Signup - User created. Last Insert ID: " . $user_id . ", Affected rows: " . $stmt->rowCount());
+
+    if (!$user_id || $user_id == 0) {
+        error_log("Signup failed: lastInsertId returned 0");
+        http_response_code(500);
+        echo json_encode(['error' => 'فشل الحصول على معرف المستخدم']);
+        exit;
+    }
+
     // تسجيل دخول المستخدم تلقائياً
-    $_SESSION['user_id'] = $user_id;
+    $_SESSION['user_id'] = (int)$user_id; // Force integer
     $_SESSION['user_name'] = $username;
     $_SESSION['user_age'] = $age;
     $_SESSION['user_gender'] = $gender;
     $_SESSION['user_phone'] = $phone;
     $_SESSION['user_email'] = $email;
 
+    // Debug: Log session data
+    error_log("Signup - Session data set. user_id: " . $_SESSION['user_id']);
+
     // Force PHP to write session data immediately
     session_write_close();
 
     $target = safe_return_target_signup($raw_return) ?: 'myaccount.html';
-    echo json_encode(['success' => true, 'redirect' => $target]);
+    echo json_encode(['success' => true, 'redirect' => $target, 'user_id' => (int)$user_id]);
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode(['error' => 'خطأ في الخادم']);
