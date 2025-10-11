@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 	exit;
 }
 // جلب جميع الحسابات الخاصة بالمستخدم الحالي مع الصور
-$stmt = $pdo->prepare('SELECT a.id, a.game_name, "" as description, a.price, GROUP_CONCAT(ai.image_path) as images FROM accounts a LEFT JOIN account_images ai ON a.id = ai.account_id WHERE a.user_id = ? GROUP BY a.id ORDER BY a.id DESC');
+$stmt = $pdo->prepare('SELECT a.id, a.game_name, a.description, a.price, GROUP_CONCAT(ai.image_path ORDER BY ai.id) as images FROM accounts a LEFT JOIN account_images ai ON a.id = ai.account_id WHERE a.user_id = ? GROUP BY a.id ORDER BY a.id DESC');
 $stmt->execute([$_SESSION['user_id']]);
 $accounts = $stmt->fetchAll();
 foreach($accounts as &$acc){

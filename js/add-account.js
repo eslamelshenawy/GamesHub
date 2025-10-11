@@ -172,13 +172,15 @@
                     })
                     .then(data => {
                         if(data.success){
+                            console.log('[DEBUG] نجح النشر! account_id:', data.account_id, 'redirect:', data.redirect);
                             // clear saved draft + images
                             try { sessionStorage.removeItem('addAccountDraft'); } catch(e){}
                             try { clearImagesFromIDB(); } catch(e){}
                             document.getElementById('success-modal').classList.remove('hidden');
                             document.body.style.overflow = 'hidden';
+                            const redirectUrl = data.redirect || 'myaccount.html';
                             setTimeout(function(){
-                                window.location.href = 'myaccount.html';
+                                window.location.href = redirectUrl;
                             }, 1200);
                         } else {
                             showPlaceholder(data.error || 'فشل إضافة الحساب');

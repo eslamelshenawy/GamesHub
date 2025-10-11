@@ -117,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			}
 		}
 	}
-	echo json_encode(['success' => true, 'images' => $image_paths, 'redirect' => 'myaccount.html']);
+	echo json_encode(['success' => true, 'account_id' => $account_id, 'images' => $image_paths, 'redirect' => 'moredetails.html?id=' . $account_id]);
 	ob_end_flush();
 	exit;
 }

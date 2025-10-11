@@ -840,12 +840,13 @@ function submitRecoveredForm(form, files, data) {
             return;
         }
         if (resp && resp.success) {
-            console.log('[DEBUG] تم نشر الإعلان بنجاح');
+            console.log('[DEBUG] تم نشر الإعلان بنجاح، account_id:', resp.account_id);
             localStorage.removeItem('pendingAddAccount');
             clearImagesFromIDB();
             document.getElementById('success-modal').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
-            setTimeout(function(){ window.location.href = 'myaccount.html'; }, 1200);
+            const redirectUrl = resp.redirect || 'myaccount.html';
+            setTimeout(function(){ window.location.href = redirectUrl; }, 1200);
         } else {
             console.log('[DEBUG] فشل إضافة الحساب:', resp && resp.error);
             showPlaceholder(resp && resp.error ? resp.error : 'فشل إضافة الحساب');

@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 	exit;
 }
 $user_id = $_SESSION['user_id'];
-$stmt = $pdo->prepare('SELECT a.*, GROUP_CONCAT(ai.image_path) as images FROM favorites f JOIN accounts a ON f.account_id = a.id LEFT JOIN account_images ai ON a.id = ai.account_id WHERE f.user_id = ? GROUP BY a.id ORDER BY f.created_at DESC');
+$stmt = $pdo->prepare('SELECT a.*, GROUP_CONCAT(ai.image_path ORDER BY ai.id) as images FROM favorites f JOIN accounts a ON f.account_id = a.id LEFT JOIN account_images ai ON a.id = ai.account_id WHERE f.user_id = ? GROUP BY a.id ORDER BY f.created_at DESC');
 $stmt->execute([$user_id]);
 $accounts = $stmt->fetchAll();
 foreach($accounts as &$acc){
