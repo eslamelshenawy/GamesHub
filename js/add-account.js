@@ -117,6 +117,22 @@
                         document.getElementById('csrf_token').value = data.csrf_token;
                     }
                     const formData = new FormData(form);
+
+                    // Debug: عرض الملفات المرسلة
+                    const imageInput = document.getElementById('image-upload');
+                    console.log('[SUBMIT DEBUG] عدد الملفات في input:', imageInput.files.length);
+                    for (let i = 0; i < imageInput.files.length; i++) {
+                        console.log('[SUBMIT DEBUG] ملف', i, ':', imageInput.files[i].name, imageInput.files[i].size, 'bytes');
+                    }
+
+                    // Debug: عرض محتويات FormData
+                    console.log('[SUBMIT DEBUG] محتويات FormData:');
+                    for (let pair of formData.entries()) {
+                        if (pair[0] === 'images[]') {
+                            console.log('[SUBMIT DEBUG] images[]:', pair[1].name, pair[1].size, 'bytes');
+                        }
+                    }
+
                     fetch('api/add_account.php', {
                         method: 'POST',
                         body: formData,

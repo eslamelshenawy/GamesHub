@@ -15,7 +15,7 @@
                 extend: {
                     colors: {
                         'neon-blue': '#00d4ff',
-                        'neon-purple': '#9b59ff', 
+                        'neon-purple': '#9b59ff',
                         'neon-green': '#32ff7e',
                         'bg-dark': '#0b0f14'
                     },
@@ -92,15 +92,15 @@
                 قم بإضافة تفاصيل حسابك بدقة لضمان بيع سريع وآمن
             </p>
         </div>
-        
+
         <!-- Enhanced Form Card -->
         <div class="relative">
             <!-- Background gradient overlay -->
             <div class="absolute inset-0 bg-gradient-to-br from-neon-purple/10 via-transparent to-neon-blue/10 rounded-3xl"></div>
-            
+
             <form id="add-account-form" class="relative bg-white/8 backdrop-blur-xl rounded-3xl p-6 lg:p-8 border border-white/20 shadow-2xl" method="POST" action="api/add_account.php" enctype="multipart/form-data" autocomplete="off">
                 <input type="hidden" id="csrf_token" name="csrf_token" value="">
-                
+
                 <!-- Game Selection -->
                 <div class="form-section">
                     <label for="game_name" class="form-label flex items-center font-bold text-white">
@@ -111,40 +111,47 @@
                     </label>
                     <input type="text" id="game-name" name="game_name" placeholder="مثال: PUBG Mobile" required class="form-input w-full rounded-2xl bg-white/10 backdrop-blur-sm border border-white/30 focus:border-neon-blue focus:outline-none focus:ring-4 focus:ring-neon-blue/30 text-white placeholder-white/60 transition-all duration-300 hover:bg-white/15">
                 </div>
-            
+
             <div class="md:flex md:gap-8">
                 <div class="flex-1 mb-6 md:mb-0">
-                
+
                 <!-- Enhanced Image Upload Section -->
                 <div class="flex-1">
                     <label for="image-upload" class="form-label flex items-center font-bold text-white">
                         <div class="icon-container bg-gradient-to-r from-neon-green to-neon-blue rounded-xl flex items-center justify-center">
                             <i class="fa fa-images text-white"></i>
                         </div>
-                        صور الحساب 
+                        صور الحساب
                     </label>
                     <div class="upload-area relative flex items-center justify-center border-2 border-dashed border-neon-blue/40 rounded-3xl cursor-pointer transition-all duration-300 bg-gradient-to-br from-white/5 to-white/10 hover:from-white/10 hover:to-white/15 hover:border-neon-blue/60 hover:shadow-lg hover:shadow-neon-blue/20">
                         <input type="file" id="image-upload" name="images[]" multiple accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-                        <div class="text-center">
+                        <div class="text-center" id="upload-prompt">
                             <div class="upload-icon bg-gradient-to-r from-neon-blue to-neon-purple rounded-2xl flex items-center justify-center mx-auto">
                                 <i class="fa fa-cloud-upload-alt text-xl text-white"></i>
                             </div>
                             <p class="text-base font-bold text-white mb-2">اضغط هنا لرفع الصور</p>
                             <p class="text-sm text-white/70 leading-relaxed">يمكنك سحب وإفلات الصور هنا • حد أقصى 5MB لكل صورة</p>
                         </div>
-                        <!-- معاينة الصور الجديدة -->
-                        <div id="image-carousel" class="mt-4 hidden">
-                            <div class="relative w-full flex items-center justify-center">
-                                <button type="button" id="prev-image" class="absolute right-0 top-1/2 -translate-y-1/2 bg-black/60 text-white rounded-full w-8 h-8 flex items-center justify-center z-10"><i class="fa fa-chevron-right"></i></button>
-                                <div class="relative w-64 h-64 mx-auto flex items-center justify-center overflow-hidden select-none" id="carousel-container">
-                                    <img id="slider-img" src="" class="w-64 h-64 object-cover rounded border transition-transform duration-200 bg-white" style="max-width:100%">
-                                    <button type="button" id="delete-image" class="absolute top-1 right-1 bg-red-600 text-white rounded-full w-7 h-7 flex items-center justify-center z-20" title="حذف الصورة"><i class="fa fa-trash"></i></button>
-                                    <button type="button" id="rotate-image" class="absolute bottom-1 right-1 bg-blue-600 text-white rounded-full w-7 h-7 flex items-center justify-center z-20" title="تدوير الصورة"><i class="fa fa-rotate-right"></i></button>
-                                </div>
-                                <button type="button" id="next-image" class="absolute left-0 top-1/2 -translate-y-1/2 bg-black/60 text-white rounded-full w-8 h-8 flex items-center justify-center z-10"><i class="fa fa-chevron-left"></i></button>
-                            </div>
-                            <div id="carousel-thumbs" class="flex gap-2 mt-4 overflow-x-auto w-full justify-center"></div>
+                        <div class="text-center py-4 hidden" id="upload-more-prompt">
+                            <p class="text-sm text-neon-blue font-semibold">
+                                <i class="fa fa-plus-circle ml-1"></i>
+                                اضغط هنا لإضافة المزيد من الصور
+                            </p>
                         </div>
+                    </div>
+
+                    <!-- معاينة الصور الجديدة - خارج upload-area -->
+                    <div id="image-carousel" class="mt-4 hidden">
+                        <div class="relative w-full flex items-center justify-center">
+                            <button type="button" id="prev-image" class="absolute right-0 top-1/2 -translate-y-1/2 bg-black/60 text-white rounded-full w-8 h-8 flex items-center justify-center z-10"><i class="fa fa-chevron-right"></i></button>
+                            <div class="relative w-64 h-64 mx-auto flex items-center justify-center overflow-hidden select-none" id="carousel-container">
+                                <img id="slider-img" src="" class="w-64 h-64 object-cover rounded border transition-transform duration-200 bg-white" style="max-width:100%">
+                                <button type="button" id="delete-image" class="absolute top-1 right-1 bg-red-600 text-white rounded-full w-7 h-7 flex items-center justify-center z-20" title="حذف الصورة"><i class="fa fa-trash"></i></button>
+                                <button type="button" id="rotate-image" class="absolute bottom-1 right-1 bg-blue-600 text-white rounded-full w-7 h-7 flex items-center justify-center z-20" title="تدوير الصورة"><i class="fa fa-rotate-right"></i></button>
+                            </div>
+                            <button type="button" id="next-image" class="absolute left-0 top-1/2 -translate-y-1/2 bg-black/60 text-white rounded-full w-8 h-8 flex items-center justify-center z-10"><i class="fa fa-chevron-left"></i></button>
+                        </div>
+                        <div id="carousel-thumbs" class="flex gap-2 mt-4 overflow-x-auto w-full justify-center"></div>
                     </div>
                 </div>
             </div>
@@ -157,17 +164,17 @@
         </div>
         وصف الحساب
     </label>
-    <textarea 
-        id="description" 
-        name="description" 
-        rows="4" 
-        required 
-        placeholder="اكتب وصفًا مفصلاً للحساب (المميزات، المستويات، و النادرة... إلخ)." 
-        class="form-textarea w-full rounded-2xl bg-white/10 backdrop-blur-sm border border-white/30 
-               focus:border-neon-blue focus:outline-none focus:ring-4 focus:ring-neon-blue/30 
-               text-white placeholder-white/60 transition-all duration-300 hover:bg-white/15 
+    <textarea
+        id="description"
+        name="description"
+        rows="4"
+        required
+        placeholder="اكتب وصفًا مفصلاً للحساب (المميزات، المستويات، و النادرة... إلخ)."
+        class="form-textarea w-full rounded-2xl bg-white/10 backdrop-blur-sm border border-white/30
+               focus:border-neon-blue focus:outline-none focus:ring-4 focus:ring-neon-blue/30
+               text-white placeholder-white/60 transition-all duration-300 hover:bg-white/15
                resize-none leading-relaxed
-               [scrollbar-width:none] [-ms-overflow-style:none] 
+               [scrollbar-width:none] [-ms-overflow-style:none]
                [&::-webkit-scrollbar]:hidden"></textarea>
 </div>
 
@@ -184,14 +191,14 @@
                         <input type="number" id="price" name="price" placeholder="مثال: 50" step="0.01" required class="form-input w-full pl-12 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/30 focus:border-neon-blue focus:outline-none focus:ring-4 focus:ring-neon-blue/30 text-white placeholder-white/60 transition-all duration-300 hover:bg-white/15">
                         <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-neon-blue font-bold">ج.م</div>
                     </div>
-                    
+
                     <!-- Fee Information Section -->
                     <div id="fee-info" class="mt-4 p-4 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/30 rounded-2xl backdrop-blur-sm">
                         <div class="flex items-center mb-3">
                             <i class="fa fa-info-circle text-yellow-400 ml-2"></i>
                             <span class="text-yellow-400 font-bold text-sm">معلومات رسوم المنصة</span>
                         </div>
-                        
+
                         <!-- Fee Breakdown -->
                         <div class="text-white/80 text-sm space-y-2">
                             <div class="flex justify-between items-center">
@@ -214,7 +221,7 @@
                                 <span id="display-net" class="font-bold text-xl">0 ج.م</span>
                             </div>
                         </div>
-                        
+
                         <!-- Progress Bar -->
                         <div class="mt-4">
                             <div class="flex justify-between text-xs text-white/60 mb-1">
@@ -225,7 +232,7 @@
                                 <div class="bg-gradient-to-r from-yellow-400 to-orange-400 h-2 rounded-full transition-all duration-300" style="width: 10%"></div>
                             </div>
                         </div>
-                        
+
                         <!-- Warning Message -->
                         <div class="mt-4 text-xs text-yellow-300/80 bg-yellow-500/10 p-3 rounded-lg border border-yellow-500/20">
                             <div class="flex items-start">
@@ -295,7 +302,7 @@
         <!-- Background gradient -->
         <div class="absolute inset-0 bg-gradient-to-t from-bg-dark via-bg-dark/95 to-transparent"></div>
         <div class="absolute inset-0 bg-gradient-to-br from-neon-purple/5 via-transparent to-neon-blue/5"></div>
-        
+
         <div class="relative border-t border-white/20 p-6 md:p-10">
             <div class="max-w-6xl mx-auto flex flex-col md:flex-row md:justify-between gap-6">
                 <div>
@@ -317,11 +324,15 @@
 <script src="js/add-account.js"></script>
 <script src="js/sidebar.js"></script>
 <script>
+console.log('[DEBUG] بدء تحميل كود معاينة الصور...');
+
 // Carousel معاينة الصور مع دعم نافذة منبثقة
 let previewFiles = [];
 let previewMeta = [];
 let previewRotation = [];
 let currentPreviewIndex = 0;
+
+console.log('[DEBUG] محاولة الحصول على العناصر من DOM...');
 const imageUpload = document.getElementById('image-upload');
 const imageCarousel = document.getElementById('image-carousel');
 const sliderImg = document.getElementById('slider-img');
@@ -331,6 +342,10 @@ const deleteBtn = document.getElementById('delete-image');
 const rotateBtn = document.getElementById('rotate-image');
 const carouselContainer = document.getElementById('carousel-container');
 const carouselThumbs = document.getElementById('carousel-thumbs');
+
+console.log('[DEBUG] imageUpload =', imageUpload);
+console.log('[DEBUG] imageCarousel =', imageCarousel);
+
 // عناصر المودال
 const imageModal = document.getElementById('preview-image-modal');
 const modalImg = document.getElementById('modal-slider-img');
@@ -341,8 +356,53 @@ const modalThumbs = document.getElementById('modal-thumbs');
 let modalIndex = 0;
 const allowedTypes = ['image/jpeg','image/png','image/gif','image/webp'];
 const maxSize = 5*1024*1024;
+
+// Fallback لـ showPlaceholder إذا لم يتم تحميل sidebar.js
+if (typeof showPlaceholder !== 'function') {
+    window.showPlaceholder = function(message, duration = 3000) {
+        console.log('[PLACEHOLDER]', message);
+        const toast = document.getElementById('toast');
+        if (toast) {
+            toast.textContent = message;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, duration);
+        } else {
+            alert(message);
+        }
+    };
+}
+
+// التحقق من وجود العنصر قبل إضافة event listener
+if (!imageUpload) {
+    console.error('[ERROR] ❌ العنصر image-upload غير موجود في الصفحة!');
+} else {
+    console.log('[DEBUG] ✅ العنصر image-upload موجود، إضافة event listener...');
+}
+
+if (imageUpload) {
 imageUpload.addEventListener('change', function(event) {
+    console.log('[DEBUG] ✅✅✅ EVENT TRIGGERED! change event fired!');
+    console.log('[DEBUG] event =', event);
+    console.log('[DEBUG] event.target =', event.target);
+    console.log('[DEBUG] event.target.files =', event.target.files);
     let files = Array.from(event.target.files);
+
+    // إذا لم يتم اختيار أي ملف، لا تفعل شيء
+    if (files.length === 0) {
+        return;
+    }
+
+    console.log('[DEBUG] تم اختيار', files.length, 'ملف');
+
+    // إظهار رسالة تحميل
+    const uploadPrompt = document.getElementById('upload-prompt');
+    const uploadMorePrompt = document.getElementById('upload-more-prompt');
+    if (uploadPrompt) {
+        uploadPrompt.innerHTML = '<div class="text-center"><i class="fa fa-spinner fa-spin text-neon-blue text-3xl mb-2"></i><p class="text-white">جاري تحميل الصور...</p></div>';
+    }
+
     let validFiles = [];
     let rejected = [];
     files.forEach(f => {
@@ -354,18 +414,33 @@ imageUpload.addEventListener('change', function(event) {
             validFiles.push(f);
         }
     });
+
     if (rejected.length > 0) {
+        console.log('[DEBUG] ملفات مرفوضة:', rejected);
         showPlaceholder(rejected.join('\n'));
     }
+
+    console.log('[DEBUG] ملفات صالحة:', validFiles.length);
+
     previewFiles = validFiles;
     previewMeta = [];
     previewRotation = [];
+
     if (previewFiles.length === 0) {
+        console.log('[DEBUG] لا توجد ملفات صالحة');
         imageCarousel.classList.add('hidden');
         sliderImg.src = '';
         carouselThumbs.innerHTML = '';
+        // استعادة النص الأصلي
+        if (uploadPrompt) {
+            uploadPrompt.innerHTML = '<div class="upload-icon bg-gradient-to-r from-neon-blue to-neon-purple rounded-2xl flex items-center justify-center mx-auto"><i class="fa fa-cloud-upload-alt text-xl text-white"></i></div><p class="text-base font-bold text-white mb-2">اضغط هنا لرفع الصور</p><p class="text-sm text-white/70 leading-relaxed">يمكنك سحب وإفلات الصور هنا • حد أقصى 5MB لكل صورة</p>';
+            uploadPrompt.style.display = 'block';
+        }
+        if (uploadMorePrompt) uploadMorePrompt.classList.add('hidden');
+        showPlaceholder('لم يتم قبول أي صورة. تحقق من نوع وحجم الملفات.');
         return;
     }
+
     // قراءة أبعاد كل صورة
     let loaded = 0;
     previewFiles.forEach((file, i) => {
@@ -376,6 +451,17 @@ imageUpload.addEventListener('change', function(event) {
                 previewMeta[i] = { width: img.width, height: img.height };
                 previewRotation[i] = 0;
                 loaded++;
+                console.log('[DEBUG] تم تحميل صورة', loaded, 'من', previewFiles.length);
+                if (loaded === previewFiles.length) {
+                    console.log('[DEBUG] تم تحميل جميع الصور، عرض المعاينة');
+                    currentPreviewIndex = 0;
+                    showPreviewImage();
+                    showPlaceholder('✅ تم رفع ' + previewFiles.length + ' صورة بنجاح');
+                }
+            };
+            img.onerror = function() {
+                console.error('[DEBUG] فشل تحميل الصورة', i);
+                loaded++;
                 if (loaded === previewFiles.length) {
                     currentPreviewIndex = 0;
                     showPreviewImage();
@@ -383,9 +469,21 @@ imageUpload.addEventListener('change', function(event) {
             };
             img.src = e.target.result;
         };
+        reader.onerror = function(err) {
+            console.error('[DEBUG] خطأ في قراءة الملف:', err);
+            loaded++;
+            if (loaded === previewFiles.length) {
+                currentPreviewIndex = 0;
+                showPreviewImage();
+            }
+        };
         reader.readAsDataURL(file);
     });
 });
+console.log('[DEBUG] ✅ Event listener تم إضافته بنجاح!');
+} else {
+    console.error('[ERROR] ❌ فشل إضافة event listener لأن imageUpload = null');
+}
 
 
 
@@ -402,7 +500,22 @@ function isSquare(meta) {
 }
 
 function showPreviewImage() {
-    if (previewFiles.length === 0) return;
+    console.log('[DEBUG] showPreviewImage() called, previewFiles.length =', previewFiles.length);
+
+    if (previewFiles.length === 0) {
+        console.log('[DEBUG] لا توجد ملفات للمعاينة');
+        return;
+    }
+
+    // إخفاء نص الرفع الأصلي وإظهار نص "إضافة المزيد"
+    const uploadPrompt = document.getElementById('upload-prompt');
+    const uploadMorePrompt = document.getElementById('upload-more-prompt');
+
+    console.log('[DEBUG] uploadPrompt:', uploadPrompt, 'uploadMorePrompt:', uploadMorePrompt);
+
+    if (uploadPrompt) uploadPrompt.style.display = 'none';
+    if (uploadMorePrompt) uploadMorePrompt.classList.remove('hidden');
+
     const reader = new FileReader();
     reader.onload = function(e) {
         sliderImg.src = e.target.result;
@@ -428,11 +541,14 @@ function showPreviewImage() {
         sliderImg.style.transform = `rotate(${angle}deg)`;
     };
     reader.readAsDataURL(previewFiles[currentPreviewIndex]);
+
+    console.log('[DEBUG] بدء إنشاء الصور المصغرة');
     // تحديث الصور المصغرة
     carouselThumbs.innerHTML = '';
     previewFiles.forEach((file, i) => {
         const thumbReader = new FileReader();
         thumbReader.onload = function(ev) {
+            console.log('[DEBUG] تم تحميل صورة مصغرة', i + 1);
             const img = document.createElement('img');
             img.src = ev.target.result;
             img.className = 'w-16 h-16 object-cover rounded border cursor-pointer' + (i === currentPreviewIndex ? ' ring-4 ring-[--neon-blue]' : '');
@@ -450,6 +566,7 @@ function showPreviewImage() {
         };
         thumbReader.readAsDataURL(file);
     });
+    console.log('[DEBUG] انتهى إعداد الصور المصغرة');
     // إخفاء زر الحذف إذا صورة واحدة فقط
     deleteBtn.style.display = previewFiles.length > 0 ? 'block' : 'none';
     // عند الضغط على الصورة الكبيرة، افتح المودال
@@ -476,6 +593,11 @@ deleteBtn.onclick = function() {
         sliderImg.src = '';
         imageUpload.value = '';
         carouselThumbs.innerHTML = '';
+        // إظهار نص الرفع الأصلي وإخفاء نص "المزيد"
+        const uploadPrompt = document.getElementById('upload-prompt');
+        const uploadMorePrompt = document.getElementById('upload-more-prompt');
+        if (uploadPrompt) uploadPrompt.style.display = 'block';
+        if (uploadMorePrompt) uploadMorePrompt.classList.add('hidden');
         return;
     }
     if (currentPreviewIndex >= previewFiles.length) currentPreviewIndex = previewFiles.length - 1;
@@ -678,7 +800,6 @@ window.addEventListener('DOMContentLoaded', function(){
                 showPlaceholder('لم يتم العثور على بيانات نشر معلقة. إذا كنت قد ملأت النموذج قبل تسجيل الدخول، يرجى إعادة المحاولة.');
             }
         }
-            }
         })
         .catch(err => {
             console.error('[DEBUG] خطأ في التحقق من تسجيل الدخول:', err);
@@ -742,23 +863,23 @@ function calculateFees() {
     const displayPrice = document.getElementById('display-price');
     const displayFee = document.getElementById('display-fee');
     const displayNet = document.getElementById('display-net');
-    
+
     const price = parseFloat(priceInput.value) || 0;
     const feePercentage = 0.10; // 10%
     const feeAmount = price * feePercentage;
     const netAmount = price - feeAmount;
-    
+
     // تحديث العرض مع تأثيرات بصرية
     displayPrice.textContent = price.toFixed(2) + ' ج.م';
     displayFee.textContent = feeAmount.toFixed(2) + ' ج.م';
     displayNet.textContent = netAmount.toFixed(2) + ' ج.م';
-    
+
     // إضافة تأثيرات بصرية
     if (price > 0) {
         displayPrice.classList.add('text-green-400');
         displayFee.classList.add('text-yellow-400');
         displayNet.classList.add('text-neon-green');
-        
+
         // تأثير النبض للمبلغ النهائي
         displayNet.style.animation = 'pulse 0.5s ease-in-out';
         setTimeout(() => {
@@ -791,7 +912,7 @@ document.addEventListener('DOMContentLoaded', function(){
         // حساب أولي
         calculateFees();
     }
-    
+
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('success') === '1') {
         document.getElementById('success-modal').classList.remove('hidden');

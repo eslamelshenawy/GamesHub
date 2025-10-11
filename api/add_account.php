@@ -35,6 +35,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 	// حفظ الصور إذا تم رفعها مع uploaded_at
 	$image_paths = [];
+
+	// Debug: عرض معلومات الملفات المستلمة
+	error_log('[DEBUG] عدد الملفات المستلمة: ' . (isset($_FILES['images']['name']) ? count($_FILES['images']['name']) : 0));
+	if (isset($_FILES['images']['name'])) {
+		foreach ($_FILES['images']['name'] as $key => $name) {
+			error_log('[DEBUG] ملف ' . $key . ': name=' . $name . ', size=' . $_FILES['images']['size'][$key] . ', tmp_name=' . $_FILES['images']['tmp_name'][$key] . ', error=' . $_FILES['images']['error'][$key]);
+		}
+	}
+
 	if (
 		isset($_FILES['images']) &&
 		isset($_FILES['images']['name']) &&
@@ -53,11 +62,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$allowed_types = ['image/jpeg','image/png','image/gif','image/webp'];
 		$max_size = 5*1024*1024; // 5MB
 		foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
-			if (empty($tmp_name) || !is_uploaded_file($tmp_name)) continue;
+			error_log('[DEBUG] معالجة ملف ' . $key . ': tmp_name=' . $tmp_name);
+			if (empty($tmp_name) || !is_uploaded_file($tmp_name)) {
+				error_log('[DEBUG] تخطي ملف ' . $key . ' (فارغ أو غير محمل)');
+				continue;
+			}
 			$type = mime_content_type($tmp_name);
 			$size = filesize($tmp_name);
-			if (!in_array($type, $allowed_types)) continue;
-			if ($size > $max_size) continue;
+			error_log('[DEBUG] نوع الملف: ' . $type . ', الحجم: ' . $size . ' bytes');
+			if (!in_array($type, $allowed_types)) {
+				error_log('[DEBUG] ❌ رفض الملف - نوع غير مدعوم: ' . $type);
+				continue;
+			}
+			if ($size > $max_size) {
+				error_log('[DEBUG] ❌ رفض الملف - حجم كبير جداً: ' . $size);
+				continue;
+			}
 			$file_name = uniqid('img_') . '_' . basename($_FILES['images']['name'][$key]);
 			$target = $upload_dir . $file_name;
 			// ضغط الصورة إذا كانت JPEG أو PNG وامتداد GD متوفر
@@ -88,9 +108,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				move_uploaded_file($tmp_name, $target);
 			}
 			if (file_exists($target)) {
+				error_log('[DEBUG] ✅ تم حفظ الصورة: ' . $file_name);
 				$image_paths[] = 'uploads/' . $file_name;
 				$stmt_img = $pdo->prepare('INSERT INTO account_images (account_id, image_path, uploaded_at) VALUES (?, ?, NOW())');
 				$stmt_img->execute([$account_id, 'uploads/' . $file_name]);
+			} else {
+				error_log('[DEBUG] ❌ فشل حفظ الصورة: ' . $file_name);
 			}
 		}
 	}
