@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة البيانات - GamesHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'neon-purple': '#9b59ff',
+                        'neon-blue': '#00d4ff',
+                        'neon-green': '#39ff14',
+                        'neon-pink': '#ff00ff',
+                        'dark-bg': '#0b0f14',
+                        'card-bg': '#1e293b',
+                        'input-bg': '#334155'
+                    },
+                    fontFamily: {
+                        'tajawal': ['Tajawal', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0b0f14 0%, #1a1f2e 100%);
+        }
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(155, 89, 255, 0.2);
+        }
+        .btn-primary {
+            background: linear-gradient(90deg, #9b59ff, #00d4ff);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(155, 89, 255, 0.3);
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+        }
+        .tab-btn.active {
+            background: linear-gradient(90deg, #9b59ff, #00d4ff);
+            color: white;
+        }
+    </style>
+</head>
+<body class="font-tajawal min-h-screen p-6">
+    <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold bg-gradient-to-r from-neon-purple to-neon-blue bg-clip-text text-transparent mb-2">
+                إدارة البيانات
+            </h1>
+            <p class="text-gray-400">إضافة وإدارة جميع بيانات النظام</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="flex flex-wrap gap-2 mb-6">
+            <button class="tab-btn active px-4 py-2 rounded-lg bg-gray-700 text-white" onclick="showTab('users')">
+                <i class="fas fa-users mr-2"></i>المستخدمين
+            </button>
+            <button class="tab-btn px-4 py-2 rounded-lg bg-gray-700 text-white" onclick="showTab('accounts')">
+                <i class="fas fa-gamepad mr-2"></i>حسابات الألعاب
+            </button>
+            <button class="tab-btn px-4 py-2 rounded-lg bg-gray-700 text-white" onclick="showTab('deals')">
+                <i class="fas fa-handshake mr-2"></i>الصفقات
+            </button>
+            <button class="tab-btn px-4 py-2 rounded-lg bg-gray-700 text-white" onclick="showTab('reports')">
+                <i class="fas fa-flag mr-2"></i>البلاغات
+            </button>
+            <button class="tab-btn px-4 py-2 rounded-lg bg-gray-700 text-white" onclick="showTab('topups')">
+                <i class="fas fa-wallet mr-2"></i>طلبات الشحن
+            </button>
+            <button class="tab-btn px-4 py-2 rounded-lg bg-gray-700 text-white" onclick="showTab('withdrawals')">
+                <i class="fas fa-money-bill-wave mr-2"></i>طلبات السحب
+            </button>
+        </div>
+
+        <!-- Users Form -->
+        <div id="users-form" class="tab-content card rounded-xl p-6">
+            <h2 class="text-2xl font-bold text-neon-blue mb-4">إضافة مستخدم جديد</h2>
+            <form class="space-y-4" onsubmit="submitForm(event, 'user')">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-300 mb-2">الاسم</label>
+                        <input type="text" name="name" required class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2">البريد الإلكتروني</label>
+                        <input type="email" name="email" required class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2">رقم الهاتف</label>
+                        <input type="text" name="phone" required class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2">كلمة المرور</label>
+                        <input type="password" name="password" required class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2">العمر</label>
+                        <input type="number" name="age" required class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2">الجنس</label>
+                        <select name="gender" required class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue">
+                            <option value="male">ذكر</option>
+                            <option value="female">أنثى</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2">الدور</label>
+                        <select name="role" required class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue">
+                            <option value="buyer">مشتري</option>
+                            <option value="seller">بائع</option>
+                            <option value="admin">مدير</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2">الرصيد</label>
+                        <input type="number" name="balance" value="0" step="0.01" class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue">
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary w-full py-3 rounded-lg text-white font-bold">
+                    <i class="fas fa-plus mr-2"></i>إضافة مستخدم
+                </button>
+            </form>
+        </div>
+
+        <!-- Accounts Form -->
+        <div id="accounts-form" class="tab-content card rounded-xl p-6 hidden">
+            <h2 class="text-2xl font-bold text-neon-green mb-4">إضافة حساب لعبة جديد</h2>
+            <form class="space-y-4" onsubmit="submitForm(event, 'account')">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-300 mb-2">معرف المستخدم</label>
+                        <input type="number" name="user_id" required class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2">اسم اللعبة</label>
+                        <input type="text" name="game_name" required class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-gray-300 mb-2">الوصف</label>
+                        <textarea name="description" required rows="3" class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2">السعر (ج.م)</label>
+                        <input type="number" name="price" required step="0.01" class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue">
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary w-full py-3 rounded-lg text-white font-bold">
+                    <i class="fas fa-plus mr-2"></i>إضافة حساب
+                </button>
+            </form>
+        </div>
+
+        <!-- Deals Form -->
+        <div id="deals-form" class="tab-content card rounded-xl p-6 hidden">
+            <h2 class="text-2xl font-bold text-neon-purple mb-4">إضافة صفقة جديدة</h2>
+            <form class="space-y-4" onsubmit="submitForm(event, 'deal')">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-300 mb-2">معرف المشتري</label>
+                        <input type="number" name="buyer_id" required class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2">معرف البائع</label>
+                        <input type="number" name="seller_id" required class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2">المبلغ (ج.م)</label>
+                        <input type="number" name="amount" required step="0.01" class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2">معرف الحساب</label>
+                        <input type="number" name="account_id" class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2">الحالة</label>
+                        <select name="status" required class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue">
+                            <option value="CREATED">تم الإنشاء</option>
+                            <option value="FUNDED">تم التمويل</option>
+                            <option value="COMPLETED">مكتملة</option>
+                            <option value="CANCELLED">ملغية</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2">نسبة الرسوم (%)</label>
+                        <input type="number" name="fee_percentage" value="10" step="0.01" class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-gray-300 mb-2">التفاصيل</label>
+                        <textarea name="details" required rows="3" class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue"></textarea>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary w-full py-3 rounded-lg text-white font-bold">
+                    <i class="fas fa-plus mr-2"></i>إضافة صفقة
+                </button>
+            </form>
+        </div>
+
+        <!-- Reports Form -->
+        <div id="reports-form" class="tab-content card rounded-xl p-6 hidden">
+            <h2 class="text-2xl font-bold text-neon-pink mb-4">إضافة بلاغ جديد</h2>
+            <form class="space-y-4" onsubmit="submitForm(event, 'report')">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-300 mb-2">معرف المبلغ</label>
+                        <input type="number" name="reporter_id" required class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2">معرف المبلغ عنه</label>
+                        <input type="number" name="reported_user_id" required class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2">معرف المحادثة</label>
+                        <input type="number" name="conversation_id" class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2">الحالة</label>
+                        <select name="status" required class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue">
+                            <option value="pending">قيد الانتظار</option>
+                            <option value="under_review">قيد المراجعة</option>
+                            <option value="resolved">تم الحل</option>
+                            <option value="dismissed">مرفوض</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-gray-300 mb-2">سبب البلاغ</label>
+                        <textarea name="reason" required rows="3" class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue"></textarea>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary w-full py-3 rounded-lg text-white font-bold">
+                    <i class="fas fa-plus mr-2"></i>إضافة بلاغ
+                </button>
+            </form>
+        </div>
+
+        <!-- Topups Form -->
+        <div id="topups-form" class="tab-content card rounded-xl p-6 hidden">
+            <h2 class="text-2xl font-bold text-neon-green mb-4">إضافة طلب شحن جديد</h2>
+            <form class="space-y-4" onsubmit="submitForm(event, 'topup')">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-300 mb-2">معرف المستخدم</label>
+                        <input type="number" name="user_id" required class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2">المبلغ (ج.م)</label>
+                        <input type="number" name="amount" required step="0.01" class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2">طريقة الدفع</label>
+                        <select name="method" required class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue">
+                            <option value="vodafone_cash">فودافون كاش</option>
+                            <option value="instapay">انستاباي</option>
+                            <option value="bank_transfer">تحويل بنكي</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2">رقم الهاتف</label>
+                        <input type="text" name="phone" class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2">الحالة</label>
+                        <select name="status" required class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue">
+                            <option value="pending">قيد الانتظار</option>
+                            <option value="approved">موافق عليه</option>
+                            <option value="rejected">مرفوض</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary w-full py-3 rounded-lg text-white font-bold">
+                    <i class="fas fa-plus mr-2"></i>إضافة طلب شحن
+                </button>
+            </form>
+        </div>
+
+        <!-- Withdrawals Form -->
+        <div id="withdrawals-form" class="tab-content card rounded-xl p-6 hidden">
+            <h2 class="text-2xl font-bold text-neon-blue mb-4">إضافة طلب سحب جديد</h2>
+            <form class="space-y-4" onsubmit="submitForm(event, 'withdrawal')">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-300 mb-2">معرف المستخدم</label>
+                        <input type="number" name="user_id" required class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2">المبلغ (ج.م)</label>
+                        <input type="number" name="amount" required step="0.01" class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2">رقم الهاتف</label>
+                        <input type="text" name="phone" required class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2">طريقة السحب</label>
+                        <select name="method" required class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue">
+                            <option value="vodafone_cash">فودافون كاش</option>
+                            <option value="instapay">انستاباي</option>
+                            <option value="bank_transfer">تحويل بنكي</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2">الحالة</label>
+                        <select name="status" required class="w-full p-3 rounded-lg bg-input-bg text-white border border-gray-600 focus:border-neon-blue">
+                            <option value="pending">قيد الانتظار</option>
+                            <option value="approved">موافق عليه</option>
+                            <option value="rejected">مرفوض</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary w-full py-3 rounded-lg text-white font-bold">
+                    <i class="fas fa-plus mr-2"></i>إضافة طلب سحب
+                </button>
+            </form>
+        </div>
+
+        <!-- Result Message -->
+        <div id="result-message" class="hidden mt-6 p-4 rounded-lg"></div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName + '-form').classList.remove('hidden');
+
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        async function submitForm(event, type) {
+            event.preventDefault();
+
+            const form = event.target;
+            const formData = new FormData(form);
+            formData.append('type', type);
+
+            const resultDiv = document.getElementById('result-message');
+            resultDiv.classList.add('hidden');
+
+            try {
+                const response = await fetch('api/add_data.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    resultDiv.className = 'mt-6 p-4 rounded-lg bg-green-500/20 border border-green-500 text-green-400';
+                    resultDiv.textContent = data.message || 'تمت الإضافة بنجاح!';
+                    form.reset();
+                } else {
+                    resultDiv.className = 'mt-6 p-4 rounded-lg bg-red-500/20 border border-red-500 text-red-400';
+                    resultDiv.textContent = data.error || 'حدث خطأ أثناء الإضافة';
+                }
+
+                resultDiv.classList.remove('hidden');
+
+                // Hide message after 5 seconds
+                setTimeout(() => {
+                    resultDiv.classList.add('hidden');
+                }, 5000);
+
+            } catch (error) {
+                resultDiv.className = 'mt-6 p-4 rounded-lg bg-red-500/20 border border-red-500 text-red-400';
+                resultDiv.textContent = 'خطأ في الاتصال بالخادم';
+                resultDiv.classList.remove('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
