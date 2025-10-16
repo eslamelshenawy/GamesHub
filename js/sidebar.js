@@ -303,12 +303,12 @@ function logoutUser(e){
 	fetch('/api/api/logout.php', { method: 'POST', credentials: 'include' })
 		.then((res) => res.json())
 		.then((data) => {
-			// Update UI and reload
+			// Update UI and redirect to home page
 			if (window.setLoginVisibility) window.setLoginVisibility(false, null);
-			window.location.reload();
+			window.location.href = 'index.html';
 		})
 		.catch(() => {
-			window.location.reload();
+			window.location.href = 'index.html';
 		});
 }
 
@@ -329,15 +329,15 @@ function toggleSidebarAuth() {
 						if (data.success) {
 							// Update button to show login state
 							updateSidebarAuthButton(false);
-							// Redirect to login page
+							// Redirect to home page
 							setTimeout(() => {
-								window.location.href = 'login.html';
+								window.location.href = 'index.html';
 							}, 500);
 						}
 					})
 					.catch(error => {
 						console.error('Logout error:', error);
-						window.location.href = 'login.html';
+						window.location.href = 'index.html';
 					});
 				}
 			} else {

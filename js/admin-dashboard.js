@@ -1156,7 +1156,7 @@ class AdminDashboard {
                 this.loadDeals();
                 this.loadDashboardData();
             } else {
-                this.showNotification('فشل في رفض الصفقة: ' + data.message, 'error');
+                this.showNotification('فشل في رفض الصفقة: ' + (data.error || data.message || 'خطأ غير معروف'), 'error');
             }
         } catch (error) {
             console.error('Error rejecting deal:', error);
@@ -2650,7 +2650,7 @@ function logout() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                window.location.href = 'login.html';
+                window.location.href = 'index.html';
             } else {
                 alert('حدث خطأ أثناء تسجيل الخروج');
             }
@@ -2658,7 +2658,7 @@ function logout() {
         .catch(error => {
             console.error('Logout error:', error);
             // Redirect anyway since session might be cleared
-            window.location.href = 'login.html';
+            window.location.href = 'index.html';
         });
     }
 }
@@ -2680,15 +2680,15 @@ function toggleAuth() {
                         if (data.success) {
                             // Update button to show login state
                             updateAuthButton(false);
-                            // Redirect to login page
+                            // Redirect to home page
                             setTimeout(() => {
-                                window.location.href = 'login.html';
+                                window.location.href = 'index.html';
                             }, 500);
                         }
                     })
                     .catch(error => {
                         console.error('Logout error:', error);
-                        window.location.href = 'login.html';
+                        window.location.href = 'index.html';
                     });
                 }
             } else {
