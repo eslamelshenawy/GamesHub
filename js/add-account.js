@@ -58,7 +58,7 @@
 
     // Handle form submission
     // جلب رمز CSRF عند تحميل الصفحة
-    fetch('api/get_csrf.php', {credentials: 'include'})
+    fetch('/api/api/get_csrf.php', {credentials: 'include'})
         .then(res => res.json())
         .then(data => {
             if(data.csrf_token){
@@ -69,7 +69,7 @@
     // عند تحميل الصفحة: إذا كان المستخدم مسجلاً الدخول ويوجد إعلان معلق في sessionStorage، استرجعه تلقائياً
     document.addEventListener('DOMContentLoaded', function() {
         // التحقق من تسجيل الدخول باستخدام API بدلاً من فحص الكوكي
-        fetch('api/check_login.php', { credentials: 'include' })
+        fetch('/api/api/check_login.php', { credentials: 'include' })
             .then(res => res.json())
             .then(loginData => {
                 if (loginData.logged_in) {
@@ -110,7 +110,7 @@
             // إذا لم يكن مسجل دخول، سيرد السيرفر بـ 401 وسنتعامل معه
             event.preventDefault();
             const form = event.target;
-            fetch('api/get_csrf.php', {credentials: 'include'})
+            fetch('/api/api/get_csrf.php', {credentials: 'include'})
                 .then(res => res.json())
                 .then(data => {
                     if(data.csrf_token){
@@ -133,7 +133,7 @@
                         }
                     }
 
-                    fetch('api/add_account.php', {
+                    fetch('/api/api/add_account.php', {
                         method: 'POST',
                         body: formData,
                         credentials: 'include'

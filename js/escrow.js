@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
             amount: parseFloat(amount)
         });
         try {
-            const response = await fetch('api/transfer_wallet.php', {
+            const response = await fetch('/api/api/transfer_wallet.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

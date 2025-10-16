@@ -374,7 +374,7 @@ s0.parentNode.insertBefore(s1,s0);
     // Logout function
     async function logout() {
       try {
-        const response = await fetch('api/logout.php', {
+        const response = await fetch('/api/api/logout.php', {
           method: 'POST',
           credentials: 'include'
         });
@@ -475,7 +475,7 @@ s0.parentNode.insertBefore(s1,s0);
     document.addEventListener('DOMContentLoaded', function() {
       console.log('[Header] فحص حالة تسجيل الدخول...');
 
-      fetch('api/check_login.php', { credentials: 'include' })
+      fetch('/api/api/check_login.php', { credentials: 'include' })
         .then(res => res.json())
         .then(data => {
           console.log('[Header] النتيجة:', data);

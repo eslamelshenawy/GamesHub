@@ -638,13 +638,13 @@
                 <span class="sidebar-text text-sm lg:text-base truncate">إدارة الشحن والسحب</span>
             </a>
             <div class="border-t border-border-neon/30 mt-3 lg:mt-4 pt-3 lg:pt-4">
-                <a href="index.html" class="sidebar-item flex items-center gap-2 lg:gap-3 p-2.5 lg:p-3 rounded-lg transition-all duration-300 text-neon-green hover:text-neon-blue">
+                <a href="index.html?view=user" class="sidebar-item flex items-center gap-2 lg:gap-3 p-2.5 lg:p-3 rounded-lg transition-all duration-300 text-neon-green hover:text-neon-blue">
                     <i class="fas fa-home w-4 lg:w-5 flex-shrink-0 text-center"></i>
                     <span class="sidebar-text text-sm lg:text-base truncate">العودة للموقع</span>
                 </a>
-                <a href="#" onclick="logout()" class="sidebar-item flex items-center gap-2 lg:gap-3 p-2.5 lg:p-3 rounded-lg transition-all duration-300 text-neon-red hover:text-red-400">
-                    <i class="fas fa-sign-out-alt w-4 lg:w-5 flex-shrink-0 text-center"></i>
-                    <span class="sidebar-text text-sm lg:text-base truncate">تسجيل الخروج</span>
+                <a href="#" id="authToggleBtn" onclick="toggleAuth()" class="sidebar-item flex items-center gap-2 lg:gap-3 p-2.5 lg:p-3 rounded-lg transition-all duration-300 text-neon-red hover:text-red-400">
+                    <i id="authIcon" class="fas fa-sign-out-alt w-4 lg:w-5 flex-shrink-0 text-center"></i>
+                    <span id="authText" class="sidebar-text text-sm lg:text-base truncate">تسجيل الخروج</span>
                 </a>
             </div>
         </nav>

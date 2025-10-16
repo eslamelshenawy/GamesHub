@@ -186,7 +186,7 @@
                         document.addEventListener('DOMContentLoaded', function() {
                                 var btn = document.getElementById('desktop-sidebar-toggle');
                                 // إظهار الزر فقط إذا كان المستخدم أدمن
-                                fetch('api/get_user.php', { credentials: 'include' })
+                                fetch('/api/api/get_user.php', { credentials: 'include' })
                                     .then(async res => {
                                         try { return await res.json(); } catch { return {}; }
                                     })

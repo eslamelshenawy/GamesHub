@@ -13,7 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	if (!container) return;
 
 		// Always clear any old cached sidebar HTML to avoid stale onclick placeholders
-		try { sessionStorage.removeItem('wasata_sidebar'); } catch(e) {}
+		// Also clear when auth button is updated (version 2.0)
+		try { sessionStorage.removeItem('wasata_sidebar'); sessionStorage.removeItem('wasata_sidebar_v2'); } catch(e) {}
 
 		// Simple loading placeholder while sidebar HTML is retrieved
 	container.innerHTML = '<div class="p-4 text-gray-400">جارٍ تحميل الشريط الجانبي...</div>';
@@ -41,9 +42,13 @@ document.addEventListener('DOMContentLoaded', function() {
 					if (overlay) { overlay.style.pointerEvents = 'none'; overlay.style.display = 'none'; }
 				}, 10);
 				// update login state
-				fetch('api/check_login.php', { credentials: 'include' })
+				fetch('/api/api/check_login.php', { credentials: 'include' })
 					.then(res => res.json())
-					.then(data => { if (window.setLoginVisibility) window.setLoginVisibility(!!data.logged_in, data.name || null); })
+					.then(data => {
+						if (window.setLoginVisibility) window.setLoginVisibility(!!data.logged_in, data.name || null);
+						// Update auth button state
+						checkSidebarAuthState();
+					})
 					.catch(()=>{});
 				return; // used cache
 			}
@@ -73,17 +78,21 @@ document.addEventListener('DOMContentLoaded', function() {
 			try { sessionStorage.setItem('wasata_sidebar', JSON.stringify({ html: html, ts: Date.now() })); } catch(e){}
 
 						// بعد إدراج الشريط الجانبي في DOM نحدّث حالة تسجيل الدخول واسم المستخدم
-						fetch('api/check_login.php', { credentials: 'include' })
+						fetch('/api/api/check_login.php', { credentials: 'include' })
 								.then(res => res.json())
-								.then(data => { if (window.setLoginVisibility) window.setLoginVisibility(!!data.logged_in, data.name || null); })
+								.then(data => {
+									if (window.setLoginVisibility) window.setLoginVisibility(!!data.logged_in, data.name || null);
+									// Update auth button state
+									checkSidebarAuthState();
+								})
 								.catch(() => {});
 
 						// منطق إظهار زر لوحة الإدارة للأدمن فقط
-						fetch('api/login.php?check=1', { credentials: 'include' })
+						fetch('/api/api/login.php?check=1', { credentials: 'include' })
 							.then(res => res.json())
 							.then(data => {
 								if (data.logged_in && data.user_id) {
-									fetch('api/get_user.php', { credentials: 'include' })
+									fetch('/api/api/get_user.php', { credentials: 'include' })
 										.then(r=>r.json())
 										.then(u=>{
 											if (u.profile && u.profile.role === 'admin') {
@@ -161,7 +170,7 @@ function setLoginVisibility(loggedIn, userName){
 	}
 
 	// إخفاء زر تسجيل الدخول إذا كان المستخدم مسجل دخول عند التحميل
-	fetch('api/check_login.php', { credentials: 'include' })
+	fetch('/api/api/check_login.php', { credentials: 'include' })
 		.then(res => res.json())
 		.then(data => {
 			setLoginVisibility(!!data.logged_in, data.name || null);
@@ -291,7 +300,7 @@ function showPlaceholder(msg){
 // Logout handler moved here so sidebar HTML stays pure
 function logoutUser(e){
 	if (e && e.preventDefault) e.preventDefault();
-	fetch('api/logout.php', { method: 'POST', credentials: 'include' })
+	fetch('/api/api/logout.php', { method: 'POST', credentials: 'include' })
 		.then((res) => res.json())
 		.then((data) => {
 			// Update UI and reload
@@ -303,13 +312,80 @@ function logoutUser(e){
 		});
 }
 
+// Toggle authentication state for sidebar
+function toggleSidebarAuth() {
+	fetch('/api/api/check_login.php', { credentials: 'include' })
+		.then(res => res.json())
+		.then(data => {
+			if (data.logged_in) {
+				// User is logged in, perform logout
+				if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
+					fetch('/api/api/logout.php', {
+						method: 'POST',
+						credentials: 'include'
+					})
+					.then(response => response.json())
+					.then(data => {
+						if (data.success) {
+							// Update button to show login state
+							updateSidebarAuthButton(false);
+							// Redirect to login page
+							setTimeout(() => {
+								window.location.href = 'login.html';
+							}, 500);
+						}
+					})
+					.catch(error => {
+						console.error('Logout error:', error);
+						window.location.href = 'login.html';
+					});
+				}
+			} else {
+				// User is not logged in, redirect to login page
+				window.location.href = 'login.html';
+			}
+		})
+		.catch(error => {
+			console.error('Auth check error:', error);
+			window.location.href = 'login.html';
+		});
+}
+
+// Update sidebar auth button based on login state
+function updateSidebarAuthButton(isLoggedIn) {
+	const authIcon = document.getElementById('sidebarAuthIcon');
+	const authText = document.getElementById('sidebarAuthText');
+	const authBtn = document.getElementById('sidebarAuthBtn');
+
+	if (isLoggedIn) {
+		if (authIcon) authIcon.className = 'fa fa-sign-out text-xl text-red-500 sidebar-icon';
+		if (authText) authText.textContent = 'تسجيل الخروج';
+	} else {
+		if (authIcon) authIcon.className = 'fa fa-sign-in text-xl text-green-500 sidebar-icon';
+		if (authText) authText.textContent = 'تسجيل دخول';
+	}
+}
+
+// Check auth state on sidebar load
+function checkSidebarAuthState() {
+	fetch('/api/api/check_login.php', { credentials: 'include' })
+		.then(res => res.json())
+		.then(data => {
+			updateSidebarAuthButton(data.logged_in);
+		})
+		.catch(error => {
+			console.error('Auth check error:', error);
+			updateSidebarAuthButton(false);
+		});
+}
+
 // delegate logout clicks from any inserted sidebar markup
 document.addEventListener('click', function(e){
 	try {
 		var a = e.target.closest && e.target.closest('[data-action="logout"]');
 		if (a) {
 			e.preventDefault();
-			logoutUser(e);
+			toggleSidebarAuth();
 			return;
 		}
 	} catch(err){}

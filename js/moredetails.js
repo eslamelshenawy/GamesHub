@@ -85,7 +85,7 @@
         const accountId = getIdFromUrl() || 0;
         
         // إنشاء محادثة مع ربطها بالحساب
-        fetch('api/get_csrf.php', { credentials: 'include' })
+        fetch('/api/api/get_csrf.php', { credentials: 'include' })
             .then(r => r.json())
             .then(csrfData => {
                 const csrf = csrfData && csrfData.csrf_token ? csrfData.csrf_token : '';
@@ -95,7 +95,7 @@
                 formData.append('account_id', accountId);
                 formData.append('csrf_token', csrf);
                 
-                return fetch('api/create_conversation.php', {
+                return fetch('/api/api/create_conversation.php', {
                     method: 'POST',
                     credentials: 'include',
                     body: formData
@@ -257,7 +257,7 @@
             if (!btn) { showPlaceholder('زر الإرسال غير موجود'); return; }
             btn.disabled = true;
         // get csrf and send message
-        fetch('api/get_csrf.php', { credentials: 'include' })
+        fetch('/api/api/get_csrf.php', { credentials: 'include' })
           .then(r => {
               if (!r.ok) throw new Error('Failed to fetch CSRF token: ' + r.status);
               return r.json();
@@ -268,7 +268,7 @@
               const hidden = document.getElementById('chat-modal-seller-id');
               const sellerId = hidden && hidden.value ? hidden.value : (modal.dataset.userId || userId);
               const body = new URLSearchParams({ to: userId, seller_id: sellerId, message: text, csrf_token: token });
-              return fetch('api/send_message.php', { method: 'POST', credentials: 'include', headers: {'Content-Type':'application/x-www-form-urlencoded'}, body: body.toString() });
+              return fetch('/api/api/send_message.php', { method: 'POST', credentials: 'include', headers: {'Content-Type':'application/x-www-form-urlencoded'}, body: body.toString() });
           })
           .then(r => r.text())
           .then(textBody => {

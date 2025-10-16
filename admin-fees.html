@@ -140,7 +140,7 @@ async function loadStats() {
         document.getElementById('error').classList.add('hidden');
         document.getElementById('stats-content').classList.add('hidden');
 
-        const response = await fetch('api/platform_fees_stats.php', {
+        const response = await fetch('/api/api/platform_fees_stats.php', {
             credentials: 'include'
         });
 

@@ -61,7 +61,7 @@ class AdminDealsManager {
 
     async loadStats() {
         try {
-            const response = await fetch('api/admin_deals.php?action=stats');
+            const response = await fetch('/api/api/admin_deals.php?action=stats');
             const data = await response.json();
             
             if (data.success) {
@@ -77,7 +77,7 @@ class AdminDealsManager {
     async loadDeals() {
         try {
             this.showLoading();
-            const response = await fetch('api/admin_deals.php?action=pending');
+            const response = await fetch('/api/api/admin_deals.php?action=pending');
             const data = await response.json();
             
             if (data.success) {
@@ -311,7 +311,7 @@ class AdminDealsManager {
         
         try {
             this.showLoading();
-            const response = await fetch('api/admin_deals.php?action=approve', {
+            const response = await fetch('/api/api/admin_deals.php?action=approve', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -361,7 +361,7 @@ class AdminDealsManager {
         
         try {
             this.showLoading();
-            const response = await fetch('api/admin_deals.php?action=reject', {
+            const response = await fetch('/api/api/admin_deals.php?action=reject', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

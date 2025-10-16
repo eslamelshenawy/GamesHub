@@ -82,7 +82,7 @@ function showModalImage(){
 modalPrev.onclick = function(e){ e.stopPropagation(); if(modalImages.length){ modalIndex = (modalIndex-1+modalImages.length)%modalImages.length; showModalImage(); } };
 modalNext.onclick = function(e){ e.stopPropagation(); if(modalImages.length){ modalIndex = (modalIndex+1)%modalImages.length; showModalImage(); } };
 // جلب الحسابات الخاصة بالمستخدم الحالي
-fetch('api/get_accounts.php', { credentials: 'include' })
+fetch('/api/api/get_accounts.php', { credentials: 'include' })
     .then(res => res.json())
     .then(data => {
         const list = document.getElementById('accounts-list');
@@ -129,9 +129,9 @@ document.addEventListener('click', function(e){
     if (del) {
         const id = del.getAttribute('data-id');
         if (!confirm('هل أنت متأكد أنك تريد حذف هذا الإعلان؟')) return;
-        fetch('api/get_csrf.php', { credentials: 'include' })
+        fetch('/api/api/get_csrf.php', { credentials: 'include' })
         .then(r=>r.json())
-        .then(cs=>fetch('api/delete_account.php', {
+        .then(cs=>fetch('/api/api/delete_account.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: new URLSearchParams({ account_id: id, csrf_token: cs.csrf_token }),
@@ -296,11 +296,11 @@ document.getElementById('modal-save')?.addEventListener('click', function(){
     const newDesc = document.getElementById('modal-description').value.trim();
     const saveBtn = document.getElementById('modal-save');
     saveBtn.disabled = true;
-    fetch('api/get_csrf.php', { credentials: 'include' })
+    fetch('/api/api/get_csrf.php', { credentials: 'include' })
     .then(r=>r.json())
     .then(cs=>{
         // 1. تحديث البيانات النصية
-        return fetch('api/update_account.php', {
+        return fetch('/api/api/update_account.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: new URLSearchParams({ account_id: id, game_name: newTitle, price: newPrice, description: newDesc, csrf_token: cs.csrf_token }),
@@ -319,7 +319,7 @@ document.getElementById('modal-save')?.addEventListener('click', function(){
                     formData.append('new_images[]', editModalNewImages[i]);
                 }
             }
-            return fetch('api/update_account_images.php', {
+            return fetch('/api/api/update_account_images.php', {
                 method: 'POST',
                 body: formData,
                 credentials: 'include'
