@@ -15,7 +15,7 @@
         }
 
         // إرسال الاقتراح فعليًا إلى السيرفر
-        fetch('api/submit-suggestion.php', {
+        fetch('/api/api/submit-suggestion.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -3,7 +3,7 @@
     // التحقق من حالة تسجيل الدخول أولاً
     async function checkLoginStatus() {
         try {
-            const response = await fetch('api/check_login.php', {
+            const response = await fetch('/api/api/check_login.php', {
                 method: 'GET',
                 credentials: 'include'
             });
@@ -24,7 +24,7 @@
         }
         
         try {
-            await fetch('api/update_status.php', {
+            await fetch('/api/api/update_status.php', {
                 method: 'POST',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -43,7 +43,7 @@
     window.addEventListener('beforeunload', async function() {
         const isLoggedIn = await checkLoginStatus();
         if (isLoggedIn && navigator.sendBeacon) {
-            navigator.sendBeacon('api/update_status.php', new URLSearchParams({action:'offline'}));
+            navigator.sendBeacon('/api/api/update_status.php', new URLSearchParams({action:'offline'}));
         }
     });
     

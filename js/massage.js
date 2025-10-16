@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // جلب بيانات مستخدم (الاسم والصورة) عبر API
 function fetchUserProfile(userId, cb) {
     if (!userId) return cb && cb(null);
-    fetch('api/get_user.php?id=' + encodeURIComponent(userId), { credentials: 'include' })
+    fetch('/api/api/get_user.php?id=' + encodeURIComponent(userId), { credentials: 'include' })
         .then(r => r.json())
         .then(data => {
             if (data && data.profile) {
@@ -208,7 +208,7 @@ function fetchMessages() {
                         e.stopPropagation();
                         if (!confirm('هل تريد حذف هذه الرسالة نهائياً؟')) return;
                         deleteBtn.disabled = true;
-                        fetch('api/delete_message.php', {
+                        fetch('/api/api/delete_message.php', {
                             method: 'POST',
                             credentials: 'include',
                             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -391,7 +391,7 @@ function sendAdminMessage(chatId, message) {
         message: message.trim()
     };
     
-    fetch('api/send_user_admin_message.php', {
+    fetch('/api/api/send_user_admin_message.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -425,8 +425,8 @@ function sendAdminMessage(chatId, message) {
 function fetchConversations() {
     // جلب المحادثات العادية والإدارية
     Promise.all([
-        fetch('api/get_conversations.php', { credentials: 'include' }).then(r => r.json()),
-        fetch('api/get_user_admin_chats.php', { credentials: 'include' }).then(r => r.json())
+        fetch('/api/api/get_conversations.php', { credentials: 'include' }).then(r => r.json()),
+        fetch('/api/api/get_user_admin_chats.php', { credentials: 'include' }).then(r => r.json())
     ])
     .then(([regularData, adminData]) => {
         const list = document.getElementById('conversation-list');
@@ -686,15 +686,15 @@ function sendMessage(event) {
         const file = fileInput && fileInput.files && fileInput.files[0] ? fileInput.files[0] : null;
         formData.append('to', ACTIVE_CHAT_USER);
         // get CSRF then send
-        fetch('api/get_csrf.php', { credentials: 'include' })
+        fetch('/api/api/get_csrf.php', { credentials: 'include' })
         .then(r => { if (!r.ok) throw new Error('Failed to get CSRF'); return r.json(); })
         .then(cs => {
             if (cs && cs.csrf_token) formData.append('csrf_token', cs.csrf_token);
             // إذا كان هناك ملف، أرسل عبر send_file.php
             if (file) {
-                return fetch('api/send_file.php', { method: 'POST', body: formData, credentials: 'include' });
+                return fetch('/api/api/send_file.php', { method: 'POST', body: formData, credentials: 'include' });
             } else {
-                return fetch('api/send_message.php', { method: 'POST', body: formData, credentials: 'include' });
+                return fetch('/api/api/send_message.php', { method: 'POST', body: formData, credentials: 'include' });
             }
         })
         .then(res => res.json().catch(e => ({ success: false, error: 'invalid_server_response' })))
@@ -738,12 +738,12 @@ function sendMessage(event) {
 function markRead(userId) {
     if (!userId) return Promise.resolve();
     // get CSRF then post
-    return fetch('api/get_csrf.php', { credentials: 'include' })
+    return fetch('/api/api/get_csrf.php', { credentials: 'include' })
     .then(r => r.json())
     .then(cs => {
         const token = cs && cs.csrf_token ? cs.csrf_token : '';
         const body = new URLSearchParams({ user_id: userId, csrf_token: token });
-        return fetch('api/mark_read.php', { method: 'POST', body: body.toString(), credentials: 'include', headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+        return fetch('/api/api/mark_read.php', { method: 'POST', body: body.toString(), credentials: 'include', headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
     })
     .then(r => r.json())
     .catch((err) => { console.error('markRead error:', err); });
@@ -762,7 +762,7 @@ window.addEventListener('load', () => {
         if (ACTIVE_CHAT_USER) fetchMessages();
     }, 5000); // تحديث كل 5 ثواني
     // عند تحميل الصفحة، أرسل حالة الاتصال للخادم
-    fetch('api/update_status.php', {
+    fetch('/api/api/update_status.php', {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -770,7 +770,7 @@ window.addEventListener('load', () => {
     });
     // عند إغلاق الصفحة أو إعادة تحميلها، أرسل حالة غير متصل
     window.addEventListener('beforeunload', function() {
-        navigator.sendBeacon && navigator.sendBeacon('api/update_status.php', new URLSearchParams({action:'offline'}));
+        navigator.sendBeacon && navigator.sendBeacon('/api/api/update_status.php', new URLSearchParams({action:'offline'}));
     });
 
     // Initialize ACTIVE_CHAT_USER from URL or sessionStorage if not set
@@ -1132,7 +1132,7 @@ document.addEventListener('click', function(e) {
             `;
         }
         
-        fetch('api/fund_deal.php', {
+        fetch('/api/api/fund_deal.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: `deal_id=${dealId}`,
@@ -1175,7 +1175,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (fundButton) {
         fundButton.addEventListener('click', function() {
             const dealId = this.dataset.dealId;
-            fetch('api/fund_deal.php', {
+            fetch('/api/api/fund_deal.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: `deal_id=${dealId}`,
@@ -1196,7 +1196,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (deliverButton) {
         deliverButton.addEventListener('click', function() {
             const dealId = this.dataset.dealId;
-            fetch('api/deliver_deal.php', {
+            fetch('/api/api/deliver_deal.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: `deal_id=${dealId}`,
@@ -1217,7 +1217,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (confirmButton) {
         confirmButton.addEventListener('click', function() {
             const dealId = this.dataset.dealId;
-            fetch('api/confirm_or_dispute.php', {
+            fetch('/api/api/confirm_or_dispute.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: `deal_id=${dealId}&action=confirm`,
@@ -1238,7 +1238,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (disputeButton) {
         disputeButton.addEventListener('click', function() {
             const dealId = this.dataset.dealId;
-            fetch('api/confirm_or_dispute.php', {
+            fetch('/api/api/confirm_or_dispute.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: `deal_id=${dealId}&action=dispute`,
@@ -1287,7 +1287,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 5000);
 
     // Update user status on page load and unload
-    fetch('api/update_status.php', {
+    fetch('/api/api/update_status.php', {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -1295,7 +1295,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     window.addEventListener('beforeunload', function() {
-        navigator.sendBeacon && navigator.sendBeacon('api/update_status.php', new URLSearchParams({ action: 'offline' }));
+        navigator.sendBeacon && navigator.sendBeacon('/api/api/update_status.php', new URLSearchParams({ action: 'offline' }));
     });
 
     // Initialize ACTIVE_CHAT_USER from URL or sessionStorage
@@ -1699,7 +1699,7 @@ function showReleaseFundsModal(dealId) {
 
 // دالة تأكيد استلام البيانات
 function confirmDealReceipt(dealId) {
-    fetch('api/fund_deal_user.php', {
+    fetch('/api/api/fund_deal_user.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -1728,7 +1728,7 @@ function confirmDealReceipt(dealId) {
 
 // دالة إلغاء الصفقة
 function cancelDeal(dealId) {
-    fetch('api/cancel_deal_user.php', {
+    fetch('/api/api/cancel_deal_user.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -1762,7 +1762,7 @@ function releaseFunds(dealId) {
         loadActiveDeal(window.CONVERSATION_ID);
     }
     
-    fetch('api/release_funds.php', {
+    fetch('/api/api/release_funds.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -1884,7 +1884,7 @@ document.addEventListener('DOMContentLoaded', function() {
             submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin ml-1"></i>جاري الإرسال...';
 
             // إرسال البلاغ
-            fetch('api/create_report.php', {
+            fetch('/api/api/create_report.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

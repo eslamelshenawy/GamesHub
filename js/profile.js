@@ -55,7 +55,7 @@
     // Load profile dynamically from server
     document.addEventListener('DOMContentLoaded', () => {
         // If the page includes a query id ?id=.. the server will return that profile, otherwise the current user
-        fetch('api/get_user.php', { credentials: 'include' })
+        fetch('/api/api/get_user.php', { credentials: 'include' })
             .then(r => r.json())
             .then(data => {
                 if (data && !data.error) {

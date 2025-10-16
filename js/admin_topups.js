@@ -1,6 +1,6 @@
 // جلب بيانات المستخدم الحالي لمعرفة إذا كان أدمن
 let isAdmin = false;
-fetch('api/get_user.php', { credentials: 'include' })
+fetch('/api/api/get_user.php', { credentials: 'include' })
   .then(async res => {
     try {
       return await res.json();
@@ -20,7 +20,7 @@ fetch('api/get_user.php', { credentials: 'include' })
   .finally(() => {
 
     // جلب الطلبات وعرضها في الجدول
-    fetch('api/get_topup_requests.php', { credentials: 'include' })
+    fetch('/api/api/get_topup_requests.php', { credentials: 'include' })
       .then(async res => {
         try {
           return await res.json();
@@ -107,7 +107,7 @@ function showNotification(msg, success = true) {
 
 function approveTopup(id) {
   if (!confirm('تأكيد الموافقة على الشحن؟')) return;
-  fetch('api/approve_topup.php', {
+  fetch('/api/api/approve_topup.php', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
@@ -142,7 +142,7 @@ function approveTopup(id) {
 }
 function rejectTopup(id) {
   if (!confirm('تأكيد رفض الطلب؟')) return;
-  fetch('api/reject_topup.php', {
+  fetch('/api/api/reject_topup.php', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
@@ -171,7 +171,7 @@ function rejectTopup(id) {
 // الموافقة ورفض طلبات السحب
 function approveWithdraw(id) {
     if (!confirm('هل أنت متأكد من الموافقة على طلب السحب؟')) return;
-    fetch('api/approve_withdraw.php', {
+    fetch('/api/api/approve_withdraw.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'id=' + encodeURIComponent(id),
@@ -185,7 +185,7 @@ function approveWithdraw(id) {
 }
 function rejectWithdraw(id) {
     if (!confirm('هل أنت متأكد من رفض طلب السحب؟ سيتم إعادة الرصيد للمستخدم.')) return;
-    fetch('api/reject_withdraw.php', {
+    fetch('/api/api/reject_withdraw.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'id=' + encodeURIComponent(id),
@@ -200,7 +200,7 @@ function rejectWithdraw(id) {
 
 // جلب طلبات السحب وعرضها في جدول السحب
 function loadWithdrawals() {
-    fetch('api/get_withdraw_requests.php', { credentials: 'include' })
+    fetch('/api/api/get_withdraw_requests.php', { credentials: 'include' })
         .then(async res => {
             try { return await res.json(); } catch { return {}; }
         })

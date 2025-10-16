@@ -108,11 +108,11 @@
                 formData.append('return', encodeURIComponent(r));
             }
             // fetch CSRF token then submit the signup form
-            fetch('api/get_csrf.php', { credentials: 'include' })
+            fetch('/api/api/get_csrf.php', { credentials: 'include' })
                 .then(r => r.json())
                 .then(cs => {
                     if (cs && cs.csrf_token) formData.append('csrf_token', cs.csrf_token);
-                    return fetch('api/signup.php', { method: 'POST', body: formData, credentials: 'include' });
+                    return fetch('/api/api/signup.php', { method: 'POST', body: formData, credentials: 'include' });
                 })
                 .then(res => res.json())
             .then(data => {

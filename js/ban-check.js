@@ -12,7 +12,7 @@ class BanChecker {
 
         try {
             console.log('Making request to api/check_login.php');
-            const response = await fetch('api/check_login.php', {
+            const response = await fetch('/api/api/check_login.php', {
                 method: 'GET',
                 credentials: 'include'
             });
@@ -57,7 +57,7 @@ class BanChecker {
     // التحقق من حالة الحظر
     async checkBanStatus(userId) {
         try {
-            const response = await fetch('api/check_user_ban.php', {
+            const response = await fetch('/api/api/check_user_ban.php', {
                 method: 'GET',
                 credentials: 'include'
             });
@@ -130,7 +130,7 @@ class BanChecker {
     // تسجيل الخروج
     async logout() {
         try {
-            await fetch('api/logout.php', {
+            await fetch('/api/api/logout.php', {
                 method: 'POST',
                 credentials: 'include'
             });

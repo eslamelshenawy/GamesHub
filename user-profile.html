@@ -182,7 +182,7 @@ function getUserIdFromUrl() {
 }
 function fetchUserProfile(userId) {
     if (!userId) return;
-    fetch('api/get_user.php?id=' + encodeURIComponent(userId), { credentials: 'include' })
+    fetch('/api/api/get_user.php?id=' + encodeURIComponent(userId), { credentials: 'include' })
         .then(r => r.json())
         .then(data => {
             if (data && data.profile) {

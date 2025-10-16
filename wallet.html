@@ -108,7 +108,7 @@
 let walletBalance = 0.00;
 let pendingBalance = 0.00;
 function updateWalletBalance() {
-    fetch('api/get_wallet.php', { credentials: 'include' })
+    fetch('/api/api/get_wallet.php', { credentials: 'include' })
         .then(res => res.json())
         .then(data => {
             if (data.success && typeof data.balance !== 'undefined') {
@@ -177,7 +177,7 @@ if (topupForm && chargeSuccess) {
                 e.preventDefault();
                 chargeSuccess.classList.add('hidden');
                 const formData = new FormData(topupForm);
-                fetch('api/request_topup.php', {
+                fetch('/api/api/request_topup.php', {
                         method: 'POST',
                         body: formData,
                         credentials: 'include'
@@ -229,7 +229,7 @@ if (withdrawForm && withdrawSuccess) {
         e.preventDefault();
         withdrawSuccess.classList.add('hidden');
         const formData = new FormData(withdrawForm);
-        fetch('api/request_withdraw.php', {
+        fetch('/api/api/request_withdraw.php', {
             method: 'POST',
             body: formData,
             credentials: 'include'

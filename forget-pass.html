@@ -83,7 +83,7 @@
 function sendCode(event) {
     event.preventDefault();
     const phoneNumber = document.getElementById('phoneNumber').value;
-    fetch('api/send_code.php', {
+    fetch('/api/api/send_code.php', {
         method: 'POST',
         body: new URLSearchParams({ phone: phoneNumber }),
         credentials: 'include'
@@ -102,7 +102,7 @@ function sendCode(event) {
 function verifyCode(event) {
     event.preventDefault();
     const verificationCode = document.getElementById('verificationCode').value;
-    fetch('api/verify_code.php', {
+    fetch('/api/api/verify_code.php', {
         method: 'POST',
         body: new URLSearchParams({ code: verificationCode }),
         credentials: 'include'
@@ -127,7 +127,7 @@ function resetPassword(event) {
         alert('كلمتا المرور غير متطابقتين');
         return;
     }
-    fetch('api/reset_password.php', {
+    fetch('/api/api/reset_password.php', {
         method: 'POST',
         body: new URLSearchParams({ password: newPassword }),
         credentials: 'include'

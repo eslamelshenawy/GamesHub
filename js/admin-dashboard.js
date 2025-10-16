@@ -1205,7 +1205,7 @@ class AdminDashboard {
                 this.loadDeals();
                 this.loadDashboardData();
             } else {
-                this.showNotification('فشل في قبول الصفقة: ' + data.message, 'error');
+                this.showNotification('فشل في قبول الصفقة: ' + (data.error || data.message || 'خطأ غير معروف'), 'error');
             }
         } catch (error) {
             console.error('Error approving deal:', error);

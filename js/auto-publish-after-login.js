@@ -4,7 +4,7 @@
     // التحقق من تسجيل الدخول باستخدام API بدلاً من فحص الكوكي
     let loginData;
     try {
-        const res = await fetch('api/check_login.php', { credentials: 'include' });
+        const res = await fetch('/api/api/check_login.php', { credentials: 'include' });
         loginData = await res.json();
     } catch(e) {
         console.error('خطأ في التحقق من تسجيل الدخول:', e);
@@ -49,7 +49,7 @@
     formData.append('price', data.price || '');
     files.forEach(f => formData.append('images[]', f));
     // إرسال الطلب
-    fetch('api/add_account.php', {
+    fetch('/api/api/add_account.php', {
         method: 'POST',
         body: formData,
         credentials: 'include'

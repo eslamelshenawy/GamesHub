@@ -751,7 +751,7 @@ function redirectToLogin() {
 // عند تحميل الصفحة: إذا كان هناك بيانات نشر معلقة، تحقق من تسجيل الدخول واعرضها
 window.addEventListener('DOMContentLoaded', function(){
     // التحقق من تسجيل الدخول باستخدام API
-    fetch('api/check_login.php', { credentials: 'include' })
+    fetch('/api/api/check_login.php', { credentials: 'include' })
         .then(res => res.json())
         .then(loginData => {
             if (loginData.logged_in && localStorage.getItem('pendingAddAccount')) {
@@ -819,7 +819,7 @@ function submitRecoveredForm(form, files, data) {
             formData.append('images[]', files[i]);
         }
     }
-    fetch('api/add_account.php', {
+    fetch('/api/api/add_account.php', {
         method: 'POST',
         body: formData,
         credentials: 'include'

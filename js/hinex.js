@@ -23,9 +23,9 @@
       var currentlyFav = btn.classList.contains('active-fav');
       var setFavUI = function(fav){ if (fav) { btn.classList.add('active-fav'); if (icon) icon.className = 'fas fa-heart text-2xl'; } else { btn.classList.remove('active-fav'); if (icon) icon.className = 'far fa-heart text-2xl'; } };
       setFavUI(!currentlyFav);
-      fetch('api/get_csrf.php', { credentials: 'include' })
+      fetch('/api/api/get_csrf.php', { credentials: 'include' })
         .then(function(r){ return r.json(); })
-        .then(function(csrfData){ var csrf = csrfData && csrfData.csrf_token ? csrfData.csrf_token : ''; return fetch('api/favorite.php', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ account_id: adId, csrf_token: csrf }), credentials: 'include' }); })
+        .then(function(csrfData){ var csrf = csrfData && csrfData.csrf_token ? csrfData.csrf_token : ''; return fetch('/api/api/favorite.php', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ account_id: adId, csrf_token: csrf }), credentials: 'include' }); })
         .then(function(res){ 
           if (res.status === 401) {
             setFavUI(currentlyFav);
@@ -61,7 +61,7 @@
   };
 
   Wasata.fetchAndRenderAccounts = function(limit){ 
-    fetch('api/get_all_accounts.php').then(function(res){ return res.json(); }).then(function(data){ 
+    fetch('/api/api/get_all_accounts.php').then(function(res){ return res.json(); }).then(function(data){ 
       // Check if we're on the homepage by looking for specific elements
       var isHomepage = window.location.pathname === '/' || window.location.pathname.endsWith('index.html') || window.location.pathname === '/index.html';
       var actualLimit = isHomepage ? (limit || 6) : undefined;

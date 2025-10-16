@@ -68,6 +68,7 @@ try {
 		$_SESSION['user_id'] = $user['id'];
 		$_SESSION['user_name'] = $user['name'];
 		$_SESSION['user_email'] = $email;
+		$_SESSION['role'] = $user['role'];
 		$_SESSION['is_admin'] = ($user['role'] === 'admin') ? 1 : 0;
 
 		// Debug: Log session data

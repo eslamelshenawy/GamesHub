@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Determine profile id from query string (e.g., profile.html?id=123). If missing, API will return current session user.
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id');
-    const url = id ? `api/get_user.php?id=${encodeURIComponent(id)}` : 'api/get_user.php';
+    const url = id ? `api/get_user.php?id=${encodeURIComponent(id)}` : '/api/api/get_user.php';
     fetch(url, { credentials: 'include' })
         .then(res => res.json())
         .then(data => {
@@ -380,7 +380,7 @@ document.addEventListener('DOMContentLoaded', function(){
         if (submitBtn.disabled) return; // already submitting
         submitBtn.disabled = true;
         // get CSRF
-        fetch('api/get_csrf.php', { credentials: 'include' })
+        fetch('/api/api/get_csrf.php', { credentials: 'include' })
             .then(r=>r.json())
             .then(cs=>{
                 const formData = new FormData();
@@ -394,7 +394,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 if (imageInput && imageInput.files && imageInput.files[0]) {
                     formData.append('profile_image', imageInput.files[0]);
                 }
-                return fetch('api/update_user_image.php', {
+                return fetch('/api/api/update_user_image.php', {
                     method: 'POST',
                     credentials: 'include',
                     body: formData

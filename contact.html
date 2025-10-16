@@ -160,7 +160,7 @@
 		const btn = form.querySelector('button[type="submit"]');
 		if (btn) { btn.disabled = true; btn.classList.add('opacity-60'); }
 
-	fetch('api/contact.php', {
+	fetch('/api/api/contact.php', {
 			method: 'POST',
 			body: formData,
 			credentials: 'include'
