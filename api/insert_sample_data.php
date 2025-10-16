@@ -8,17 +8,18 @@ try {
 
     // 1. Add Users
     echo "Adding users...\n";
+    $timestamp = time();
     $users = [
-        ['احمد محمد', 'ahmed@gmail.com', '01012345678', 'password123', 25, 'male', 'buyer', 5000],
-        ['سارة علي', 'sara@gmail.com', '01112345678', 'password123', 22, 'female', 'seller', 3000],
-        ['محمود حسن', 'mahmoud@gmail.com', '01212345678', 'password123', 30, 'male', 'buyer', 8000],
-        ['فاطمة عبدالله', 'fatma@gmail.com', '01312345678', 'password123', 28, 'female', 'seller', 4500],
-        ['عمر خالد', 'omar@gmail.com', '01412345678', 'password123', 26, 'male', 'admin', 10000],
-        ['ياسر إبراهيم', 'yaser@gmail.com', '01512345678', 'password123', 29, 'male', 'buyer', 6000],
-        ['منى سعيد', 'mona@gmail.com', '01612345678', 'password123', 24, 'female', 'seller', 4000],
-        ['كريم عادل', 'karim@gmail.com', '01712345678', 'password123', 27, 'male', 'buyer', 7000],
-        ['نور الدين', 'nour@gmail.com', '01812345678', 'password123', 23, 'female', 'seller', 3500],
-        ['طارق محمود', 'tarek@gmail.com', '01912345678', 'password123', 31, 'male', 'buyer', 9000]
+        ['احمد محمد', 'ahmed' . $timestamp . '@gmail.com', '0100' . $timestamp . '1', 'password123', 25, 'male', 'buyer', 5000],
+        ['سارة علي', 'sara' . $timestamp . '@gmail.com', '0100' . $timestamp . '2', 'password123', 22, 'female', 'seller', 3000],
+        ['محمود حسن', 'mahmoud' . $timestamp . '@gmail.com', '0100' . $timestamp . '3', 'password123', 30, 'male', 'buyer', 8000],
+        ['فاطمة عبدالله', 'fatma' . $timestamp . '@gmail.com', '0100' . $timestamp . '4', 'password123', 28, 'female', 'seller', 4500],
+        ['عمر خالد', 'omar' . $timestamp . '@gmail.com', '0100' . $timestamp . '5', 'password123', 26, 'male', 'admin', 10000],
+        ['ياسر إبراهيم', 'yaser' . $timestamp . '@gmail.com', '0100' . $timestamp . '6', 'password123', 29, 'male', 'buyer', 6000],
+        ['منى سعيد', 'mona' . $timestamp . '@gmail.com', '0100' . $timestamp . '7', 'password123', 24, 'female', 'seller', 4000],
+        ['كريم عادل', 'karim' . $timestamp . '@gmail.com', '0100' . $timestamp . '8', 'password123', 27, 'male', 'buyer', 7000],
+        ['نور الدين', 'nour' . $timestamp . '@gmail.com', '0100' . $timestamp . '9', 'password123', 23, 'female', 'seller', 3500],
+        ['طارق محمود', 'tarek' . $timestamp . '@gmail.com', '0101' . $timestamp . '0', 'password123', 31, 'male', 'buyer', 9000]
     ];
 
     $userIds = [];
@@ -120,16 +121,16 @@ try {
     // 5. Add Wallet Topups
     echo "\nAdding wallet topups...\n";
     $topups = [
-        [$userIds[0], 'vodafone_cash', 5000, '01012345678', 'approved'],
-        [$userIds[2], 'instapay', 8000, '01212345678', 'approved'],
-        [$userIds[1], 'bank_transfer', 3000, '01112345678', 'pending'],
-        [$userIds[5], 'vodafone_cash', 6000, '01512345678', 'approved'],
-        [$userIds[7], 'instapay', 7000, '01712345678', 'pending'],
-        [$userIds[3], 'vodafone_cash', 4500, '01312345678', 'approved'],
-        [$userIds[6], 'bank_transfer', 4000, '01612345678', 'rejected'],
-        [$userIds[8], 'vodafone_cash', 3500, '01812345678', 'approved'],
-        [$userIds[9], 'instapay', 9000, '01912345678', 'pending'],
-        [$userIds[4], 'vodafone_cash', 10000, '01412345678', 'approved']
+        [$userIds[0], 'vodafone_cash', 5000, '0100' . $timestamp . '1', 'approved'],
+        [$userIds[2], 'instapay', 8000, '0100' . $timestamp . '3', 'approved'],
+        [$userIds[1], 'bank_transfer', 3000, '0100' . $timestamp . '2', 'pending'],
+        [$userIds[5], 'vodafone_cash', 6000, '0100' . $timestamp . '6', 'approved'],
+        [$userIds[7], 'instapay', 7000, '0100' . $timestamp . '8', 'pending'],
+        [$userIds[3], 'vodafone_cash', 4500, '0100' . $timestamp . '4', 'approved'],
+        [$userIds[6], 'bank_transfer', 4000, '0100' . $timestamp . '7', 'rejected'],
+        [$userIds[8], 'vodafone_cash', 3500, '0100' . $timestamp . '9', 'approved'],
+        [$userIds[9], 'instapay', 9000, '0101' . $timestamp . '0', 'pending'],
+        [$userIds[4], 'vodafone_cash', 10000, '0100' . $timestamp . '5', 'approved']
     ];
 
     $topupIds = [];
@@ -155,16 +156,16 @@ try {
     // 6. Add Withdrawal Requests
     echo "\nAdding withdrawal requests...\n";
     $withdrawals = [
-        [$userIds[1], 2000, '01112345678', 'vodafone_cash', 'approved'],
-        [$userIds[3], 3000, '01312345678', 'instapay', 'pending'],
-        [$userIds[6], 2500, '01612345678', 'vodafone_cash', 'approved'],
-        [$userIds[8], 3500, '01812345678', 'bank_transfer', 'pending'],
-        [$userIds[0], 4000, '01012345678', 'vodafone_cash', 'rejected'],
-        [$userIds[2], 5000, '01212345678', 'instapay', 'approved'],
-        [$userIds[5], 2800, '01512345678', 'vodafone_cash', 'pending'],
-        [$userIds[7], 3200, '01712345678', 'instapay', 'approved'],
-        [$userIds[9], 4500, '01912345678', 'vodafone_cash', 'pending'],
-        [$userIds[4], 6000, '01412345678', 'bank_transfer', 'approved']
+        [$userIds[1], 2000, '0100' . $timestamp . '2', 'vodafone_cash', 'approved'],
+        [$userIds[3], 3000, '0100' . $timestamp . '4', 'instapay', 'pending'],
+        [$userIds[6], 2500, '0100' . $timestamp . '7', 'vodafone_cash', 'approved'],
+        [$userIds[8], 3500, '0100' . $timestamp . '9', 'bank_transfer', 'pending'],
+        [$userIds[0], 4000, '0100' . $timestamp . '1', 'vodafone_cash', 'rejected'],
+        [$userIds[2], 5000, '0100' . $timestamp . '3', 'instapay', 'approved'],
+        [$userIds[5], 2800, '0100' . $timestamp . '6', 'vodafone_cash', 'pending'],
+        [$userIds[7], 3200, '0100' . $timestamp . '8', 'instapay', 'approved'],
+        [$userIds[9], 4500, '0101' . $timestamp . '0', 'vodafone_cash', 'pending'],
+        [$userIds[4], 6000, '0100' . $timestamp . '5', 'bank_transfer', 'approved']
     ];
 
     $withdrawalIds = [];
