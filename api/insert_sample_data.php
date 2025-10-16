@@ -13,7 +13,12 @@ try {
         ['سارة علي', 'sara@gmail.com', '01112345678', 'password123', 22, 'female', 'seller', 3000],
         ['محمود حسن', 'mahmoud@gmail.com', '01212345678', 'password123', 30, 'male', 'buyer', 8000],
         ['فاطمة عبدالله', 'fatma@gmail.com', '01312345678', 'password123', 28, 'female', 'seller', 4500],
-        ['عمر خالد', 'omar@gmail.com', '01412345678', 'password123', 26, 'male', 'admin', 10000]
+        ['عمر خالد', 'omar@gmail.com', '01412345678', 'password123', 26, 'male', 'admin', 10000],
+        ['ياسر إبراهيم', 'yaser@gmail.com', '01512345678', 'password123', 29, 'male', 'buyer', 6000],
+        ['منى سعيد', 'mona@gmail.com', '01612345678', 'password123', 24, 'female', 'seller', 4000],
+        ['كريم عادل', 'karim@gmail.com', '01712345678', 'password123', 27, 'male', 'buyer', 7000],
+        ['نور الدين', 'nour@gmail.com', '01812345678', 'password123', 23, 'female', 'seller', 3500],
+        ['طارق محمود', 'tarek@gmail.com', '01912345678', 'password123', 31, 'male', 'buyer', 9000]
     ];
 
     $userIds = [];
@@ -39,7 +44,12 @@ try {
         [$userIds[1], 'Free Fire', 'حساب فري فاير مستوى 65 - دايموند 50000', 1800],
         [$userIds[3], 'Call of Duty', 'حساب كود موبايل مستوى 150 - ليجندري', 3200],
         [$userIds[3], 'Fortnite', 'حساب فورتنايت - سكنات نادرة - 200 V-Bucks', 2800],
-        [$userIds[1], 'Clash of Clans', 'حساب كلاش اوف كلانس TH14 - قرية ماكس', 4500]
+        [$userIds[1], 'Clash of Clans', 'حساب كلاش اوف كلانس TH14 - قرية ماكس', 4500],
+        [$userIds[6], 'Genshin Impact', 'حساب جينشن امباكت AR 55 - شخصيات نادرة', 3500],
+        [$userIds[6], 'Valorant', 'حساب فالورانت - رانك دايموند - اسلحة نادرة', 2900],
+        [$userIds[8], 'League of Legends', 'حساب ليج اوف ليجندز - رانك بلاتنيوم', 2200],
+        [$userIds[8], 'Apex Legends', 'حساب ابكس ليجندز - جميع الشخصيات مفتوحة', 2600],
+        [$userIds[6], 'Minecraft', 'حساب ماين كرافت - عالم ضخم - موارد كثيرة', 1500]
     ];
 
     $accountIds = [];
@@ -57,7 +67,14 @@ try {
     $deals = [
         [$userIds[0], $userIds[1], 2500, 'صفقة شراء حساب PUBG Mobile', 'COMPLETED', $accountIds[0], 10],
         [$userIds[2], $userIds[3], 3200, 'صفقة شراء حساب Call of Duty', 'FUNDED', $accountIds[2], 10],
-        [$userIds[0], $userIds[1], 1800, 'صفقة شراء حساب Free Fire', 'CREATED', $accountIds[1], 10]
+        [$userIds[0], $userIds[1], 1800, 'صفقة شراء حساب Free Fire', 'CREATED', $accountIds[1], 10],
+        [$userIds[5], $userIds[6], 3500, 'صفقة شراء حساب Genshin Impact', 'COMPLETED', $accountIds[5], 10],
+        [$userIds[7], $userIds[8], 2600, 'صفقة شراء حساب Apex Legends', 'FUNDED', $accountIds[8], 10],
+        [$userIds[2], $userIds[6], 2900, 'صفقة شراء حساب Valorant', 'CREATED', $accountIds[6], 10],
+        [$userIds[5], $userIds[8], 2200, 'صفقة شراء حساب League of Legends', 'COMPLETED', $accountIds[7], 10],
+        [$userIds[0], $userIds[3], 2800, 'صفقة شراء حساب Fortnite', 'FUNDED', $accountIds[3], 10],
+        [$userIds[7], $userIds[6], 1500, 'صفقة شراء حساب Minecraft', 'CREATED', $accountIds[9], 10],
+        [$userIds[2], $userIds[1], 4500, 'صفقة شراء حساب Clash of Clans', 'COMPLETED', $accountIds[4], 10]
     ];
 
     $dealIds = [];
@@ -79,7 +96,15 @@ try {
     echo "\nAdding reports...\n";
     $reports = [
         [$userIds[0], $userIds[1], null, 'المستخدم لم يقم بتسليم الحساب بعد الدفع', 'pending'],
-        [$userIds[2], $userIds[3], null, 'الحساب المباع غير صحيح', 'under_review']
+        [$userIds[2], $userIds[3], null, 'الحساب المباع غير صحيح', 'under_review'],
+        [$userIds[5], $userIds[6], null, 'البائع يطلب سعر أعلى بعد الاتفاق', 'pending'],
+        [$userIds[7], $userIds[8], null, 'الحساب تم حظره من اللعبة', 'resolved'],
+        [$userIds[0], $userIds[3], null, 'المستخدم لا يرد على الرسائل', 'under_review'],
+        [$userIds[2], $userIds[6], null, 'محاولة احتيال - طلب دفع خارج المنصة', 'dismissed'],
+        [$userIds[5], $userIds[1], null, 'بيانات الحساب غير مطابقة للوصف', 'pending'],
+        [$userIds[7], $userIds[3], null, 'التأخر في تسليم الحساب', 'under_review'],
+        [$userIds[9], $userIds[6], null, 'سلوك غير لائق في المحادثة', 'resolved'],
+        [$userIds[8], $userIds[1], null, 'الحساب المباع به مشاكل فنية', 'pending']
     ];
 
     $reportIds = [];
@@ -97,7 +122,14 @@ try {
     $topups = [
         [$userIds[0], 'vodafone_cash', 5000, '01012345678', 'approved'],
         [$userIds[2], 'instapay', 8000, '01212345678', 'approved'],
-        [$userIds[1], 'bank_transfer', 3000, '01112345678', 'pending']
+        [$userIds[1], 'bank_transfer', 3000, '01112345678', 'pending'],
+        [$userIds[5], 'vodafone_cash', 6000, '01512345678', 'approved'],
+        [$userIds[7], 'instapay', 7000, '01712345678', 'pending'],
+        [$userIds[3], 'vodafone_cash', 4500, '01312345678', 'approved'],
+        [$userIds[6], 'bank_transfer', 4000, '01612345678', 'rejected'],
+        [$userIds[8], 'vodafone_cash', 3500, '01812345678', 'approved'],
+        [$userIds[9], 'instapay', 9000, '01912345678', 'pending'],
+        [$userIds[4], 'vodafone_cash', 10000, '01412345678', 'approved']
     ];
 
     $topupIds = [];
@@ -124,7 +156,15 @@ try {
     echo "\nAdding withdrawal requests...\n";
     $withdrawals = [
         [$userIds[1], 2000, '01112345678', 'vodafone_cash', 'approved'],
-        [$userIds[3], 3000, '01312345678', 'instapay', 'pending']
+        [$userIds[3], 3000, '01312345678', 'instapay', 'pending'],
+        [$userIds[6], 2500, '01612345678', 'vodafone_cash', 'approved'],
+        [$userIds[8], 3500, '01812345678', 'bank_transfer', 'pending'],
+        [$userIds[0], 4000, '01012345678', 'vodafone_cash', 'rejected'],
+        [$userIds[2], 5000, '01212345678', 'instapay', 'approved'],
+        [$userIds[5], 2800, '01512345678', 'vodafone_cash', 'pending'],
+        [$userIds[7], 3200, '01712345678', 'instapay', 'approved'],
+        [$userIds[9], 4500, '01912345678', 'vodafone_cash', 'pending'],
+        [$userIds[4], 6000, '01412345678', 'bank_transfer', 'approved']
     ];
 
     $withdrawalIds = [];
