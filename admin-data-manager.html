@@ -17,7 +17,7 @@
                         'neon-green': '#39ff14',
                         'neon-pink': '#ff00ff',
                         'dark-bg': '#0b0f14',
-                        'card-bg': '#1e293b',
+                        'card-bg': '#1e293b',1
                         'input-bg': '#334155'
                     },
                     fontFamily: {
@@ -359,7 +359,7 @@
             resultDiv.classList.add('hidden');
 
             try {
-                const response = await fetch('api/add_data.php', {
+                const response = await fetch('/api/api/add_data.php', {
                     method: 'POST',
                     body: formData
                 });
