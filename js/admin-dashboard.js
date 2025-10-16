@@ -36,7 +36,7 @@ class AdminDashboard {
         return true;
         
         // Production auth check (commented out for testing):
-        // fetch('api/check_admin.php')
+        // fetch('/api/api/check_admin.php')
         //     .then(response => {
         //         if (!response.ok) {
         //             throw new Error('Network response was not ok');
@@ -63,10 +63,17 @@ class AdminDashboard {
         // Sidebar navigation
         document.querySelectorAll('.sidebar-item').forEach(item => {
             item.addEventListener('click', (e) => {
+                const href = item.getAttribute('href');
+                const onclickAttr = item.getAttribute('onclick');
+
+                // Allow navigation if href exists and is not '#'
+                if (href && href !== '#' && (!onclickAttr || !onclickAttr.includes('showSection'))) {
+                    // Let the link navigate normally
+                    return;
+                }
+
                 e.preventDefault();
                 e.stopPropagation();
-
-                const onclickAttr = item.getAttribute('onclick');
 
                 // Skip if onclick doesn't contain showSection (e.g., logout button)
                 if (!onclickAttr || !onclickAttr.includes('showSection')) {
@@ -344,7 +351,7 @@ class AdminDashboard {
     async loadDashboardData() {
         try {
             // Load main statistics from admin_stats.php
-            const statsResponse = await fetch('api/admin_stats.php');
+            const statsResponse = await fetch('/api/api/admin_stats.php');
             if (statsResponse.ok) {
                 const statsData = await statsResponse.json();
                 if (statsData.success) {
@@ -353,7 +360,7 @@ class AdminDashboard {
             }
             
             // Load profits statistics from profits_stats.php
-            const profitsResponse = await fetch('api/profits_stats.php');
+            const profitsResponse = await fetch('/api/api/profits_stats.php');
             if (profitsResponse.ok) {
                 const profitsData = await profitsResponse.json();
                 if (profitsData.success) {
@@ -694,7 +701,7 @@ class AdminDashboard {
 
     async loadUsers() {
         try {
-            const response = await fetch('api/get_users.php');
+            const response = await fetch('/api/api/get_users.php');
             const data = await response.json();
             
             if (data.success) {
@@ -749,7 +756,7 @@ class AdminDashboard {
 
     async loadDeals() {
         try {
-            const response = await fetch('api/admin_deals.php?action=get_pending_deals');
+            const response = await fetch('/api/api/admin_deals.php?action=get_pending_deals');
             const data = await response.json();
             
             if (data.success) {
@@ -806,8 +813,8 @@ class AdminDashboard {
     async loadTopups() {
         try {
             const [topupsResponse, withdrawalsResponse] = await Promise.all([
-                fetch('api/get_topup_requests.php'),
-                fetch('api/get_withdraw_requests.php')
+                fetch('/api/api/get_topup_requests.php'),
+                fetch('/api/api/get_withdraw_requests.php')
             ]);
             
             const topupsData = await topupsResponse.json();
@@ -900,6 +907,10 @@ class AdminDashboard {
                 </td>
             </tr>
         `).join('');
+    }
+
+    async loadWithdrawals() {
+        await this.loadTopups();
     }
 
     switchTopupTab(tab) {
@@ -1015,7 +1026,7 @@ class AdminDashboard {
     // API functions
     async approveTopup(topupId) {
         try {
-            const response = await fetch('api/approve_topup.php', {
+            const response = await fetch('/api/api/approve_topup.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ topup_id: topupId })
@@ -1037,7 +1048,7 @@ class AdminDashboard {
 
     async rejectTopup(topupId) {
         try {
-            const response = await fetch('api/reject_topup.php', {
+            const response = await fetch('/api/api/reject_topup.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ topup_id: topupId })
@@ -1059,7 +1070,7 @@ class AdminDashboard {
 
     async approveWithdraw(withdrawId) {
         try {
-            const response = await fetch('api/approve_withdraw.php', {
+            const response = await fetch('/api/api/approve_withdraw.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ withdraw_id: withdrawId })
@@ -1081,7 +1092,7 @@ class AdminDashboard {
 
     async rejectWithdraw(withdrawId) {
         try {
-            const response = await fetch('api/reject_withdraw.php', {
+            const response = await fetch('/api/api/reject_withdraw.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ withdraw_id: withdrawId })
@@ -1128,7 +1139,7 @@ class AdminDashboard {
         }
         
         try {
-            const response = await fetch('api/admin_deals.php?action=reject', {
+            const response = await fetch('/api/api/admin_deals.php?action=reject', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
@@ -1179,7 +1190,7 @@ class AdminDashboard {
         }
         
         try {
-            const response = await fetch('api/admin_deals.php?action=approve', {
+            const response = await fetch('/api/api/admin_deals.php?action=approve', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
@@ -1505,7 +1516,7 @@ class AdminDashboard {
         this.banInProgress = true;
         
         try {
-            const response = await fetch('api/ban_user.php', {
+            const response = await fetch('/api/api/ban_user.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -1542,7 +1553,7 @@ class AdminDashboard {
         this.unbanInProgress = true;
 
         try {
-            const response = await fetch('api/unban_user.php', {
+            const response = await fetch('/api/api/unban_user.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -1579,7 +1590,7 @@ class AdminDashboard {
         this.banInProgress = true;
 
         try {
-            const response = await fetch('api/ban_user.php', {
+            const response = await fetch('/api/api/ban_user.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -1700,7 +1711,7 @@ class AdminDashboard {
 
     async loadReports() {
         try {
-            const response = await fetch('api/get_reports.php');
+            const response = await fetch('/api/api/get_reports.php');
             const data = await response.json();
             
             if (data.success && data.data) {
@@ -1888,7 +1899,7 @@ class AdminDashboard {
         }
 
         try {
-            const response = await fetch('api/admin_reports.php', {
+            const response = await fetch('/api/api/admin_reports.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -1921,7 +1932,7 @@ class AdminDashboard {
         }
 
         try {
-            const response = await fetch('api/admin_reports.php', {
+            const response = await fetch('/api/api/admin_reports.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -1964,7 +1975,7 @@ class AdminDashboard {
         }
 
         try {
-            const response = await fetch('api/admin_reports.php', {
+            const response = await fetch('/api/api/admin_reports.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -2139,7 +2150,7 @@ class AdminDashboard {
         }
 
         try {
-            const response = await fetch('api/admin_reports.php', {
+            const response = await fetch('/api/api/admin_reports.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -2300,7 +2311,7 @@ class AdminDashboard {
         sendButton.classList.add('opacity-50', 'cursor-not-allowed');
 
         try {
-            const response = await fetch('api/admin_reports.php', {
+            const response = await fetch('/api/api/admin_reports.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -2374,7 +2385,7 @@ class AdminDashboard {
         }
         
         try {
-            const response = await fetch('api/admin_deals.php', {
+            const response = await fetch('/api/api/admin_deals.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -2422,7 +2433,7 @@ class AdminDashboard {
                 return;
             }
 
-            const response = await fetch('api/admin_deals.php', {
+            const response = await fetch('/api/api/admin_deals.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -2632,7 +2643,7 @@ function closeReportModal() {
 // Global logout function
 function logout() {
     if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
-        fetch('api/logout.php', {
+        fetch('/api/api/logout.php', {
             method: 'POST',
             credentials: 'include'
         })
@@ -2652,9 +2663,80 @@ function logout() {
     }
 }
 
+// Toggle authentication state
+function toggleAuth() {
+    fetch('/api/api/check_login.php', { credentials: 'include' })
+        .then(res => res.json())
+        .then(data => {
+            if (data.logged_in) {
+                // User is logged in, perform logout
+                if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
+                    fetch('/api/api/logout.php', {
+                        method: 'POST',
+                        credentials: 'include'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Update button to show login state
+                            updateAuthButton(false);
+                            // Redirect to login page
+                            setTimeout(() => {
+                                window.location.href = 'login.html';
+                            }, 500);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Logout error:', error);
+                        window.location.href = 'login.html';
+                    });
+                }
+            } else {
+                // User is not logged in, redirect to login page
+                window.location.href = 'login.html';
+            }
+        })
+        .catch(error => {
+            console.error('Auth check error:', error);
+            window.location.href = 'login.html';
+        });
+}
+
+// Update auth button based on login state
+function updateAuthButton(isLoggedIn) {
+    const authIcon = document.getElementById('authIcon');
+    const authText = document.getElementById('authText');
+    const authBtn = document.getElementById('authToggleBtn');
+
+    if (isLoggedIn) {
+        if (authIcon) authIcon.className = 'fas fa-sign-out-alt w-4 lg:w-5 flex-shrink-0 text-center';
+        if (authText) authText.textContent = 'تسجيل الخروج';
+        if (authBtn) authBtn.classList.add('text-neon-red', 'hover:text-red-400');
+    } else {
+        if (authIcon) authIcon.className = 'fas fa-sign-in-alt w-4 lg:w-5 flex-shrink-0 text-center';
+        if (authText) authText.textContent = 'تسجيل دخول';
+        if (authBtn) authBtn.classList.remove('text-neon-red', 'hover:text-red-400');
+        if (authBtn) authBtn.classList.add('text-neon-green', 'hover:text-green-400');
+    }
+}
+
+// Check auth state on page load
+function checkAuthState() {
+    fetch('/api/api/check_login.php', { credentials: 'include' })
+        .then(res => res.json())
+        .then(data => {
+            updateAuthButton(data.logged_in);
+        })
+        .catch(error => {
+            console.error('Auth check error:', error);
+            updateAuthButton(false);
+        });
+}
+
 // Initialize dashboard when page loads
 document.addEventListener('DOMContentLoaded', function() {
     window.adminDashboard = new AdminDashboard();
     window.adminDashboard.init();
     initializeSidebar();
+    checkAuthState(); // Check and update auth button state
 });
