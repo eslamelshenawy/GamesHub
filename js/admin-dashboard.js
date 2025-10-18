@@ -1448,10 +1448,11 @@ class AdminDashboard {
         const modal = document.getElementById('conversationModal');
         modal.classList.add('hidden');
         modal.classList.remove('flex');
-        
+
         // Clear search
         document.getElementById('messageSearch').value = '';
-        this.currentDealId = null;
+        // Don't clear currentDealId here - keep it so we can reopen the conversation
+        // It will be cleared when the deal modal is closed
     }
 
     setupConversationModalEvents() {
@@ -2135,11 +2136,6 @@ class AdminDashboard {
             modal.classList.add('hidden');
             modal.classList.remove('flex');
         }
-    }
-
-    // إغلاق modal المحادثة (للتوافق مع الكود القديم)
-    closeConversationModal() {
-        this.closeReportConversationModal();
     }
 
     // فتح محادثة إدارية مع المستخدم
