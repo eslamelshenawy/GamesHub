@@ -54,6 +54,9 @@ switch ($action) {
     case 'details':
         getDealDetails();
         break;
+    case 'reject_cancel_request':
+        rejectCancelRequest();
+        break;
     default:
         http_response_code(400);
         echo json_encode(['success' => false, 'error' => 'إجراء غير صحيح']);
@@ -61,10 +64,10 @@ switch ($action) {
 
 function getPendingDeals() {
     global $pdo;
-    
+
     try {
         $stmt = $pdo->prepare('
-            SELECT d.*, 
+            SELECT d.*,
                    buyer.name as buyer_name, buyer.phone as buyer_phone,
                    seller.name as seller_name, seller.phone as seller_phone,
                    a.game_name, "" as account_description
@@ -72,12 +75,12 @@ function getPendingDeals() {
             JOIN users buyer ON d.buyer_id = buyer.id
             JOIN users seller ON d.seller_id = seller.id
             LEFT JOIN accounts a ON d.account_id = a.id
-            WHERE d.status = "FUNDED"
+            WHERE d.status IN ("FUNDED", "PENDING_CANCEL")
             ORDER BY d.updated_at DESC
         ');
         $stmt->execute();
         $deals = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
+
         echo json_encode(['success' => true, 'deals' => $deals]);
     } catch (PDOException $e) {
         http_response_code(500);
@@ -689,6 +692,69 @@ function getDealByConversation() {
         echo json_encode(['success' => true, 'deal' => $deal]);
         
     } catch (PDOException $e) {
+        http_response_code(500);
+        echo json_encode(['success' => false, 'error' => 'خطأ في الخادم']);
+    }
+}
+
+function rejectCancelRequest() {
+    global $pdo;
+
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        http_response_code(405);
+        echo json_encode(['success' => false, 'error' => 'طريقة غير مسموحة']);
+        return;
+    }
+
+    $input = json_decode(file_get_contents('php://input'), true);
+    if (!$input || !isset($input['deal_id'])) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'معرف الصفقة مطلوب']);
+        return;
+    }
+
+    $deal_id = intval($input['deal_id']);
+    $admin_note = $input['admin_note'] ?? 'تم رفض طلب الإلغاء من قبل الإدارة';
+
+    try {
+        $pdo->beginTransaction();
+
+        // الحصول على تفاصيل الصفقة
+        $stmt = $pdo->prepare('SELECT * FROM deals WHERE id = ? AND status = "PENDING_CANCEL" FOR UPDATE');
+        $stmt->execute([$deal_id]);
+        $deal = $stmt->fetch();
+
+        if (!$deal) {
+            $pdo->rollBack();
+            http_response_code(404);
+            echo json_encode(['success' => false, 'error' => 'الصفقة غير موجودة أو ليست في حالة انتظار إلغاء']);
+            return;
+        }
+
+        // إرجاع الصفقة لحالتها السابقة (FUNDED)
+        $stmt = $pdo->prepare('UPDATE deals SET status = "FUNDED", cancel_reason = NULL, cancel_requested_by = NULL, updated_at = NOW() WHERE id = ?');
+        $stmt->execute([$deal_id]);
+
+        // الحصول على معرف المستخدم النظام
+        $system_user_stmt = $pdo->prepare('SELECT id FROM users WHERE role = "system" LIMIT 1');
+        $system_user_stmt->execute();
+        $system_user = $system_user_stmt->fetch();
+        $system_user_id = $system_user ? $system_user['id'] : null;
+
+        // إضافة رسالة في المحادثة
+        $message = "⚠️ تم رفض طلب إلغاء الصفقة من قبل الإدارة.\n\n{$admin_note}\n\nالصفقة الآن في حالة نشطة ويجب إكمالها.";
+        $stmt = $pdo->prepare('INSERT INTO messages (sender_id, receiver_id, message_text, deal_id) VALUES (?, ?, ?, ?)');
+        $stmt->execute([$system_user_id, $deal['buyer_id'], $message, $deal_id]);
+
+        $stmt = $pdo->prepare('INSERT INTO messages (sender_id, receiver_id, message_text, deal_id) VALUES (?, ?, ?, ?)');
+        $stmt->execute([$system_user_id, $deal['seller_id'], $message, $deal_id]);
+
+        $pdo->commit();
+
+        echo json_encode(['success' => true, 'message' => 'تم رفض طلب الإلغاء وإرجاع الصفقة للحالة النشطة']);
+
+    } catch (PDOException $e) {
+        $pdo->rollBack();
         http_response_code(500);
         echo json_encode(['success' => false, 'error' => 'خطأ في الخادم']);
     }

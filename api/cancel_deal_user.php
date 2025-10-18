@@ -59,42 +59,30 @@ if (!isset($_SESSION['user_id'])) {
             $wallet = ['pending_balance' => 0.00];
         }
         
-        // إرجاع المبلغ من الرصيد المعلق إلى رصيد المشتري - نستخدم مبلغ الصفقة الأصلي فقط
-        $amount_to_refund = $deal['amount'];
-        
-        // تحديث المحفظة - إرجاع المبلغ من الرصيد المعلق إلى الرصيد الأساسي
-        $stmt = $pdo->prepare('UPDATE wallets SET pending_balance = pending_balance - ?, balance = balance + ? WHERE user_id = ?');
-        $stmt->execute([$amount_to_refund, $amount_to_refund, $deal['buyer_id']]);
-        
-        // تحديث حالة الصفقة
-        $stmt = $pdo->prepare('UPDATE deals SET status = "CANCELLED", escrow_status = "REFUNDED", updated_at = NOW() WHERE id = ?');
-        $stmt->execute([$deal_id]);
+        // بدلاً من إلغاء الصفقة مباشرة، نحولها للإدارة للمراجعة
+        // تحديث حالة الصفقة لـ PENDING_CANCEL
+        $stmt = $pdo->prepare('UPDATE deals SET status = "PENDING_CANCEL", cancel_reason = ?, cancel_requested_by = "buyer", cancel_requested_at = NOW(), updated_at = NOW() WHERE id = ?');
+        $stmt->execute([$reason, $deal_id]);
+
+        // ملحوظة: الأموال تبقى في pending_balance حتى تقرر الإدارة
         
         // الحصول على معرف المستخدم النظام
         $system_user_stmt = $pdo->prepare('SELECT id FROM users WHERE role = "system" LIMIT 1');
         $system_user_stmt->execute();
         $system_user = $system_user_stmt->fetch();
         $system_user_id = $system_user ? $system_user['id'] : null;
-        
-        // تسجيل المعاملة المالية
-        $stmt = $pdo->prepare('INSERT INTO financial_logs (deal_id, type, amount, from_user, to_user) VALUES (?, "REFUND", ?, ?, ?)');
-        $stmt->execute([$deal_id, $amount_to_refund, $system_user_id, $deal['buyer_id']]);
-        
-        // تسجيل معاملة في wallet_transactions
-        $stmt = $pdo->prepare('INSERT INTO wallet_transactions (user_id, amount, type, description) VALUES (?, ?, "refund", ?)');
-        $stmt->execute([$deal['buyer_id'], $amount_to_refund, "استرداد صفقة رقم {$deal_id} - {$reason}"]);
-        
+
         // إضافة رسالة في المحادثة
-        $message = "تم الغاء الصفقة من قبل المستخدم. : . تم إرجاع المبلغ {$amount_to_refund} جنيه إلى المشتري.";
+        $message = "⚠️ طلب إلغاء الصفقة من قبل المشتري. السبب: {$reason}\n\nالصفقة الآن في انتظار مراجعة الإدارة.";
         $stmt = $pdo->prepare('INSERT INTO messages (sender_id, receiver_id, message_text, deal_id) VALUES (?, ?, ?, ?)');
         $stmt->execute([$system_user_id, $deal['buyer_id'], $message, $deal_id]);
-        
+
         $stmt = $pdo->prepare('INSERT INTO messages (sender_id, receiver_id, message_text, deal_id) VALUES (?, ?, ?, ?)');
         $stmt->execute([$system_user_id, $deal['seller_id'], $message, $deal_id]);
-        
+
         $pdo->commit();
-        
-        echo json_encode(['success' => true, 'message' => 'تم رفض الصفقة وإرجاع المبلغ']);
+
+        echo json_encode(['success' => true, 'message' => 'تم إرسال طلب الإلغاء للإدارة للمراجعة']);
         
     } catch (PDOException $e) {
         $pdo->rollBack();

@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s 'http://localhost/api/api/login.php' -H 'Content-Type: application/json' --data-raw '{\"\"email\"\":\"\"Mada4605123@gmail.com\"\",\"\"password\"\":\"\"123456\"\"}')"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
