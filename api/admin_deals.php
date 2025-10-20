@@ -306,12 +306,39 @@ function rejectDeal() {
             $wallet = ['pending_balance' => 0.00];
         }
         
-        // إرجاع المبلغ من الرصيد المعلق إلى رصيد المشتري - نستخدم مبلغ الصفقة الأصلي فقط
+        // إرجاع المبلغ من الرصيد المعلق إلى الإدارة أولاً - نستخدم مبلغ الصفقة الأصلي فقط
         $amount_to_refund = $deal['amount'];
-        
-        // تحديث المحفظة - إرجاع المبلغ من الرصيد المعلق إلى الرصيد الأساسي
-        $stmt = $pdo->prepare('UPDATE wallets SET pending_balance = pending_balance - ?, balance = balance + ? WHERE user_id = ?');
-        $stmt->execute([$amount_to_refund, $amount_to_refund, $deal['buyer_id']]);
+
+        // الحصول على حساب الأدمن/النظام
+        $admin_stmt = $pdo->prepare('SELECT id FROM users WHERE role = "system" OR role = "admin" ORDER BY role DESC LIMIT 1');
+        $admin_stmt->execute();
+        $admin_user = $admin_stmt->fetch();
+
+        if (!$admin_user) {
+            $pdo->rollBack();
+            http_response_code(500);
+            echo json_encode(['success' => false, 'error' => 'لم يتم العثور على حساب الإدارة']);
+            return;
+        }
+
+        // التحقق من وجود محفظة للإدارة وإنشاؤها إذا لم تكن موجودة
+        $admin_wallet_stmt = $pdo->prepare('SELECT pending_balance FROM wallets WHERE user_id = ?');
+        $admin_wallet_stmt->execute([$admin_user['id']]);
+        $admin_wallet = $admin_wallet_stmt->fetch();
+
+        if (!$admin_wallet) {
+            // إنشاء محفظة للإدارة
+            $stmt = $pdo->prepare('INSERT INTO wallets (user_id, balance, pending_balance) VALUES (?, 0.00, 0.00)');
+            $stmt->execute([$admin_user['id']]);
+        }
+
+        // تحديث المحفظة - نقل المبلغ من الرصيد المعلق للمشتري إلى الرصيد المعلق للإدارة
+        $stmt = $pdo->prepare('UPDATE wallets SET pending_balance = pending_balance - ? WHERE user_id = ?');
+        $stmt->execute([$amount_to_refund, $deal['buyer_id']]);
+
+        // إضافة المبلغ للرصيد المعلق للإدارة (ليس الرصيد الأساسي)
+        $stmt = $pdo->prepare('UPDATE wallets SET pending_balance = pending_balance + ? WHERE user_id = ?');
+        $stmt->execute([$amount_to_refund, $admin_user['id']]);
         
         // تحديث حالة الصفقة
         $stmt = $pdo->prepare('UPDATE deals SET status = "CANCELLED", escrow_status = "REFUNDED", updated_at = NOW() WHERE id = ?');
@@ -323,30 +350,35 @@ function rejectDeal() {
         $system_user = $system_user_stmt->fetch();
         $system_user_id = $system_user ? $system_user['id'] : null;
         
-        // تسجيل المعاملة المالية
-        $stmt = $pdo->prepare('INSERT INTO financial_logs (deal_id, type, amount, from_user, to_user) VALUES (?, "REFUND", ?, ?, ?)');
-        $stmt->execute([$deal_id, $amount_to_refund, $system_user_id, $deal['buyer_id']]);
-        
-        // تسجيل معاملة في wallet_transactions
-        $stmt = $pdo->prepare('INSERT INTO wallet_transactions (user_id, amount, type, description) VALUES (?, ?, "refund", ?)');
-        $stmt->execute([$deal['buyer_id'], $amount_to_refund, "استرداد صفقة رقم {$deal_id} - {$reason}"]);
-        
+        // تسجيل المعاملة المالية - إرجاع للإدارة
+        $stmt = $pdo->prepare('INSERT INTO financial_logs (deal_id, type, amount, from_user, to_user) VALUES (?, "REFUND_TO_ADMIN", ?, ?, ?)');
+        $stmt->execute([$deal_id, $amount_to_refund, $deal['buyer_id'], $admin_user['id']]);
+
+        // تسجيل معاملة في wallet_transactions للمشتري
+        $stmt = $pdo->prepare('INSERT INTO wallet_transactions (user_id, amount, type, description) VALUES (?, ?, "refund_to_admin", ?)');
+        $stmt->execute([$deal['buyer_id'], -$amount_to_refund, "إرجاع مبلغ صفقة رقم {$deal_id} للإدارة - {$reason}"]);
+
+        // تسجيل معاملة في wallet_transactions للإدارة
+        $stmt = $pdo->prepare('INSERT INTO wallet_transactions (user_id, amount, type, description) VALUES (?, ?, "refund_received", ?)');
+        $stmt->execute([$admin_user['id'], $amount_to_refund, "استلام مبلغ مسترد من صفقة رقم {$deal_id} - {$reason}"]);
+
         // إضافة رسالة في المحادثة
-        $message = "تم رفض الصفقة من قبل الإدارة. السبب: {$reason}. تم إرجاع المبلغ {$amount_to_refund} جنيه إلى المشتري.";
+        $message = "⚠️ تم رفض الصفقة من قبل الإدارة.\n\nالسبب: {$reason}\n\nتم إرجاع المبلغ {$amount_to_refund} جنيه إلى الإدارة في الرصيد المعلق. للحصول على استرداد كامل، يرجى التواصل مع الدعم الفني.";
         $stmt = $pdo->prepare('INSERT INTO messages (sender_id, receiver_id, message_text, deal_id) VALUES (?, ?, ?, ?)');
         $stmt->execute([$system_user_id, $deal['buyer_id'], $message, $deal_id]);
-        
+
         $stmt = $pdo->prepare('INSERT INTO messages (sender_id, receiver_id, message_text, deal_id) VALUES (?, ?, ?, ?)');
         $stmt->execute([$system_user_id, $deal['seller_id'], $message, $deal_id]);
         
         $pdo->commit();
-        
+
         echo json_encode(['success' => true, 'message' => 'تم رفض الصفقة وإرجاع المبلغ']);
-        
+
     } catch (PDOException $e) {
         $pdo->rollBack();
+        error_log('Error in rejectDeal: ' . $e->getMessage());
         http_response_code(500);
-        echo json_encode(['success' => false, 'error' => 'خطأ في الخادم']);
+        echo json_encode(['success' => false, 'error' => 'خطأ في الخادم', 'debug' => $e->getMessage()]);
     }
 }
 

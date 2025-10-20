@@ -1882,11 +1882,38 @@ class AdminDashboard {
         // Store current report ID and report data for actions
         this.currentReportId = report.id;
         this.currentReport = report;
-        
+
+        // إخفاء/إظهار زر عرض المحادثة بناءً على وجود conversation_id
+        const viewConversationBtn = document.getElementById('viewReportedConversation');
+        if (viewConversationBtn) {
+            if (!report.conversation_id || report.conversation_id === 0) {
+                // إخفاء الزر وإضافة رسالة توضيحية
+                viewConversationBtn.style.display = 'none';
+
+                // إضافة رسالة توضيحية بدلاً من الزر
+                const conversationContainer = viewConversationBtn.parentElement;
+                let noConvMsg = conversationContainer.querySelector('.no-conversation-msg');
+                if (!noConvMsg) {
+                    noConvMsg = document.createElement('div');
+                    noConvMsg.className = 'no-conversation-msg bg-gray-700 text-gray-400 px-4 py-2 rounded-lg text-center text-sm';
+                    noConvMsg.innerHTML = '<i class="fas fa-info-circle ml-2"></i>لا توجد محادثة مرتبطة';
+                    conversationContainer.insertBefore(noConvMsg, viewConversationBtn);
+                }
+            } else {
+                // إظهار الزر وإزالة الرسالة إذا كانت موجودة
+                viewConversationBtn.style.display = 'flex';
+                const conversationContainer = viewConversationBtn.parentElement;
+                const noConvMsg = conversationContainer.querySelector('.no-conversation-msg');
+                if (noConvMsg) {
+                    noConvMsg.remove();
+                }
+            }
+        }
+
         // Show modal
         modal.classList.remove('hidden');
         modal.classList.add('flex');
-        
+
         // Add event listener for release funds button
         const releaseFundsBtn = document.getElementById('releaseFundsFromReport');
         if (releaseFundsBtn) {
@@ -1970,17 +1997,24 @@ class AdminDashboard {
 
     // عرض المحادثة المبلغ عنها
     async viewReportedConversation(reportId) {
-        if (!this.currentReport || !this.currentReport.conversation_id) {
-            this.showNotification('لا توجد محادثة مرتبطة بهذا البلاغ', 'error');
+        console.log('📋 Current Report:', this.currentReport);
+        console.log('💬 Conversation ID:', this.currentReport?.conversation_id);
+
+        if (!this.currentReport || !this.currentReport.conversation_id || this.currentReport.conversation_id === 0) {
+            const convId = this.currentReport?.conversation_id || 'null';
+            this.showNotification(`❌ لا توجد محادثة مرتبطة بهذا البلاغ (ID: ${convId})`, 'error');
+            console.warn('⚠️ Cannot view conversation - invalid conversation_id:', convId);
             return;
         }
 
         try {
+            console.log('🔍 Fetching conversation for ID:', this.currentReport.conversation_id);
             const response = await fetch('/api/api/admin_reports.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include',
                 body: JSON.stringify({
                     action: 'get_conversation_messages',
                     conversation_id: this.currentReport.conversation_id

@@ -12,38 +12,48 @@ class BanChecker {
 
         try {
             console.log('Making request to api/check_login.php');
-            const response = await fetch('/api/api/check_login.php', {
+            const response = await fetch('/api/check_login.php', {
                 method: 'GET',
                 credentials: 'include'
             });
 
             console.log('Response status:', response.status);
             console.log('Response ok:', response.ok);
-            
+
             if (response.ok) {
                 const text = await response.text();
                 console.log('Raw response text:', text);
                 console.log('Response URL:', response.url);
                 console.log('Response headers:', response.headers);
-                
+
                 if (text.startsWith('<?php')) {
-                    console.log('User not logged in, skipping ban check');
+                    console.log('User not logged in, redirecting to home page');
+                    this.handleSessionExpired();
                     return;
                 }
-                
+
                 let data;
                 try {
                     data = JSON.parse(text);
                     console.log('Parsed data:', data);
                 } catch (e) {
-                    console.log('Failed to parse response as JSON, user likely not logged in');
+                    console.log('Failed to parse response as JSON, session likely expired');
+                    this.handleSessionExpired();
                     return;
                 }
-                
+
                 if (data.logged_in) {
                     // التحقق من تفاصيل المستخدم للتأكد من حالة الحظر
                     await this.checkBanStatus(data.user_id);
+                } else {
+                    // Session انتهت
+                    console.log('Session expired, redirecting to home');
+                    this.handleSessionExpired();
                 }
+            } else if (response.status === 401 || response.status === 403) {
+                // Unauthorized - session انتهت
+                console.log('Unauthorized response, session expired');
+                this.handleSessionExpired();
             } else {
                 console.log('Response not ok, status:', response.status);
             }
@@ -57,7 +67,7 @@ class BanChecker {
     // التحقق من حالة الحظر
     async checkBanStatus(userId) {
         try {
-            const response = await fetch('/api/api/check_user_ban.php', {
+            const response = await fetch('/api/check_user_ban.php', {
                 method: 'GET',
                 credentials: 'include'
             });
@@ -130,7 +140,7 @@ class BanChecker {
     // تسجيل الخروج
     async logout() {
         try {
-            await fetch('/api/api/logout.php', {
+            await fetch('/api/logout.php', {
                 method: 'POST',
                 credentials: 'include'
             });
@@ -142,6 +152,59 @@ class BanChecker {
     // إعادة التوجيه لصفحة تسجيل الدخول
     redirectToLogin() {
         window.location.href = '/login.html';
+    }
+
+    // معالجة انتهاء الجلسة
+    handleSessionExpired() {
+        // إيقاف المراقبة
+        this.stopMonitoring();
+
+        // عرض رسالة للمستخدم (اختياري)
+        this.showSessionExpiredMessage();
+
+        // إعادة التوجيه للصفحة الرئيسية بعد 2 ثانية
+        setTimeout(() => {
+            window.location.href = '/index.html';
+        }, 2000);
+    }
+
+    // عرض رسالة انتهاء الجلسة
+    showSessionExpiredMessage() {
+        // إنشاء النافذة المنبثقة إذا لم تكن موجودة
+        if (!document.getElementById('sessionExpiredModal')) {
+            this.createSessionExpiredModal();
+        }
+
+        const modal = document.getElementById('sessionExpiredModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    // إنشاء نافذة انتهاء الجلسة
+    createSessionExpiredModal() {
+        const modalHTML = `
+            <div id="sessionExpiredModal" class="hidden fixed inset-0 bg-black bg-opacity-75 items-center justify-center z-50" style="font-family: 'Tajawal', sans-serif;">
+                <div class="bg-gray-800 rounded-lg p-8 max-w-md mx-4 border border-yellow-500 shadow-2xl">
+                    <div class="text-center">
+                        <div class="mb-4">
+                            <svg class="w-16 h-16 text-yellow-500 mx-auto" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <h2 class="text-2xl font-bold text-yellow-500 mb-4">انتهت جلستك</h2>
+                        <p class="text-gray-300 mb-6 leading-relaxed">
+                            تم انتهاء جلسة تسجيل الدخول الخاصة بك.<br>
+                            سيتم توجيهك إلى الصفحة الرئيسية...
+                        </p>
+                        <div class="flex justify-center">
+                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-500"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
     }
 
     // بدء المراقبة الدورية

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار انتهاء الجلسة</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8 text-center">🧪 اختبار نظام انتهاء الجلسة</h1>
+
+        <div class="bg-gray-800 rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-bold mb-4">📋 السيناريوهات</h2>
+
+            <div class="space-y-4">
+                <div class="bg-gray-700 p-4 rounded">
+                    <h3 class="font-bold mb-2">1️⃣ اختبار Session Check (كل 30 ثانية)</h3>
+                    <p class="text-sm text-gray-300 mb-3">النظام يفحص الجلسة تلقائياً كل 30 ثانية</p>
+                    <button onclick="manualSessionCheck()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">
+                        فحص الجلسة الآن
+                    </button>
+                </div>
+
+                <div class="bg-gray-700 p-4 rounded">
+                    <h3 class="font-bold mb-2">2️⃣ اختبار API Request مع Session منتهية</h3>
+                    <p class="text-sm text-gray-300 mb-3">محاكاة request يرجع 401 Unauthorized</p>
+                    <button onclick="testExpiredSession()" class="bg-yellow-600 hover:bg-yellow-700 px-4 py-2 rounded">
+                        اختبار Session منتهية
+                    </button>
+                </div>
+
+                <div class="bg-gray-700 p-4 rounded">
+                    <h3 class="font-bold mb-2">3️⃣ إنهاء الجلسة (Logout)</h3>
+                    <p class="text-sm text-gray-300 mb-3">تسجيل خروج حقيقي ثم فحص النظام</p>
+                    <button onclick="actualLogout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded">
+                        تسجيل خروج
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-gray-800 rounded-lg p-6">
+            <h2 class="text-xl font-bold mb-4">📊 Logs</h2>
+            <div id="logs" class="bg-black p-4 rounded font-mono text-sm h-64 overflow-y-auto">
+                <div class="text-green-400">🟢 System Ready</div>
+            </div>
+            <button onclick="clearLogs()" class="mt-4 bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded text-sm">
+                مسح Logs
+            </button>
+        </div>
+    </div>
+
+    <!-- Session Manager Script -->
+    <script src="js/session-manager.js"></script>
+    <script src="js/ban-check.js"></script>
+
+    <script>
+        function log(message, type = 'info') {
+            const logs = document.getElementById('logs');
+            const timestamp = new Date().toLocaleTimeString('ar-EG');
+            const color = {
+                'info': 'text-blue-400',
+                'success': 'text-green-400',
+                'error': 'text-red-400',
+                'warning': 'text-yellow-400'
+            }[type] || 'text-gray-400';
+
+            const div = document.createElement('div');
+            div.className = color;
+            div.textContent = `[${timestamp}] ${message}`;
+            logs.appendChild(div);
+            logs.scrollTop = logs.scrollHeight;
+        }
+
+        function clearLogs() {
+            document.getElementById('logs').innerHTML = '<div class="text-green-400">🟢 Logs Cleared</div>';
+        }
+
+        // 1. فحص الجلسة يدوياً
+        async function manualSessionCheck() {
+            log('🔍 فحص الجلسة...', 'info');
+
+            try {
+                const response = await fetch('/api/api/check_login.php', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+
+                log(`📡 Response Status: ${response.status}`, 'info');
+
+                const text = await response.text();
+
+                try {
+                    const data = JSON.parse(text);
+                    if (data.logged_in) {
+                        log(`✅ الجلسة نشطة - User ID: ${data.user_id}`, 'success');
+                    } else {
+                        log('❌ الجلسة منتهية', 'error');
+                    }
+                } catch (e) {
+                    log('⚠️ Response غير JSON - الجلسة منتهية', 'warning');
+                }
+            } catch (error) {
+                log(`❌ خطأ: ${error.message}`, 'error');
+            }
+        }
+
+        // 2. اختبار Session منتهية (محاكاة 401)
+        async function testExpiredSession() {
+            log('🧪 اختبار session منتهية...', 'warning');
+
+            // سنجرب نطلب API محمي بدون session
+            try {
+                const response = await fetch('/api/api/admin_deals.php?action=get_pending_deals', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+
+                log(`📡 Response Status: ${response.status}`, 'info');
+
+                if (response.status === 401 || response.status === 403) {
+                    log('🎯 تم اكتشاف Session منتهية! النظام سيتولى الأمر...', 'warning');
+                } else {
+                    log(`✅ Request ناجح - Status: ${response.status}`, 'success');
+                }
+            } catch (error) {
+                log(`❌ خطأ: ${error.message}`, 'error');
+            }
+        }
+
+        // 3. تسجيل خروج حقيقي
+        async function actualLogout() {
+            log('🚪 تسجيل خروج...', 'warning');
+
+            try {
+                const response = await fetch('/api/api/logout.php', {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+                log(`✅ ${data.message || 'تم تسجيل الخروج'}`, 'success');
+
+                // الآن نفحص الجلسة بعد 2 ثانية
+                setTimeout(() => {
+                    log('🔍 فحص الجلسة بعد Logout...', 'info');
+                    manualSessionCheck();
+                }, 2000);
+            } catch (error) {
+                log(`❌ خطأ: ${error.message}`, 'error');
+            }
+        }
+
+        // Log initial state
+        log('✅ Session Manager محمل', 'success');
+        log('✅ Ban Checker محمل', 'success');
+        log('ℹ️ النظام يفحص الجلسة كل 30 ثانية تلقائياً', 'info');
+    </script>
+</body>
+</html>

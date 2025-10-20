@@ -96,28 +96,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deal_id'], $_POST['ac
                 echo '<p style="color:red">فشل في إطلاق المال للبائع.</p>';
             }
         } elseif ($action === 'refund') {
-            // إرجاع المال للمشتري
+            // إرجاع المال للإدارة (ليس للمشتري مباشرة)
             $conn->begin_transaction();
             try {
-                // إرجاع المبلغ من الرصيد المعلق إلى الرصيد العادي للمشتري
-                $stmt = $conn->prepare("UPDATE wallets SET balance = balance + ?, pending_balance = pending_balance - ? WHERE user_id = ?");
-                $stmt->bind_param('ddi', $escrow_amount, $escrow_amount, $buyer_id);
+                // الحصول على حساب الإدارة
+                $admin_result = $conn->query("SELECT id FROM users WHERE role = 'system' OR role = 'admin' OR is_admin = 1 LIMIT 1");
+                $admin_user = $admin_result->fetch_assoc();
+
+                if (!$admin_user) {
+                    throw new Exception('لم يتم العثور على حساب الإدارة');
+                }
+
+                // إرجاع المبلغ من الرصيد المعلق للمشتري إلى الرصيد المعلق للإدارة
+                $stmt = $conn->prepare("UPDATE wallets SET pending_balance = pending_balance - ? WHERE user_id = ?");
+                $stmt->bind_param('di', $escrow_amount, $buyer_id);
                 $stmt->execute();
                 $stmt->close();
-                    // تسجيل الحركة المالية (REFUND من الضمان للمشتري)
-                    $stmt = $conn->prepare("INSERT INTO financial_logs (deal_id, type, amount, from_user, to_user) VALUES (?, 'REFUND', ?, NULL, ?)");
-                    $stmt->bind_param('idi', $deal_id, $escrow_amount, $buyer_id);
-                    $stmt->execute();
-                    $stmt->close();
+
+                // إضافة المبلغ للرصيد المعلق للإدارة
+                $stmt = $conn->prepare("UPDATE wallets SET pending_balance = pending_balance + ? WHERE user_id = ?");
+                $stmt->bind_param('di', $escrow_amount, $admin_user['id']);
+                $stmt->execute();
+                $stmt->close();
+
+                // تسجيل الحركة المالية (REFUND_TO_ADMIN من المشتري للإدارة)
+                $stmt = $conn->prepare("INSERT INTO financial_logs (deal_id, type, amount, from_user, to_user) VALUES (?, 'REFUND_TO_ADMIN', ?, ?, ?)");
+                $stmt->bind_param('idii', $deal_id, $escrow_amount, $buyer_id, $admin_user['id']);
+                $stmt->execute();
+                $stmt->close();
+
                 $stmt = $conn->prepare("UPDATE deals SET status = 'REFUNDED', escrow_status = 'REFUNDED', refunded_at = NOW(), updated_at = NOW() WHERE id = ?");
                 $stmt->bind_param('i', $deal_id);
                 $stmt->execute();
                 $stmt->close();
                 $conn->commit();
-                echo '<p style="color:green">تم إرجاع المال للمشتري بنجاح.</p>';
+                echo '<p style="color:green">تم إرجاع المال إلى الإدارة بنجاح. المشتري يجب أن يتواصل مع الدعم للحصول على استرداد كامل.</p>';
             } catch (Exception $e) {
                 $conn->rollback();
-                echo '<p style="color:red">فشل في إرجاع المال للمشتري.</p>';
+                echo '<p style="color:red">فشل في إرجاع المال للإدارة: ' . $e->getMessage() . '</p>';
             }
         } elseif ($action === 'cancel_dispute') {
             // إلغاء النزاع فقط
