@@ -1,6 +1,5 @@
 <?php
-require_once '../config/database.php';
-// Session is now managed in db.php
+require_once 'db.php';
 require_once 'security.php';
 ensure_session();
 
@@ -25,7 +24,7 @@ $deal_id = intval($_POST['deal_id']);
 $user_id = $_SESSION['user_id'];
 
 try {
-    $pdo = new PDO($dsn, $username, $password, $options);
+    global $pdo;
     
     // التحقق من وجود الصفقة وأن المستخدم هو المشتري
     $stmt = $pdo->prepare("SELECT * FROM deals WHERE id = ? AND buyer_id = ? AND status = 'CREATED'");
@@ -37,8 +36,8 @@ try {
         exit;
     }
     
-    // تحديث حالة الصفقة إلى FUNDED وتحديث escrow_status
-    $stmt = $pdo->prepare("UPDATE deals SET status = 'FUNDED', escrow_status = 'FUNDED', updated_at = NOW() WHERE id = ?");
+    // تحديث حالة الصفقة إلى PENDING_ADMIN للمراجعة من الإدارة
+    $stmt = $pdo->prepare("UPDATE deals SET status = 'PENDING_ADMIN', admin_review_status = 'pending', escrow_status = 'FUNDED', updated_at = NOW() WHERE id = ?");
     $stmt->execute([$deal_id]);
     
     // إضافة رسالة في المحادثة

@@ -75,7 +75,7 @@ function getPendingDeals() {
             JOIN users buyer ON d.buyer_id = buyer.id
             JOIN users seller ON d.seller_id = seller.id
             LEFT JOIN accounts a ON d.account_id = a.id
-            WHERE d.status IN ("FUNDED", "PENDING_CANCEL")
+            WHERE (d.status IN ("FUNDED", "PENDING_CANCEL", "PENDING_ADMIN") OR d.admin_review_status = "pending")
             ORDER BY d.updated_at DESC
         ');
         $stmt->execute();

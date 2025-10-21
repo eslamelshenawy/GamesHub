@@ -269,8 +269,14 @@ class AdminDashboard {
         
         // Chat buttons event listeners
         if (viewReportedConversation) viewReportedConversation.addEventListener('click', () => {
+            console.log('🔵 View Reported Conversation button clicked!');
+            console.log('📌 Current Report ID:', this.currentReportId);
+            console.log('📌 Current Report:', this.currentReport);
             if (this.currentReportId) {
                 this.viewReportedConversation(this.currentReportId);
+            } else {
+                console.error('❌ No currentReportId set!');
+                this.showNotification('خطأ: لم يتم تحديد البلاغ', 'error');
             }
         });
         
@@ -1808,16 +1814,20 @@ class AdminDashboard {
 
     async viewReportDetails(reportId) {
         try {
-            const response = await fetch(`api/get_reports.php?report_id=${reportId}`);
+            console.log('📋 Loading report details for ID:', reportId);
+            const response = await fetch(`/api/get_reports.php?report_id=${reportId}`);
             const data = await response.json();
-            
+            console.log('📦 Report details data:', data);
+
             if (data.success && data.data && data.data.reports && data.data.reports.length > 0) {
+                console.log('✅ Report found:', data.data.reports[0]);
                 this.showReportDetailsModal(data.data.reports[0]);
             } else {
+                console.error('❌ Report not found or error:', data);
                 this.showNotification(data.message || 'حدث خطأ أثناء جلب تفاصيل البلاغ', 'error');
             }
         } catch (error) {
-            console.error('Error loading report details:', error);
+            console.error('💥 Error loading report details:', error);
             this.showNotification('حدث خطأ أثناء جلب تفاصيل البلاغ', 'error');
         }
     }
@@ -1997,6 +2007,7 @@ class AdminDashboard {
 
     // عرض المحادثة المبلغ عنها
     async viewReportedConversation(reportId) {
+        console.log('🚀 viewReportedConversation called!');
         console.log('📋 Current Report:', this.currentReport);
         console.log('💬 Conversation ID:', this.currentReport?.conversation_id);
 
@@ -2021,35 +2032,44 @@ class AdminDashboard {
                 })
             });
 
+            console.log('📡 Response status:', response.status);
             const result = await response.json();
-            
+            console.log('📦 Result:', result);
+
             if (result.success) {
+                console.log('✅ Calling showConversationModal with data:', result.data);
                 this.showConversationModal(result.data);
             } else {
+                console.error('❌ API returned error:', result.message);
                 this.showNotification(result.message || 'حدث خطأ أثناء جلب المحادثة', 'error');
             }
         } catch (error) {
-            console.error('Error fetching conversation:', error);
+            console.error('💥 Error fetching conversation:', error);
             this.showNotification('حدث خطأ أثناء جلب المحادثة', 'error');
         }
     }
 
     // عرض modal المحادثة
     showConversationModal(conversationData) {
+        console.log('🎬 showConversationModal called with:', conversationData);
         const modal = document.getElementById('reportConversationModal');
         if (!modal) {
-            console.error('Report conversation modal not found');
+            console.error('❌ Report conversation modal not found in DOM!');
             return;
         }
+        console.log('✅ Modal found:', modal);
 
         const modalContent = document.getElementById('reportConversationModalContent');
         if (!modalContent) {
-            console.error('Report conversation modal content not found');
+            console.error('❌ Report conversation modal content not found in DOM!');
             return;
         }
+        console.log('✅ Modal content found:', modalContent);
 
         const conversation = conversationData.conversation;
         const messages = conversationData.messages;
+        console.log('💬 Conversation:', conversation);
+        console.log('📨 Messages count:', messages?.length);
 
         modalContent.innerHTML = `
             <div class="bg-black/90 backdrop-blur-xl border border-white/20 rounded-xl shadow-2xl p-6 max-w-4xl w-full max-h-[85vh] flex flex-col">
@@ -2148,19 +2168,26 @@ class AdminDashboard {
         `;
 
         // إغلاق أي modal آخر مفتوح
+        console.log('🔄 Closing other modals...');
         this.closeReportModal();
         this.closeAdminChatModal();
-        
+
+        console.log('👁️ Showing modal...');
+        console.log('Before - hidden:', modal.classList.contains('hidden'), 'flex:', modal.classList.contains('flex'));
         modal.classList.remove('hidden');
         modal.classList.add('flex');
-        
+        console.log('After - hidden:', modal.classList.contains('hidden'), 'flex:', modal.classList.contains('flex'));
+
         // التمرير لآخر رسالة
         setTimeout(() => {
             const messagesContainer = document.getElementById('conversationMessages');
             if (messagesContainer) {
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                console.log('📜 Scrolled to bottom');
             }
         }, 100);
+
+        console.log('✨ Modal should be visible now!');
     }
 
     // إغلاق modal المحادثة للتقارير

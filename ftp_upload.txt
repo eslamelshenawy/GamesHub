@@ -1,0 +1,8 @@
+Host: bvize.com
+Port: 21
+Username: work@bvize.com
+Password: MohamedE123+
+
+Files to upload:
+1. api/confirm_deal_receipt.php (updated)
+2. api/test_deal_flows.php (new test script)
